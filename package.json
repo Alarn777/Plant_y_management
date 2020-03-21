@@ -3,12 +3,26 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^4.9.7",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/styles": "^4.9.6",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "antd": "^4.0.3",
+    "aws-amplify": "^2.2.6",
+    "eslint": "^6.8.0",
+    "jwt-decode": "^2.2.0",
+    "password-validator": "^5.0.3",
+    "prettier": "^1.19.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1"
+    "react-redux": "^7.2.0",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.4.1",
+    "react-sticky-footer": "^0.1.0-rc3",
+    "redux": "^4.0.5",
+    "styled-components": "^5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

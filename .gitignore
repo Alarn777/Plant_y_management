@@ -23,7 +23,7 @@ yarn-debug.log*
 yarn-error.log*
 /.idea
 .idea
-
+src/ENV_VARS.js
 #amplify
 amplify/\#current-cloud-backend
 amplify/.config/local-*

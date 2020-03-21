@@ -1,0 +1,14 @@
+{
+    "trigger": true,
+    "modules": [
+        "captcha-verify"
+    ],
+    "parentResource": "plantymanagement01906c32",
+    "functionName": "plantymanagement01906c32VerifyAuthChallengeResponse",
+    "parentStack": "auth",
+    "triggerEnvs": "[]",
+    "triggerTemplate": "VerifyAuthChallengeResponse.json.ejs",
+    "roleName": "plantymanagement01906c32VerifyAuthChallengeResponse",
+    "skipEdit": true,
+    "resourceName": "plantymanagement01906c32VerifyAuthChallengeResponse"
+}

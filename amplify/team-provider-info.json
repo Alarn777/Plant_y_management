@@ -1,0 +1,27 @@
+{
+    "pmanage": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-plantymanagement-pmanage-125659-authRole",
+            "UnauthRoleArn": "arn:aws:iam::321366177529:role/amplify-plantymanagement-pmanage-125659-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::321366177529:role/amplify-plantymanagement-pmanage-125659-authRole",
+            "Region": "eu-west-1",
+            "DeploymentBucketName": "amplify-plantymanagement-pmanage-125659-deployment",
+            "UnauthRoleName": "amplify-plantymanagement-pmanage-125659-unauthRole",
+            "StackName": "amplify-plantymanagement-pmanage-125659",
+            "StackId": "arn:aws:cloudformation:eu-west-1:321366177529:stack/amplify-plantymanagement-pmanage-125659/b1ba8720-6b62-11ea-aea5-0a79771fa9ee",
+            "AmplifyAppId": "d18k7as4dyi705"
+        },
+        "categories": {
+            "function": {
+                "plantymanagement01906c32DefineAuthChallenge": {},
+                "plantymanagement01906c32CreateAuthChallenge": {},
+                "plantymanagement01906c32VerifyAuthChallengeResponse": {
+                    "RECAPTCHASECRET": "n"
+                }
+            },
+            "auth": {
+                "plantymanagemente373b221": {}
+            }
+        }
+    }
+}

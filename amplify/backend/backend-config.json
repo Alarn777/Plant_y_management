@@ -1,0 +1,27 @@
+{
+	"function": {
+		"plantymanagement01906c32DefineAuthChallenge": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true
+		},
+		"plantymanagement01906c32CreateAuthChallenge": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true
+		},
+		"plantymanagement01906c32VerifyAuthChallengeResponse": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true
+		}
+	},
+	"auth": {
+		"plantymanagemente373b221": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [],
+			"customAuth": false
+		}
+	}
+}

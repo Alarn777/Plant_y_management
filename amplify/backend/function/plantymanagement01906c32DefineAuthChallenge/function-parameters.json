@@ -1,0 +1,14 @@
+{
+    "trigger": true,
+    "modules": [
+        "captcha-define-challenge"
+    ],
+    "parentResource": "plantymanagement01906c32",
+    "functionName": "plantymanagement01906c32DefineAuthChallenge",
+    "parentStack": "auth",
+    "triggerEnvs": "[]",
+    "triggerTemplate": "DefineAuthChallenge.json.ejs",
+    "roleName": "plantymanagement01906c32DefineAuthChallenge",
+    "skipEdit": true,
+    "resourceName": "plantymanagement01906c32DefineAuthChallenge"
+}
