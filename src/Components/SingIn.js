@@ -10,7 +10,8 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { addSocket, addUser, loadPlanters } from "../actions";
 import Button from "@material-ui/core/Button";
-import { Auth } from "aws-amplify";
+import Amplify, { Auth } from "aws-amplify";
+import awsconfig from "../aws-exports";
 import FormControl from "@material-ui/core/FormControl";
 import FormGroup from "@material-ui/core/FormGroup";
 import "../Styles/Signin.css";
@@ -21,14 +22,73 @@ import MenuIcon from "@material-ui/icons/Menu";
 import StickyFooter from "react-sticky-footer";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Redirect } from "react-router-dom";
+import Input from "@material-ui/core/Input";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import { Visibility, VisibilityOff } from "@material-ui/icons";
+import InputLabel from "@material-ui/core/InputLabel";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { instanceOf } from "prop-types";
+import { useCookies } from "react-cookie";
+import { withCookies, Cookies } from "react-cookie";
+
 class SingIn extends React.Component {
+  static propTypes = {
+    cookies: instanceOf(Cookies).isRequired
+  };
+
   constructor(props) {
     super(props);
     this.state = {
       password: "",
-      name: "",
-      back: false
+      username: "",
+      back: false,
+      showPassword: false,
+      error: false,
+      loading: false
     };
+
+    Amplify.configure(awsconfig);
+  }
+  UNSAFE_componentWillMount() {
+    console.log();
+  }
+
+  async SignIn() {
+    try {
+      const user = await Auth.signIn(this.state.username, this.state.password);
+      if (user) {
+        // The user directly signs in
+        console.log(user);
+        this.props.addUser(user);
+        //"token", user.signInUserSession.idToken.jwtToken,
+
+        this.props.cookies.set(
+          "token",
+          user.signInUserSession.idToken.jwtToken,
+          {
+            path: "/"
+          }
+        );
+        this.setState({ dashboard: true });
+      }
+    } catch (err) {
+      this.setState({ error: true, loading: false });
+      if (err.code === "UserNotConfirmedException") {
+        // The error happens if the user didn't finish the confirmation step when signing up
+        // In this case you need to resend the code and confirm the user
+        // About how to resend the code and confirm the user, please check the signUp part
+      } else if (err.code === "PasswordResetRequiredException") {
+        // The error happens when the password is reset in the Cognito console
+        // In this case you need to call forgotPassword to reset the password
+        // Please check the Forgot Password part.
+      } else if (err.code === "NotAuthorizedException") {
+        // The error happens when the incorrect password is provided
+      } else if (err.code === "UserNotFoundException") {
+        // The error happens when the supplied username/email does not exist in the Cognito user pool
+      } else {
+        console.log(err);
+      }
+    }
   }
 
   handleChange = name => event => {
@@ -36,19 +96,25 @@ class SingIn extends React.Component {
   };
 
   validateForm() {
-    return this.state.name.length > 0 && this.state.password.length > 0;
+    return this.state.username.length > 0 && this.state.password.length > 0;
   }
 
   handleSubmit(event) {
     event.preventDefault();
   }
+  handleClickShowPassword = () => {
+    this.setState({ showPassword: !this.state.showPassword });
+  };
 
   render() {
+    if (this.state.dashboard === true) {
+      return <Redirect to="/dashboard" />;
+    }
+
     if (this.state.back === true) {
       return <Redirect to="/" />;
     }
 
-    console.log(this.props);
     return (
       // const [email, setEmail] = useState("");
       // const [password, setPassword] = useState("");
@@ -58,7 +124,7 @@ class SingIn extends React.Component {
       <div>
         <div
           style={{
-            height: this.state.height - 74,
+            // height: this.state.height - 74,
             root: {
               flexGrow: 1
             }
@@ -91,37 +157,97 @@ class SingIn extends React.Component {
             </Typography>
             <div className="Login">
               <form onSubmit={this.handleSubmit}>
-                <FormGroup controlId="username" bsSize="large">
-                  <TextField
-                    id="standard-name"
-                    label="Username"
-                    // className={classes.textField}
-                    value={this.state.name}
-                    onChange={this.handleChange("name")}
-                    margin="normal"
-                    variant="outlined"
+                <FormGroup>
+                  {/*<TextField*/}
+                  {/*  id="standard-name"*/}
+                  {/*  label="Username"*/}
+                  {/*  // className={classes.textField}*/}
+                  {/*  value={this.state.name}*/}
+                  {/*  onChange={this.handleChange("name")}*/}
+                  {/*  margin="normal"*/}
+                  {/*  variant="outlined"*/}
+                  {/*/>*/}
+                  <InputLabel
+                    error={this.state.error}
+                    style={{ marginTop: 10 }}
+                    htmlFor="outlined-adornment-password"
+                  >
+                    Username
+                  </InputLabel>
+                  <Input
+                    error={this.state.error}
+                    style={{ marginTop: 10 }}
+                    // variant="outlined"
+                    id="standard-adornment-password"
+                    type={"text"}
+                    value={this.state.username}
+                    onChange={this.handleChange("username")}
                   />
                 </FormGroup>
-                <FormGroup controlId="password" bsSize="large">
-                  <TextField
-                    id="standard-name"
-                    label="Password"
-                    // className={classes.textField}
+                <FormGroup>
+                  {/*<TextField*/}
+                  {/*  id="standard-name"*/}
+                  {/*  label="Password"*/}
+                  {/*  hidden={true}*/}
+                  {/*  // className={classes.textField}*/}
+                  {/*  value={this.state.password}*/}
+                  {/*  onChange={this.handleChange("password")}*/}
+                  {/*  margin="normal"*/}
+                  {/*  variant="outlined"*/}
+                  {/*/>*/}
+                  <InputLabel
+                    error={this.state.error}
+                    style={{ marginTop: 10 }}
+                    htmlFor="outlined-adornment-password"
+                  >
+                    Password
+                  </InputLabel>
+                  <Input
+                    error={this.state.error}
+                    style={{ marginTop: 10 }}
+                    variant="outlined"
+                    id="standard-adornment-password"
+                    type={this.state.showPassword ? "text" : "password"}
                     value={this.state.password}
                     onChange={this.handleChange("password")}
-                    margin="normal"
-                    variant="outlined"
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={this.handleClickShowPassword}
+                        >
+                          {this.state.showPassword ? (
+                            <Visibility />
+                          ) : (
+                            <VisibilityOff />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    }
                   />
                   <Button
                     style={{
-                      marginTop: 10
+                      marginTop: 20
                     }}
                     disabled={!this.validateForm()}
                     variant="contained"
                     color="primary"
-                    // onClick={() => this.setState({ toRegister: true })}
+                    onClick={() => {
+                      this.setState({ loading: true });
+                      this.SignIn()
+                        .then()
+                        .catch();
+                    }}
                   >
-                    Login
+                    {!this.state.loading ? (
+                      <p>Login</p>
+                    ) : (
+                      <CircularProgress
+                        color="secondary"
+                        style={{ root: { flex: 1 } }}
+                      />
+                    )}
+                    {/*Login*/}
                   </Button>
                 </FormGroup>
               </form>
@@ -149,4 +275,7 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(SingIn);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withCookies(SingIn));

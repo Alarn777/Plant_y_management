@@ -12,7 +12,7 @@ import {
   ThemeProvider
 } from "@material-ui/core/styles";
 import { orange } from "@material-ui/core/colors";
-
+import { CookiesProvider } from "react-cookie";
 // const useStyles = makeStyles(theme => ({
 //     root: {
 //         color: theme.status.danger,
@@ -32,7 +32,13 @@ const theme = createMuiTheme({
   //   danger: orange[500]
   // },
   palette: {
-    primary: { 500: plantyColor }
+    primary: { 500: plantyColor },
+    secondary: {
+      light: "#ffee58",
+      main: "#ffeb3b"
+      // dark: will be calculated from palette.secondary.main,
+      // contrastText: "#ffcc00"
+    }
   }
 });
 
@@ -40,7 +46,9 @@ ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <App />
+        <CookiesProvider>
+          <App />
+        </CookiesProvider>
       </ThemeProvider>
     </Provider>
   </React.StrictMode>,
