@@ -38,3 +38,5 @@ awsconfiguration.json
 amplifyconfiguration.json
 amplify-gradle-config.json
 amplifyxc.config
+/src/ENV_VARS.js
+ENV_VARS.js
