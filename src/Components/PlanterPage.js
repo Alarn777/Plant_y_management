@@ -18,30 +18,25 @@ import MenuIcon from "@material-ui/icons/Menu";
 import {
   Card,
   Paper,
-  CardActionArea,
-  CardContent,
-  CardMedia,
   Toolbar,
   Typography,
   Button,
   IconButton
 } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
-import Amplify, { Auth, Storage } from "aws-amplify";
+import Amplify, { Auth } from "aws-amplify";
 import awsconfig from "../aws-exports";
 import { instanceOf } from "prop-types";
 import { Cookies } from "react-cookie";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import axios from "axios";
-import CardActions from "@material-ui/core/CardActions";
-import LinearProgress from "@material-ui/core/LinearProgress";
-import UserPage from "./UserPage";
+import PlantPage from "./PlantPage";
 
-class Dashboard extends React.Component {
-  // static propTypes = {
-  //   cookies: instanceOf(Cookies).isRequired
-  // };
+class PlanterPage extends React.Component {
+  static propTypes = {
+    cookies: instanceOf(Cookies).isRequired
+  };
 
   constructor(props) {
     super(props);
@@ -52,8 +47,7 @@ class Dashboard extends React.Component {
       toLogin: false,
       toRegister: false,
       user: null,
-      systemUsers: [],
-      selectedUser: "none"
+      systemUsers: []
     };
     Amplify.configure(awsconfig);
   }
@@ -77,11 +71,10 @@ class Dashboard extends React.Component {
     Auth.currentAuthenticatedUser()
       .then(user => {
         // return Auth.changePassword(user, "oldPassword", "newPassword");
+        console.log(user);
         this.setState({ user: user });
         this.props.addUser(user);
-        this.loadAllData()
-          .then()
-          .catch();
+        this.loadAllData();
       })
       // .then(data => console.log(data))
       .catch(err => console.log(err));
@@ -95,6 +88,7 @@ class Dashboard extends React.Component {
 
   async loadAllData() {
     let USER_TOKEN = "";
+    console.log(this.state.user);
     USER_TOKEN = this.state.user.signInUserSession.idToken.jwtToken;
     this.state.USER_TOKEN = USER_TOKEN;
 
@@ -108,7 +102,7 @@ class Dashboard extends React.Component {
         }
       )
       .then(response => {
-        // console.log(response);
+        // console.log(response.data);
         this.dealWithUserData(response.data);
       })
       .catch(error => {
@@ -121,73 +115,23 @@ class Dashboard extends React.Component {
 
     sentData.TableNames.map(one => {
       if (one.endsWith("_Planters")) {
-        let userAvatarKey =
-          "user_avatars/" + one.replace("_Planters", "") + "_avatar.jpeg";
-        Storage.get(userAvatarKey, {
-          level: "public",
-          type: "image/jpg"
-          // bucket: 'plant-pictures-planty',
-          // region: 'eu',
-        })
-          .then(data => {
-            let newOne = {
-              name: one.replace("_Planters", ""),
-              pic: data
-            };
-            users.push(newOne);
-            // console.log(data);
-          })
-          .then(() => this.setState({ systemUsers: users }))
-          .catch(error => console.log(error));
+        users.push(one.replace("_Planters", ""));
       }
     });
+
+    this.setState({ systemUsers: users });
   }
 
-  renderUsers = user => {
-    //
-
-    return (
-      <Card
-        onClick={() => {
-          this.setState({ selectedUser: user.name });
-        }}
-        key={user.name}
-        style={{ float: "left", margin: 10, maxWidth: 345 }}
-      >
-        <CardActionArea>
-          <CardMedia
-            style={{
-              height: 140
-            }}
-            image={user.pic}
-            title="Contemplative Reptile"
-          />
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="h2">
-              {user.name}
-            </Typography>
-            <Typography variant="body2" color="textSecondary" component="p">
-              One cool user
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-    );
-  };
-
   render() {
-    if (this.state.selectedUser !== "none") {
-      return <Redirect to={`/user/${this.state.selectedUser}`} />;
-    }
+    console.log(this.state);
+    // if (!this.state.user) return <Redirect to="/login" />;
 
     if (this.state.toLogin === true) {
       return <Redirect to="/login" />;
     }
-
-    if (this.state.systemUsers === []) {
-      return <LinearProgress style={{ width: "100%" }} />;
-    }
-
+    // if (this.state.toRegister === true) {
+    //   return <Redirect to="/register" />;
+    // }
     return (
       <div>
         <div
@@ -201,9 +145,6 @@ class Dashboard extends React.Component {
           <AppBar position="static">
             <Toolbar>
               <IconButton
-                onClick={() => {
-                  if (!this.state.user) this.setState({ toLogin: true });
-                }}
                 edge="start"
                 // className={styles.menuButton}
                 style={{ marginRight: 10 }}
@@ -227,21 +168,6 @@ class Dashboard extends React.Component {
                     style={{ flexGrow: 1 }}
                   >
                     Hello {this.state.user.username}
-                    <Button
-                      variant="outlined"
-                      style={{ marginLeft: 20 }}
-                      color="inherit"
-                      onClick={() => {
-                        console.log("aaaaa");
-                        Auth.signOut()
-                          .then(data => console.log(data))
-                          .catch(err => console.log(err));
-
-                        this.setState({ user: null, toLogin: true });
-                      }}
-                    >
-                      Log Out
-                    </Button>
                   </Typography>
                 </div>
               )}
@@ -249,10 +175,7 @@ class Dashboard extends React.Component {
           </AppBar>
           {this.state.user ? (
             <div>
-              <h1 style={{ margin: 10 }}>All Users</h1>
-              <div style={{ margin: 10 }}>
-                {this.state.systemUsers.map(one => this.renderUsers(one))}
-              </div>
+              <h1>Hello</h1>
             </div>
           ) : (
             <h1>Please log in first</h1>
@@ -293,4 +216,4 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
+export default connect(mapStateToProps, mapDispatchToProps)(PlanterPage);

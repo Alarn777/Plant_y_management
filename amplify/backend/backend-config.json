@@ -23,5 +23,6 @@
 			"dependsOn": [],
 			"customAuth": false
 		}
-	}
+	},
+	"storage": {}
 }
