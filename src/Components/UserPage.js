@@ -21,7 +21,10 @@ import {
   Toolbar,
   Typography,
   Button,
-  IconButton
+  IconButton,
+  CardActionArea,
+  CardMedia,
+  CardContent
 } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
 import Amplify, { Auth } from "aws-amplify";
@@ -31,11 +34,14 @@ import { Cookies } from "react-cookie";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import axios from "axios";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Link from "@material-ui/core/Link";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 class UserPage extends React.Component {
-  static propTypes = {
-    cookies: instanceOf(Cookies).isRequired
-  };
+  // static propTypes = {
+  //   cookies: instanceOf(Cookies).isRequired
+  // };
 
   constructor(props) {
     super(props);
@@ -46,7 +52,9 @@ class UserPage extends React.Component {
       toLogin: false,
       toRegister: false,
       user: null,
-      systemUsers: []
+      planters: [],
+      customerUsername: this.props.location.pathname.replace("/users/", ""),
+      selectedPlanter: ""
     };
     Amplify.configure(awsconfig);
   }
@@ -73,7 +81,9 @@ class UserPage extends React.Component {
         console.log(user);
         this.setState({ user: user });
         this.props.addUser(user);
-        this.loadAllData();
+        this.loadPlanters()
+          .then()
+          .catch();
       })
       // .then(data => console.log(data))
       .catch(err => console.log(err));
@@ -85,43 +95,91 @@ class UserPage extends React.Component {
     window.removeEventListener("resize", this.updateDimensions);
   }
 
-  async loadAllData() {
+  async loadPlanters() {
+    // console.log('called reload plants');
+
     let USER_TOKEN = "";
-    console.log(this.state.user);
+
     USER_TOKEN = this.state.user.signInUserSession.idToken.jwtToken;
     this.state.USER_TOKEN = USER_TOKEN;
 
     const AuthStr = "Bearer ".concat(this.state.USER_TOKEN);
     await axios
       .post(
-        Consts.apigatewayRoute + "/getAllUsers",
-        {},
+        Consts.apigatewayRoute + "/getuserplanters",
+        {
+          username: this.state.customerUsername
+        },
         {
           headers: { Authorization: AuthStr }
         }
       )
       .then(response => {
         // console.log(response.data);
-        this.dealWithUserData(response.data);
+        this.dealWithPlantsData(response.data);
       })
       .catch(error => {
         console.log("error " + error);
       });
   }
 
-  dealWithUserData(sentData) {
-    let users = [];
+  dealWithPlantsData = plants => {
+    if (plants.Items) {
+      this.setState({ planters: plants.Items });
+    } else this.setState({ planters: [] });
+  };
 
-    sentData.TableNames.map(one => {
-      if (one.endsWith("_Planters")) {
-        users.push(one.replace("_Planters", ""));
-      }
-    });
+  renderPlanters = planter => {
+    //
 
-    this.setState({ systemUsers: users });
-  }
+    return (
+      <Card
+        onClick={() => {
+          this.setState({ selectedPlanter: planter.name });
+        }}
+        key={planter.name}
+        style={{
+          float: "left",
+          margin: 10,
+          maxWidth: 345,
+          backgroundColor: "#e8f5e9"
+          // root: { color: "#a5d6a7" }
+        }}
+      >
+        <CardActionArea>
+          <CardMedia
+            style={{
+              height: 200,
+              width: 200
+            }}
+            image={require("../Images/greenhouse.png")}
+            title="Contemplative Reptile"
+          />
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="h2">
+              Planter {planter.name}
+            </Typography>
+            {/*<Typography variant="body2" color="textSecondary" component="p">*/}
+            {/*  One cool user*/}
+            {/*</Typography>*/}
+          </CardContent>
+        </CardActionArea>
+      </Card>
+    );
+  };
 
   render() {
+    if (this.state.selectedPlanter !== "") {
+      return (
+        <Redirect
+          to={`/planters/${this.state.customerUsername}/${this.state.selectedPlanter}`}
+        />
+      );
+    }
+
+    if (this.state.planters === []) {
+      return <LinearProgress style={{ width: "100%" }} />;
+    }
     // if (!this.state.user) return <Redirect to="/login" />;
 
     if (this.state.toLogin === true) {
@@ -130,6 +188,10 @@ class UserPage extends React.Component {
     // if (this.state.toRegister === true) {
     //   return <Redirect to="/register" />;
     // }
+    // console.log(this.props.location);
+    // console.log(this.props.location.pathname.replace("/user/", ""));
+    let username = this.state.customerUsername;
+    console.log(this.state.planters);
     return (
       <div>
         <div
@@ -144,6 +206,9 @@ class UserPage extends React.Component {
             <Toolbar>
               <IconButton
                 edge="start"
+                onClick={() => {
+                  if (!this.state.user) this.setState({ toLogin: true });
+                }}
                 // className={styles.menuButton}
                 style={{ marginRight: 10 }}
                 color="inherit"
@@ -172,8 +237,30 @@ class UserPage extends React.Component {
             </Toolbar>
           </AppBar>
           {this.state.user ? (
-            <div>
-              <h1>Hello</h1>
+            <div style={{ margin: 10 }}>
+              <Breadcrumbs aria-label="breadcrumb">
+                <Link
+                  color="inherit"
+                  href="/dashboard"
+                  // onClick={handleClick}
+                >
+                  Dashboard
+                </Link>
+                {/*<Link*/}
+                {/*  color="inherit"*/}
+                {/*  href="/getting-started/installation/"*/}
+                {/*  // onClick={handleClick}*/}
+                {/*>*/}
+                {/*  User*/}
+                {/*</Link>*/}
+                <Typography color="textPrimary">{username}</Typography>
+              </Breadcrumbs>
+              <div>
+                <h1>{username}'s Planters</h1>
+                <div>
+                  {this.state.planters.map(one => this.renderPlanters(one))}
+                </div>
+              </div>
             </div>
           ) : (
             <h1>Please log in first</h1>

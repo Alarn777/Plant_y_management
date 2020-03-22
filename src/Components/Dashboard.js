@@ -37,6 +37,8 @@ import axios from "axios";
 import CardActions from "@material-ui/core/CardActions";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import UserPage from "./UserPage";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Link from "@material-ui/core/Link";
 
 class Dashboard extends React.Component {
   // static propTypes = {
@@ -177,7 +179,7 @@ class Dashboard extends React.Component {
 
   render() {
     if (this.state.selectedUser !== "none") {
-      return <Redirect to={`/user/${this.state.selectedUser}`} />;
+      return <Redirect to={`/users/${this.state.selectedUser}`} />;
     }
 
     if (this.state.toLogin === true) {
@@ -249,6 +251,23 @@ class Dashboard extends React.Component {
           </AppBar>
           {this.state.user ? (
             <div>
+              <Breadcrumbs style={{ margin: 10 }} aria-label="breadcrumb">
+                <Link
+                  color="inherit"
+                  href="/dashboard"
+                  // onClick={handleClick}
+                >
+                  Dashboard
+                </Link>
+                {/*<Link*/}
+                {/*  color="inherit"*/}
+                {/*  href="/getting-started/installation/"*/}
+                {/*  // onClick={handleClick}*/}
+                {/*>*/}
+                {/*  Core*/}
+                {/*</Link>*/}
+                {/*<Typography color="textPrimary">Breadcrumb</Typography>*/}
+              </Breadcrumbs>
               <h1 style={{ margin: 10 }}>All Users</h1>
               <div style={{ margin: 10 }}>
                 {this.state.systemUsers.map(one => this.renderUsers(one))}

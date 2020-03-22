@@ -24,7 +24,7 @@ import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Redirect } from "react-router-dom";
 import Input from "@material-ui/core/Input";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import { Visibility, VisibilityOff } from "@material-ui/icons";
+import { Image, Visibility, VisibilityOff } from "@material-ui/icons";
 import InputLabel from "@material-ui/core/InputLabel";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { instanceOf } from "prop-types";
@@ -44,13 +44,36 @@ class SingIn extends React.Component {
       back: false,
       showPassword: false,
       error: false,
-      loading: false
+      loading: false,
+      width: 0,
+      height: 0
     };
 
     Amplify.configure(awsconfig);
   }
-  UNSAFE_componentWillMount() {
-    console.log();
+
+  updateDimensions = () => {
+    let w = window,
+      d = document,
+      documentElement = d.documentElement,
+      body = d.getElementsByTagName("body")[0],
+      width = w.innerWidth || documentElement.clientWidth || body.clientWidth,
+      height =
+        w.innerHeight || documentElement.clientHeight || body.clientHeight;
+
+    this.setState({ width: width, height: height });
+  };
+
+  componentWillMount() {
+    this.updateDimensions();
+  }
+
+  componentDidMount() {
+    window.addEventListener("resize", this.updateDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateDimensions);
   }
 
   async SignIn() {
@@ -124,7 +147,7 @@ class SingIn extends React.Component {
       <div>
         <div
           style={{
-            // height: this.state.height - 74,
+            height: this.state.height - 74,
             root: {
               flexGrow: 1
             }
@@ -151,109 +174,127 @@ class SingIn extends React.Component {
               </Typography>
             </Toolbar>
           </AppBar>
-          <Paper style={{ margin: 10 }}>
-            <Typography style={{ padding: 10 }} variant="h3" component="h3">
-              Login
-            </Typography>
-            <div className="Login">
-              <form onSubmit={this.handleSubmit}>
-                <FormGroup>
-                  {/*<TextField*/}
-                  {/*  id="standard-name"*/}
-                  {/*  label="Username"*/}
-                  {/*  // className={classes.textField}*/}
-                  {/*  value={this.state.name}*/}
-                  {/*  onChange={this.handleChange("name")}*/}
-                  {/*  margin="normal"*/}
-                  {/*  variant="outlined"*/}
-                  {/*/>*/}
-                  <InputLabel
-                    error={this.state.error}
-                    style={{ marginTop: 10 }}
-                    htmlFor="outlined-adornment-password"
-                  >
-                    Username
-                  </InputLabel>
-                  <Input
-                    error={this.state.error}
-                    style={{ marginTop: 10 }}
-                    // variant="outlined"
-                    id="standard-adornment-password"
-                    type={"text"}
-                    value={this.state.username}
-                    onChange={this.handleChange("username")}
-                  />
-                </FormGroup>
-                <FormGroup>
-                  {/*<TextField*/}
-                  {/*  id="standard-name"*/}
-                  {/*  label="Password"*/}
-                  {/*  hidden={true}*/}
-                  {/*  // className={classes.textField}*/}
-                  {/*  value={this.state.password}*/}
-                  {/*  onChange={this.handleChange("password")}*/}
-                  {/*  margin="normal"*/}
-                  {/*  variant="outlined"*/}
-                  {/*/>*/}
-                  <InputLabel
-                    error={this.state.error}
-                    style={{ marginTop: 10 }}
-                    htmlFor="outlined-adornment-password"
-                  >
-                    Password
-                  </InputLabel>
-                  <Input
-                    error={this.state.error}
-                    style={{ marginTop: 10 }}
-                    variant="outlined"
-                    id="standard-adornment-password"
-                    type={this.state.showPassword ? "text" : "password"}
-                    value={this.state.password}
-                    onChange={this.handleChange("password")}
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={this.handleClickShowPassword}
-                        >
-                          {this.state.showPassword ? (
-                            <Visibility />
-                          ) : (
-                            <VisibilityOff />
-                          )}
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                  />
-                  <Button
-                    style={{
-                      marginTop: 20
-                    }}
-                    disabled={!this.validateForm()}
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                      this.setState({ loading: true });
-                      this.SignIn()
-                        .then()
-                        .catch();
-                    }}
-                  >
-                    {!this.state.loading ? (
-                      <p>Login</p>
-                    ) : (
-                      <CircularProgress
-                        color="secondary"
-                        style={{ root: { flex: 1 } }}
-                      />
-                    )}
-                    {/*Login*/}
-                  </Button>
-                </FormGroup>
-              </form>
-            </div>
-          </Paper>
+          {/*<Paper style={{ margin: 10 }}>*/}
+          <Typography style={{ padding: 10 }} variant="h3" component="h3">
+            Login
+          </Typography>
+          <div className="Login">
+            <form onSubmit={this.handleSubmit}>
+              <FormGroup>
+                <img
+                  style={{ width: 300 }}
+                  src={require("../Images/logo.png")}
+                />
+                {/*<TextField*/}
+                {/*  id="standard-name"*/}
+                {/*  label="Username"*/}
+                {/*  // className={classes.textField}*/}
+                {/*  value={this.state.name}*/}
+                {/*  onChange={this.handleChange("name")}*/}
+                {/*  margin="normal"*/}
+                {/*  variant="outlined"*/}
+                {/*/>*/}
+                <InputLabel
+                  error={this.state.error}
+                  style={{ marginTop: 10 }}
+                  htmlFor="outlined-adornment-password"
+                >
+                  Username
+                </InputLabel>
+                <Input
+                  error={this.state.error}
+                  style={{ marginTop: 10 }}
+                  // variant="outlined"
+                  id="standard-adornment-password"
+                  type={"text"}
+                  value={this.state.username}
+                  onChange={this.handleChange("username")}
+                />
+              </FormGroup>
+              <FormGroup>
+                {/*<TextField*/}
+                {/*  id="standard-name"*/}
+                {/*  label="Password"*/}
+                {/*  hidden={true}*/}
+                {/*  // className={classes.textField}*/}
+                {/*  value={this.state.password}*/}
+                {/*  onChange={this.handleChange("password")}*/}
+                {/*  margin="normal"*/}
+                {/*  variant="outlined"*/}
+                {/*/>*/}
+                <InputLabel
+                  error={this.state.error}
+                  style={{ marginTop: 10 }}
+                  htmlFor="outlined-adornment-password"
+                >
+                  Password
+                </InputLabel>
+                <Input
+                  error={this.state.error}
+                  style={{ marginTop: 10 }}
+                  variant="outlined"
+                  id="standard-adornment-password"
+                  type={this.state.showPassword ? "text" : "password"}
+                  value={this.state.password}
+                  onChange={this.handleChange("password")}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={this.handleClickShowPassword}
+                      >
+                        {this.state.showPassword ? (
+                          <Visibility />
+                        ) : (
+                          <VisibilityOff />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+                <Button
+                  style={{
+                    marginTop: 20
+                  }}
+                  disabled={!this.validateForm()}
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    this.setState({ loading: true });
+                    this.SignIn()
+                      .then()
+                      .catch();
+                  }}
+                >
+                  {!this.state.loading ? (
+                    <p>Login</p>
+                  ) : (
+                    <CircularProgress
+                      color="secondary"
+                      style={{ root: { flex: 1 } }}
+                    />
+                  )}
+                  {/*Login*/}
+                </Button>
+              </FormGroup>
+            </form>
+          </div>
+          {/*</Paper>*/}
         </div>
+        <StickyFooter
+          bottomThreshold={20}
+          normalStyles={{
+            height: 10,
+            backgroundColor: "#999999",
+            padding: "2rem"
+          }}
+          stickyStyles={{
+            backgroundColor: "rgba(255,255,255,.8)",
+            padding: "2rem"
+          }}
+        >
+          © 2019 - 2020, Plant'y Inc. or its affiliates. All rights reserved.
+        </StickyFooter>
       </div>
     );
   }
