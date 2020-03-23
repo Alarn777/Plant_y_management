@@ -37,8 +37,10 @@ class App extends React.Component {
     return (
       <Router>
         <Switch>
-          <Route path="/" exact component={IndexPage} />
-          <Route path="/login" exact component={SignIn} />
+          {/*<Route path="/" exact component={IndexPage} />*/}
+          {/*<Route path="/login" exact component={SignIn} />*/}
+          <Route path="/login" exact component={IndexPage} />
+          <Route path="/" exact component={SignIn} />
           <Route path="/register" component={SignUp} />
           <Route path="/dashboard" component={Dashboard} />
           <Route path="/users/:id" component={UserPage} />
