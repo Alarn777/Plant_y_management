@@ -171,7 +171,7 @@ class SingUp extends React.Component {
         <div>
           <div
             style={{
-              height: this.state.height - 74,
+              height: this.state.height - 40,
               root: {
                 flexGrow: 1
               }
@@ -224,7 +224,7 @@ class SingUp extends React.Component {
         <div>
           <div
             style={{
-              height: this.state.height - 74,
+              height: this.state.height - 40,
               root: {
                 flexGrow: 1
               }
@@ -308,7 +308,6 @@ class SingUp extends React.Component {
                       </InputLabel>
 
                       <Input
-                        helperText="Some important text"
                         error={this.state.error}
                         style={{ marginTop: 10 }}
                         variant="outlined"
@@ -346,7 +345,6 @@ class SingUp extends React.Component {
                         type={this.state.showPassword ? "text" : "password"}
                         value={this.state.password2}
                         onChange={this.handleChange("password2")}
-                        helperText="Some important text"
                         endAdornment={
                           <InputAdornment position="end">
                             <IconButton
@@ -363,7 +361,7 @@ class SingUp extends React.Component {
                         }
                       />
                       <Typography
-                        variant="p"
+                        variant="body2"
                         // className={styles.title}
                         style={{ color: "gray", marginTop: 5, flexGrow: 1 }}
                       >
@@ -469,15 +467,15 @@ class SingUp extends React.Component {
           </div>
           <BrowserView>
             <StickyFooter
-              bottomThreshold={20}
+              bottomThreshold={0}
               normalStyles={{
-                height: 10,
+                height: 20,
                 backgroundColor: "#999999",
-                padding: "2rem"
+                padding: "10px"
               }}
               stickyStyles={{
-                backgroundColor: "rgba(255,255,255,.8)",
-                padding: "2rem"
+                backgroundColor: "rgba(255,255,255,.8)"
+                // padding: "2rem",
               }}
             >
               © 2019 - 2020, Plant'y Inc. or its affiliates. All rights

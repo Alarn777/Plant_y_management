@@ -139,7 +139,7 @@ class SingIn extends React.Component {
         <div>
           <div
             style={{
-              height: this.state.height - 74,
+              height: this.state.height - 40,
               root: {
                 flexGrow: 1
               }
@@ -253,9 +253,9 @@ class SingIn extends React.Component {
             <StickyFooter
               bottomThreshold={20}
               normalStyles={{
-                height: 10,
+                height: 20,
                 backgroundColor: "#999999",
-                padding: "2rem"
+                padding: "10px"
               }}
               stickyStyles={{
                 backgroundColor: "rgba(255,255,255,.8)",
