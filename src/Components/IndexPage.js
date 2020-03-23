@@ -60,7 +60,7 @@ class IndexPage extends React.Component {
 
     console.log(a);
 
-    let b = JSON.parse(process.env.REACT_APP_CONFIG_AWS);
+    let b = JSON.parse(process.env.REACT_APP_API_LINKS);
 
     console.log(b);
 
