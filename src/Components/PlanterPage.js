@@ -29,8 +29,8 @@ import {
 import { Redirect } from "react-router-dom";
 import Amplify, { Auth, Storage } from "aws-amplify";
 //import awsconfig from "../aws-exports";
-import { instanceOf } from "prop-types";
-import { Cookies } from "react-cookie";
+//import { instanceOf } from "prop-types";
+//import { Cookies } from "react-cookie";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import axios from "axios";
@@ -39,6 +39,7 @@ import Link from "@material-ui/core/Link";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import CardActions from "@material-ui/core/CardActions";
+import { BrowserView } from "react-device-detect";
 
 class PlanterPage extends React.Component {
   // static propTypes = {
@@ -309,20 +310,22 @@ class PlanterPage extends React.Component {
             <h1>Please log in first</h1>
           )}
         </div>
-        <StickyFooter
-          bottomThreshold={20}
-          normalStyles={{
-            height: 10,
-            backgroundColor: "#999999",
-            padding: "2rem"
-          }}
-          stickyStyles={{
-            backgroundColor: "rgba(255,255,255,.8)",
-            padding: "2rem"
-          }}
-        >
-          © 2019 - 2020, Plant'y Inc. or its affiliates. All rights reserved.
-        </StickyFooter>
+        <BrowserView>
+          <StickyFooter
+            bottomThreshold={20}
+            normalStyles={{
+              height: 10,
+              backgroundColor: "#999999",
+              padding: "2rem"
+            }}
+            stickyStyles={{
+              backgroundColor: "rgba(255,255,255,.8)",
+              padding: "2rem"
+            }}
+          >
+            © 2019 - 2020, Plant'y Inc. or its affiliates. All rights reserved.
+          </StickyFooter>
+        </BrowserView>
       </div>
     );
   }

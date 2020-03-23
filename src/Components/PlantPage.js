@@ -26,16 +26,17 @@ import {
 import { Redirect } from "react-router-dom";
 import Amplify, { Auth } from "aws-amplify";
 //import awsconfig from "../aws-exports";
-import { instanceOf } from "prop-types";
-import { Cookies } from "react-cookie";
+//import { instanceOf } from "prop-types";
+//import { Cookies } from "react-cookie";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import axios from "axios";
+import { BrowserView } from "react-device-detect";
 
 class PlantPage extends React.Component {
-  static propTypes = {
-    cookies: instanceOf(Cookies).isRequired
-  };
+  // static propTypes = {
+  //   cookies: instanceOf(Cookies).isRequired
+  // };
 
   constructor(props) {
     super(props);
@@ -180,20 +181,22 @@ class PlantPage extends React.Component {
             <h1>Please log in first</h1>
           )}
         </div>
-        <StickyFooter
-          bottomThreshold={20}
-          normalStyles={{
-            height: 10,
-            backgroundColor: "#999999",
-            padding: "2rem"
-          }}
-          stickyStyles={{
-            backgroundColor: "rgba(255,255,255,.8)",
-            padding: "2rem"
-          }}
-        >
-          © 2019 - 2020, Plant'y Inc. or its affiliates. All rights reserved.
-        </StickyFooter>
+        <BrowserView>
+          <StickyFooter
+            bottomThreshold={20}
+            normalStyles={{
+              height: 10,
+              backgroundColor: "#999999",
+              padding: "2rem"
+            }}
+            stickyStyles={{
+              backgroundColor: "rgba(255,255,255,.8)",
+              padding: "2rem"
+            }}
+          >
+            © 2019 - 2020, Plant'y Inc. or its affiliates. All rights reserved.
+          </StickyFooter>
+        </BrowserView>
       </div>
     );
   }

@@ -25,6 +25,7 @@ import {
 } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
 import Avatar from "@material-ui/core/Avatar";
+import { BrowserView } from "react-device-detect";
 
 class IndexPage extends React.Component {
   constructor(props) {
@@ -166,20 +167,22 @@ class IndexPage extends React.Component {
             </div>
           </Paper>
         </div>
-        <StickyFooter
-          bottomThreshold={20}
-          normalStyles={{
-            height: 10,
-            backgroundColor: "#999999",
-            padding: "2rem"
-          }}
-          stickyStyles={{
-            backgroundColor: "rgba(255,255,255,.8)",
-            padding: "2rem"
-          }}
-        >
-          © 2019 - 2020, Plant'y Inc. or its affiliates. All rights reserved.
-        </StickyFooter>
+        <BrowserView>
+          <StickyFooter
+            bottomThreshold={20}
+            normalStyles={{
+              height: 10,
+              backgroundColor: "#999999",
+              padding: "2rem"
+            }}
+            stickyStyles={{
+              backgroundColor: "rgba(255,255,255,.8)",
+              padding: "2rem"
+            }}
+          >
+            © 2019 - 2020, Plant'y Inc. or its affiliates. All rights reserved.
+          </StickyFooter>
+        </BrowserView>
       </div>
     );
     // <Provider store={store}>

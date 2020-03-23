@@ -12,7 +12,7 @@ import {
   ThemeProvider
 } from "@material-ui/core/styles";
 import { orange } from "@material-ui/core/colors";
-import { CookiesProvider } from "react-cookie";
+//import { CookiesProvider } from "react-cookie";
 // const useStyles = makeStyles(theme => ({
 //     root: {
 //         color: theme.status.danger,
@@ -46,9 +46,9 @@ ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <CookiesProvider>
-          <App />
-        </CookiesProvider>
+        {/*<CookiesProvider>*/}
+        <App />
+        {/*</CookiesProvider>*/}
       </ThemeProvider>
     </Provider>
   </React.StrictMode>,

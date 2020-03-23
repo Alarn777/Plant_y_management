@@ -27,6 +27,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import { Image, Visibility, VisibilityOff } from "@material-ui/icons";
 import InputLabel from "@material-ui/core/InputLabel";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { BrowserView } from "react-device-detect";
 // import { instanceOf } from "prop-types";
 // import { withCookies, Cookies } from "react-cookie";
 
@@ -248,20 +249,23 @@ class SingIn extends React.Component {
             </div>
             {/*</Paper>*/}
           </div>
-          <StickyFooter
-            bottomThreshold={20}
-            normalStyles={{
-              height: 10,
-              backgroundColor: "#999999",
-              padding: "2rem"
-            }}
-            stickyStyles={{
-              backgroundColor: "rgba(255,255,255,.8)",
-              padding: "2rem"
-            }}
-          >
-            © 2019 - 2020, Plant'y Inc. or its affiliates. All rights reserved.
-          </StickyFooter>
+          <BrowserView>
+            <StickyFooter
+              bottomThreshold={20}
+              normalStyles={{
+                height: 10,
+                backgroundColor: "#999999",
+                padding: "2rem"
+              }}
+              stickyStyles={{
+                backgroundColor: "rgba(255,255,255,.8)",
+                padding: "2rem"
+              }}
+            >
+              © 2019 - 2020, Plant'y Inc. or its affiliates. All rights
+              reserved.
+            </StickyFooter>
+          </BrowserView>
         </div>
       );
     }
