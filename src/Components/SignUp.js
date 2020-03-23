@@ -51,7 +51,8 @@ class SingUp extends React.Component {
       register: true,
       confirmCode: "",
       userConfirmed: false,
-      codeMessage: ""
+      codeMessage: "",
+      dashboard: false
     };
 
     Amplify.configure(JSON.parse(process.env.REACT_APP_CONFIG_AWS));
@@ -158,13 +159,7 @@ class SingUp extends React.Component {
   };
 
   render() {
-    if (true) {
-      return <p>Hellasdasd</p>;
-    }
-
-    if (this.state.dashboard === true) {
-      return <Redirect to="/dashboard" />;
-    } else if (this.state.back === true) {
+    if (this.state.back === true) {
       return <Redirect to="/" />;
     } else if (this.state.userConfirmed) {
       return (
@@ -216,11 +211,6 @@ class SingUp extends React.Component {
       );
     } else {
       return (
-        // const [email, setEmail] = useState("");
-        // const [password, setPassword] = useState("");
-
-        // return
-
         <div>
           <div
             style={{
