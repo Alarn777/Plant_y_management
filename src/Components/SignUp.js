@@ -268,7 +268,7 @@ class SingUp extends React.Component {
                       <InputLabel
                         error={this.state.error}
                         style={{ marginTop: 10 }}
-                        htmlFor="outlined-adornment-password"
+                        htmlFor="outlined-adornment-username"
                       >
                         Username
                       </InputLabel>
@@ -276,7 +276,7 @@ class SingUp extends React.Component {
                         error={this.state.error}
                         style={{ marginTop: 10 }}
                         // variant="outlined"
-                        id="standard-adornment-password"
+                        id="standard-adornment-username"
                         type={"text"}
                         value={this.state.username}
                         onChange={this.handleChange("username")}
@@ -292,7 +292,7 @@ class SingUp extends React.Component {
                         error={this.state.error}
                         style={{ marginTop: 10 }}
                         // variant="outlined"
-                        id="standard-adornment-password"
+                        id="standard-adornment-userEmail"
                         type={"text"}
                         value={this.state.userEmail}
                         onChange={this.handleChange("userEmail")}
@@ -341,7 +341,7 @@ class SingUp extends React.Component {
                         error={this.state.error}
                         style={{ marginTop: 10 }}
                         variant="outlined"
-                        id="standard-adornment-password"
+                        id="standard-adornment-password2"
                         type={this.state.showPassword ? "text" : "password"}
                         value={this.state.password2}
                         onChange={this.handleChange("password2")}
@@ -412,7 +412,7 @@ class SingUp extends React.Component {
                         error={this.state.error}
                         style={{ marginTop: 10 }}
                         // variant="outlined"
-                        id="standard-adornment-password"
+                        id="standard-adornment-confirmCode"
                         type={"text"}
                         value={this.state.confirmCode}
                         onChange={this.handleChange("confirmCode")}
