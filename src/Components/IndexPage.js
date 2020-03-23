@@ -60,6 +60,10 @@ class IndexPage extends React.Component {
 
     console.log(a);
 
+    let b = JSON.parse(process.env.REACT_APP_CONFIG_AWS);
+
+    console.log(b);
+
     window.addEventListener("resize", this.updateDimensions);
   }
 

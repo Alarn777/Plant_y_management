@@ -184,6 +184,7 @@ class SingIn extends React.Component {
                 <img
                   style={{ width: 300 }}
                   src={require("../Images/logo.png")}
+                  alt="logo"
                 />
                 {/*<TextField*/}
                 {/*  id="standard-name"*/}
