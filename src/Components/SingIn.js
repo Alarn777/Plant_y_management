@@ -132,172 +132,170 @@ class SingIn extends React.Component {
   render() {
     if (this.state.dashboard === true) {
       return <Redirect to="/dashboard" />;
-    }
-
-    if (this.state.back === true) {
+    } else if (this.state.back === true) {
       return <Redirect to="/" />;
-    }
+    } else {
+      return (
+        // const [email, setEmail] = useState("");
+        // const [password, setPassword] = useState("");
 
-    return (
-      // const [email, setEmail] = useState("");
-      // const [password, setPassword] = useState("");
+        // return
 
-      // return
-
-      <div>
-        <div
-          style={{
-            height: this.state.height - 74,
-            root: {
-              flexGrow: 1
-            }
-          }}
-        >
-          <AppBar position="static">
-            <Toolbar>
-              <IconButton
-                onClick={() => this.setState({ back: true })}
-                edge="start"
-                // className={styles.menuButton}
-                style={{ marginRight: 10 }}
-                color="inherit"
-                aria-label="back"
-              >
-                <ArrowBackIosIcon />
-              </IconButton>
-              <Typography
-                variant="h6"
-                // className={styles.title}
-                style={{ flexGrow: 1 }}
-              >
-                Plant'y
-              </Typography>
-            </Toolbar>
-          </AppBar>
-          {/*<Paper style={{ margin: 10 }}>*/}
-          <Typography style={{ padding: 10 }} variant="h3" component="h3">
-            Login
-          </Typography>
-          <div className="Login">
-            <form onSubmit={this.handleSubmit}>
-              <FormGroup>
-                <img
-                  style={{ width: 300 }}
-                  src={require("../Images/logo.png")}
-                  alt="logo"
-                />
-                {/*<TextField*/}
-                {/*  id="standard-name"*/}
-                {/*  label="Username"*/}
-                {/*  // className={classes.textField}*/}
-                {/*  value={this.state.name}*/}
-                {/*  onChange={this.handleChange("name")}*/}
-                {/*  margin="normal"*/}
-                {/*  variant="outlined"*/}
-                {/*/>*/}
-                <InputLabel
-                  error={this.state.error}
-                  style={{ marginTop: 10 }}
-                  htmlFor="outlined-adornment-password"
+        <div>
+          <div
+            style={{
+              height: this.state.height - 74,
+              root: {
+                flexGrow: 1
+              }
+            }}
+          >
+            <AppBar position="static">
+              <Toolbar>
+                <IconButton
+                  onClick={() => this.setState({ back: true })}
+                  edge="start"
+                  // className={styles.menuButton}
+                  style={{ marginRight: 10 }}
+                  color="inherit"
+                  aria-label="back"
                 >
-                  Username
-                </InputLabel>
-                <Input
-                  error={this.state.error}
-                  style={{ marginTop: 10 }}
-                  // variant="outlined"
-                  id="standard-adornment-password"
-                  type={"text"}
-                  value={this.state.username}
-                  onChange={this.handleChange("username")}
-                />
-              </FormGroup>
-              <FormGroup>
-                {/*<TextField*/}
-                {/*  id="standard-name"*/}
-                {/*  label="Password"*/}
-                {/*  hidden={true}*/}
-                {/*  // className={classes.textField}*/}
-                {/*  value={this.state.password}*/}
-                {/*  onChange={this.handleChange("password")}*/}
-                {/*  margin="normal"*/}
-                {/*  variant="outlined"*/}
-                {/*/>*/}
-                <InputLabel
-                  error={this.state.error}
-                  style={{ marginTop: 10 }}
-                  htmlFor="outlined-adornment-password"
+                  <ArrowBackIosIcon />
+                </IconButton>
+                <Typography
+                  variant="h6"
+                  // className={styles.title}
+                  style={{ flexGrow: 1 }}
                 >
-                  Password
-                </InputLabel>
-                <Input
-                  error={this.state.error}
-                  style={{ marginTop: 10 }}
-                  variant="outlined"
-                  id="standard-adornment-password"
-                  type={this.state.showPassword ? "text" : "password"}
-                  value={this.state.password}
-                  onChange={this.handleChange("password")}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={this.handleClickShowPassword}
-                      >
-                        {this.state.showPassword ? (
-                          <Visibility />
-                        ) : (
-                          <VisibilityOff />
-                        )}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                />
-                <Button
-                  style={{
-                    marginTop: 20
-                  }}
-                  disabled={!this.validateForm()}
-                  variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    this.setState({ loading: true });
-                    this.SignIn()
-                      .then()
-                      .catch();
-                  }}
-                >
-                  {!this.state.loading ? (
-                    <p>Login</p>
-                  ) : (
-                    <CircularProgress
-                      color="secondary"
-                      style={{ root: { flex: 1 } }}
-                    />
-                  )}
-                  {/*Login*/}
-                </Button>
-              </FormGroup>
-            </form>
+                  Plant'y
+                </Typography>
+              </Toolbar>
+            </AppBar>
+            {/*<Paper style={{ margin: 10 }}>*/}
+            <Typography style={{ padding: 10 }} variant="h3" component="h3">
+              Login
+            </Typography>
+            <div className="Login">
+              <form onSubmit={this.handleSubmit}>
+                <FormGroup>
+                  <img
+                    style={{ width: 300 }}
+                    src={require("../Images/logo.png")}
+                    alt="logo"
+                  />
+                  {/*<TextField*/}
+                  {/*  id="standard-name"*/}
+                  {/*  label="Username"*/}
+                  {/*  // className={classes.textField}*/}
+                  {/*  value={this.state.name}*/}
+                  {/*  onChange={this.handleChange("name")}*/}
+                  {/*  margin="normal"*/}
+                  {/*  variant="outlined"*/}
+                  {/*/>*/}
+                  <InputLabel
+                    error={this.state.error}
+                    style={{ marginTop: 10 }}
+                    htmlFor="outlined-adornment-password"
+                  >
+                    Username
+                  </InputLabel>
+                  <Input
+                    error={this.state.error}
+                    style={{ marginTop: 10 }}
+                    // variant="outlined"
+                    id="standard-adornment-password"
+                    type={"text"}
+                    value={this.state.username}
+                    onChange={this.handleChange("username")}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  {/*<TextField*/}
+                  {/*  id="standard-name"*/}
+                  {/*  label="Password"*/}
+                  {/*  hidden={true}*/}
+                  {/*  // className={classes.textField}*/}
+                  {/*  value={this.state.password}*/}
+                  {/*  onChange={this.handleChange("password")}*/}
+                  {/*  margin="normal"*/}
+                  {/*  variant="outlined"*/}
+                  {/*/>*/}
+                  <InputLabel
+                    error={this.state.error}
+                    style={{ marginTop: 10 }}
+                    htmlFor="outlined-adornment-password"
+                  >
+                    Password
+                  </InputLabel>
+                  <Input
+                    error={this.state.error}
+                    style={{ marginTop: 10 }}
+                    variant="outlined"
+                    id="standard-adornment-password"
+                    type={this.state.showPassword ? "text" : "password"}
+                    value={this.state.password}
+                    onChange={this.handleChange("password")}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={this.handleClickShowPassword}
+                        >
+                          {this.state.showPassword ? (
+                            <Visibility />
+                          ) : (
+                            <VisibilityOff />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
+                  <Button
+                    style={{
+                      marginTop: 20
+                    }}
+                    disabled={!this.validateForm()}
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      this.setState({ loading: true });
+                      this.SignIn()
+                        .then()
+                        .catch();
+                    }}
+                  >
+                    {!this.state.loading ? (
+                      <p>Login</p>
+                    ) : (
+                      <CircularProgress
+                        color="secondary"
+                        style={{ root: { flex: 1 } }}
+                      />
+                    )}
+                    {/*Login*/}
+                  </Button>
+                </FormGroup>
+              </form>
+            </div>
+            {/*</Paper>*/}
           </div>
-          {/*</Paper>*/}
+          <StickyFooter
+            bottomThreshold={20}
+            normalStyles={{
+              height: 10,
+              backgroundColor: "#999999",
+              padding: "2rem"
+            }}
+            stickyStyles={{
+              backgroundColor: "rgba(255,255,255,.8)",
+              padding: "2rem"
+            }}
+          >
+            © 2019 - 2020, Plant'y Inc. or its affiliates. All rights reserved.
+          </StickyFooter>
         </div>
-        <StickyFooter
-          bottomThreshold={20}
-          normalStyles={{
-            height: 10,
-            backgroundColor: "#999999",
-            padding: "2rem"
-          }}
-          stickyStyles={{
-            backgroundColor: "rgba(255,255,255,.8)",
-            padding: "2rem"
-          }}
-        >
-          © 2019 - 2020, Plant'y Inc. or its affiliates. All rights reserved.
-        </StickyFooter>
-      </div>
-    );
+      );
+    }
   }
 }
 
