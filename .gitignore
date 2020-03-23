@@ -40,3 +40,5 @@ amplify-gradle-config.json
 amplifyxc.config
 /src/ENV_VARS.js
 ENV_VARS.js
+.env.production
+.env.development

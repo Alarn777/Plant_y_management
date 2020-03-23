@@ -12,7 +12,7 @@ import AppBar from "@material-ui/core/AppBar";
 // import Toolbar from "@material-ui/core/Toolbar";
 // import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/styles";
-import Consts from "../ENV_VARS";
+//import Consts from "../ENV_VARS";
 // import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import {
@@ -25,7 +25,7 @@ import {
 } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
 import Amplify, { Auth } from "aws-amplify";
-import awsconfig from "../aws-exports";
+//import awsconfig from "../aws-exports";
 import { instanceOf } from "prop-types";
 import { Cookies } from "react-cookie";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
@@ -48,7 +48,7 @@ class PlantPage extends React.Component {
       user: null,
       systemUsers: []
     };
-    Amplify.configure(awsconfig);
+    // Amplify.configure(awsconfig);
   }
 
   updateDimensions = () => {
@@ -91,22 +91,22 @@ class PlantPage extends React.Component {
     USER_TOKEN = this.state.user.signInUserSession.idToken.jwtToken;
     this.state.USER_TOKEN = USER_TOKEN;
 
-    const AuthStr = "Bearer ".concat(this.state.USER_TOKEN);
-    await axios
-      .post(
-        Consts.apigatewayRoute + "/getAllUsers",
-        {},
-        {
-          headers: { Authorization: AuthStr }
-        }
-      )
-      .then(response => {
-        // console.log(response.data);
-        this.dealWithUserData(response.data);
-      })
-      .catch(error => {
-        console.log("error " + error);
-      });
+    // const AuthStr = "Bearer ".concat(this.state.USER_TOKEN);
+    // await axios
+    //   .post(
+    //     Consts.apigatewayRoute + "/getAllUsers",
+    //     {},
+    //     {
+    //       headers: { Authorization: AuthStr }
+    //     }
+    //   )
+    //   .then(response => {
+    //     // console.log(response.data);
+    //     this.dealWithUserData(response.data);
+    //   })
+    //   .catch(error => {
+    //     console.log("error " + error);
+    //   });
   }
 
   dealWithUserData(sentData) {

@@ -12,6 +12,7 @@
     "@version/react-router-v3": "^1.0.0",
     "antd": "^4.0.3",
     "aws-amplify": "^2.2.6",
+    "env-cmd": "^10.1.0",
     "eslint": "^6.8.0",
     "jwt-decode": "^2.2.0",
     "password-validator": "^5.0.3",
@@ -29,9 +30,15 @@
     "redux": "^4.0.5",
     "styled-components": "^5.0.1"
   },
+  "old_scripts": {
+
+    "start": "react-scripts start --env=jsdom",
+    "build": "react-scripts build --env=jsdom"
+  },
+
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "env-cmd -f .env.development react-scripts start",
+    "build": "env-cmd -f .env.production react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

@@ -12,7 +12,7 @@ import AppBar from "@material-ui/core/AppBar";
 // import Toolbar from "@material-ui/core/Toolbar";
 // import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/styles";
-import Consts from "../ENV_VARS";
+// import Consts from "../ENV_VARS";
 // import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import {
@@ -28,7 +28,7 @@ import {
 } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
 import Amplify, { Auth } from "aws-amplify";
-import awsconfig from "../aws-exports";
+// import awsconfig from "../aws-exports";
 import { instanceOf } from "prop-types";
 import { Cookies } from "react-cookie";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
@@ -56,7 +56,7 @@ class UserPage extends React.Component {
       customerUsername: this.props.location.pathname.replace("/users/", ""),
       selectedPlanter: ""
     };
-    Amplify.configure(awsconfig);
+    Amplify.configure(JSON.parse(process.env.REACT_APP_CONFIG_AWS));
   }
 
   updateDimensions = () => {
@@ -106,7 +106,8 @@ class UserPage extends React.Component {
     const AuthStr = "Bearer ".concat(this.state.USER_TOKEN);
     await axios
       .post(
-        Consts.apigatewayRoute + "/getuserplanters",
+        Amplify.configure(JSON.parse(process.env.REACT_APP_API_LINKS))
+          .apigatewayRoute + "/getuserplanters",
         {
           username: this.state.customerUsername
         },

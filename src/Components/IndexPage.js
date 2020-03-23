@@ -24,6 +24,7 @@ import {
   IconButton
 } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
+import Avatar from "@material-ui/core/Avatar";
 
 class IndexPage extends React.Component {
   constructor(props) {
@@ -52,6 +53,13 @@ class IndexPage extends React.Component {
     this.updateDimensions();
   }
   componentDidMount() {
+    // console.log(process.env);
+
+    // let a = JSON.parse(JSON.stringify(process.env.REACT_APP_CONFIG_AWS));
+    let a = JSON.parse(process.env.REACT_APP_CONFIG_AWS);
+
+    console.log(a);
+
     window.addEventListener("resize", this.updateDimensions);
   }
 
@@ -60,6 +68,8 @@ class IndexPage extends React.Component {
   }
 
   render() {
+    // console.log(process.env.REACT_APP_CONFIG_AWS);
+
     if (this.state.toLogin === true) {
       return <Redirect to="/login" />;
     }
@@ -79,15 +89,34 @@ class IndexPage extends React.Component {
         >
           <AppBar position="static">
             <Toolbar>
-              <IconButton
-                edge="start"
-                // className={styles.menuButton}
-                style={{ marginRight: 10 }}
-                color="inherit"
-                aria-label="menu"
-              >
-                <MenuIcon />
-              </IconButton>
+              <Avatar
+                variant="square"
+                alt="Remy Sharp"
+                style={{
+                  backgroundColor: "white",
+                  borderRadius: 5,
+                  marginRight: 10
+                }}
+                src={require("../Images/logo.png")}
+              />
+              {/*<IconButton*/}
+              {/*  edge="start"*/}
+              {/*  // className={styles.menuButton}*/}
+              {/*  style={{ marginRight: 10 }}*/}
+              {/*  color="inherit"*/}
+              {/*  aria-label="menu"*/}
+              {/*>*/}
+              {/*  <Avatar*/}
+              {/*    variant="square"*/}
+              {/*    alt="Remy Sharp"*/}
+              {/*    style={{*/}
+              {/*      backgroundColor: "white",*/}
+              {/*      borderRadius: 5,*/}
+              {/*      marginRight: 10*/}
+              {/*    }}*/}
+              {/*    src={require("../Images/logo.png")}*/}
+              {/*  />*/}
+              {/*</IconButton>*/}
               <Typography
                 variant="h6"
                 // className={styles.title}

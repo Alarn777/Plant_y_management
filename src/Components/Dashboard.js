@@ -12,7 +12,7 @@ import AppBar from "@material-ui/core/AppBar";
 // import Toolbar from "@material-ui/core/Toolbar";
 // import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/styles";
-import Consts from "../ENV_VARS";
+// import Consts from "../ENV_VARS";
 // import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import {
@@ -28,7 +28,7 @@ import {
 } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
 import Amplify, { Auth, Storage } from "aws-amplify";
-import awsconfig from "../aws-exports";
+// import awsconfig from "../aws-exports";
 import { instanceOf } from "prop-types";
 import { Cookies } from "react-cookie";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
@@ -39,6 +39,7 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import UserPage from "./UserPage";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Link from "@material-ui/core/Link";
+import Avatar from "@material-ui/core/Avatar";
 
 class Dashboard extends React.Component {
   // static propTypes = {
@@ -57,7 +58,7 @@ class Dashboard extends React.Component {
       systemUsers: [],
       selectedUser: "none"
     };
-    Amplify.configure(awsconfig);
+    Amplify.configure(JSON.parse(process.env.REACT_APP_CONFIG_AWS));
   }
 
   updateDimensions = () => {
@@ -103,7 +104,8 @@ class Dashboard extends React.Component {
     const AuthStr = "Bearer ".concat(this.state.USER_TOKEN);
     await axios
       .post(
-        Consts.apigatewayRoute + "/getAllUsers",
+        JSON.parse(process.env.REACT_APP_API_LINKS).apigatewayRoute +
+          "/getAllUsers",
         {},
         {
           headers: { Authorization: AuthStr }
@@ -214,6 +216,17 @@ class Dashboard extends React.Component {
               >
                 {this.state.user ? <MenuIcon /> : <ArrowBackIosIcon />}
               </IconButton>
+              <Avatar
+                variant="square"
+                alt="Remy Sharp"
+                style={{
+                  backgroundColor: "white",
+                  borderRadius: 5,
+                  marginRight: 10
+                }}
+                src={require("../Images/logo.png")}
+              />
+
               <Typography
                 variant="h6"
                 // className={styles.title}

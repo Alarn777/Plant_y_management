@@ -11,7 +11,7 @@ import { bindActionCreators } from "redux";
 import { addSocket, addUser, loadPlanters } from "../actions";
 import Button from "@material-ui/core/Button";
 import Amplify, { Auth } from "aws-amplify";
-import awsconfig from "../aws-exports";
+// import awsconfig from "../aws-exports";
 import FormControl from "@material-ui/core/FormControl";
 import FormGroup from "@material-ui/core/FormGroup";
 import "../Styles/Signin.css";
@@ -55,7 +55,7 @@ class SingUp extends React.Component {
       codeMessage: ""
     };
 
-    Amplify.configure(awsconfig);
+    Amplify.configure(JSON.parse(process.env.REACT_APP_CONFIG_AWS));
   }
 
   updateDimensions = () => {
