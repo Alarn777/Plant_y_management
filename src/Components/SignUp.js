@@ -27,9 +27,6 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import { Image, Visibility, VisibilityOff } from "@material-ui/icons";
 import InputLabel from "@material-ui/core/InputLabel";
 import CircularProgress from "@material-ui/core/CircularProgress";
-//import { instanceOf } from "prop-types";
-// import { useCookies } from "react-cookie";
-// import { withCookies, Cookies } from "react-cookie";
 import {
   BrowserView,
   MobileView,
@@ -38,10 +35,6 @@ import {
 } from "react-device-detect";
 
 class SingUp extends React.Component {
-  // static propTypes = {
-  //   cookies: instanceOf(Cookies).isRequired
-  // };
-
   constructor(props) {
     super(props);
     this.state = {
@@ -160,9 +153,10 @@ class SingUp extends React.Component {
     } else return false;
   }
 
-  handleSubmit(event) {
-    event.preventDefault();
-  }
+  // handleSubmit(event) {
+  //   event.preventDefault();
+  // }
+
   handleClickShowPassword = () => {
     this.setState({ showPassword: !this.state.showPassword });
   };
@@ -262,13 +256,14 @@ class SingUp extends React.Component {
               Register
             </Typography>
             <div className="Login">
-              <form onSubmit={this.handleSubmit}>
+              <form>
                 {this.state.register ? (
                   <div>
                     <FormGroup>
                       <img
                         style={{ width: 300 }}
                         src={require("../Images/logo.png")}
+                        alt="logo"
                       />
                       <InputLabel
                         error={this.state.error}
@@ -304,16 +299,6 @@ class SingUp extends React.Component {
                       />
                     </FormGroup>
                     <FormGroup>
-                      {/*<TextField*/}
-                      {/*  id="standard-name"*/}
-                      {/*  label="Password"*/}
-                      {/*  hidden={true}*/}
-                      {/*  // className={classes.textField}*/}
-                      {/*  value={this.state.password}*/}
-                      {/*  onChange={this.handleChange("password")}*/}
-                      {/*  margin="normal"*/}
-                      {/*  variant="outlined"*/}
-                      {/*/>*/}
                       <InputLabel
                         error={this.state.error}
                         style={{ marginTop: 10 }}
