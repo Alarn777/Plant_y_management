@@ -27,14 +27,13 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import { Image, Visibility, VisibilityOff } from "@material-ui/icons";
 import InputLabel from "@material-ui/core/InputLabel";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { instanceOf } from "prop-types";
-import { useCookies } from "react-cookie";
-import { withCookies, Cookies } from "react-cookie";
+// import { instanceOf } from "prop-types";
+// import { withCookies, Cookies } from "react-cookie";
 
 class SingIn extends React.Component {
-  static propTypes = {
-    cookies: instanceOf(Cookies).isRequired
-  };
+  // static propTypes = {
+  //   cookies: instanceOf(Cookies).isRequired
+  // };
 
   constructor(props) {
     super(props);
@@ -85,13 +84,13 @@ class SingIn extends React.Component {
         this.props.addUser(user);
         //"token", user.signInUserSession.idToken.jwtToken,
 
-        this.props.cookies.set(
-          "token",
-          user.signInUserSession.idToken.jwtToken,
-          {
-            path: "/"
-          }
-        );
+        // this.props.cookies.set(
+        //   "token",
+        //   user.signInUserSession.idToken.jwtToken,
+        //   {
+        //     path: "/"
+        //   }
+        // );
         this.setState({ dashboard: true });
       }
     } catch (err) {
@@ -136,11 +135,6 @@ class SingIn extends React.Component {
       return <Redirect to="/" />;
     } else {
       return (
-        // const [email, setEmail] = useState("");
-        // const [password, setPassword] = useState("");
-
-        // return
-
         <div>
           <div
             style={{
@@ -155,23 +149,17 @@ class SingIn extends React.Component {
                 <IconButton
                   onClick={() => this.setState({ back: true })}
                   edge="start"
-                  // className={styles.menuButton}
                   style={{ marginRight: 10 }}
                   color="inherit"
                   aria-label="back"
                 >
                   <ArrowBackIosIcon />
                 </IconButton>
-                <Typography
-                  variant="h6"
-                  // className={styles.title}
-                  style={{ flexGrow: 1 }}
-                >
+                <Typography variant="h6" style={{ flexGrow: 1 }}>
                   Plant'y
                 </Typography>
               </Toolbar>
             </AppBar>
-            {/*<Paper style={{ margin: 10 }}>*/}
             <Typography style={{ padding: 10 }} variant="h3" component="h3">
               Login
             </Typography>
@@ -183,15 +171,6 @@ class SingIn extends React.Component {
                     src={require("../Images/logo.png")}
                     alt="logo"
                   />
-                  {/*<TextField*/}
-                  {/*  id="standard-name"*/}
-                  {/*  label="Username"*/}
-                  {/*  // className={classes.textField}*/}
-                  {/*  value={this.state.name}*/}
-                  {/*  onChange={this.handleChange("name")}*/}
-                  {/*  margin="normal"*/}
-                  {/*  variant="outlined"*/}
-                  {/*/>*/}
                   <InputLabel
                     error={this.state.error}
                     style={{ marginTop: 10 }}
@@ -210,16 +189,6 @@ class SingIn extends React.Component {
                   />
                 </FormGroup>
                 <FormGroup>
-                  {/*<TextField*/}
-                  {/*  id="standard-name"*/}
-                  {/*  label="Password"*/}
-                  {/*  hidden={true}*/}
-                  {/*  // className={classes.textField}*/}
-                  {/*  value={this.state.password}*/}
-                  {/*  onChange={this.handleChange("password")}*/}
-                  {/*  margin="normal"*/}
-                  {/*  variant="outlined"*/}
-                  {/*/>*/}
                   <InputLabel
                     error={this.state.error}
                     style={{ marginTop: 10 }}
@@ -315,7 +284,4 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withCookies(SingIn));
+export default connect(mapStateToProps, mapDispatchToProps)(SingIn);

@@ -28,13 +28,13 @@ import { Image, Visibility, VisibilityOff } from "@material-ui/icons";
 import InputLabel from "@material-ui/core/InputLabel";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { instanceOf } from "prop-types";
-import { useCookies } from "react-cookie";
-import { withCookies, Cookies } from "react-cookie";
+// import { useCookies } from "react-cookie";
+// import { withCookies, Cookies } from "react-cookie";
 
 class SingUp extends React.Component {
-  static propTypes = {
-    cookies: instanceOf(Cookies).isRequired
-  };
+  // static propTypes = {
+  //   cookies: instanceOf(Cookies).isRequired
+  // };
 
   constructor(props) {
     super(props);
@@ -516,7 +516,4 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withCookies(SingUp));
+export default connect(mapStateToProps, mapDispatchToProps)(SingUp);
