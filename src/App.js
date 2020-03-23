@@ -28,36 +28,36 @@ class App extends React.Component {
     super(props);
   }
 
-  // render() {
-  //   return <Routes />;
-  // }
-
   render() {
-    return (
-      <AmplifyRouter
-        amplifyConfig={JSON.parse(process.env.REACT_APP_CONFIG_AWS)}
-        homeRoute="/"
-        navigate={navigate}
-        // componentOverrides={[MySignIn]}
-      >
-        s
-        <Router>
-          <Switch>
-            <Route path="/" exact component={IndexPage} />
-            <Route path="/login" exact component={SignIn} />
-            <Route path="/register" component={SignUp} />
-            <Route path="/dashboard" component={Dashboard} />
-            <Route path="/users/:id" component={UserPage} />
-            <Route path="/planters/:id/:type" component={PlanterPage} />
-
-            {/*<Route path="/dashboard" component={Dashboard} isPrivate />*/}
-            {/* redirect user to SignIn page if route does not exist and user is not authenticated */}
-            <Route component={SignIn} />
-          </Switch>
-        </Router>
-      </AmplifyRouter>
-    );
+    return <Routes />;
   }
+
+  // render() {
+  //   return (
+  //     <AmplifyRouter
+  //       amplifyConfig={JSON.parse(process.env.REACT_APP_CONFIG_AWS)}
+  //       homeRoute="/"
+  //       navigate={navigate}
+  //       // componentOverrides={[MySignIn]}
+  //     >
+  //       s
+  //       <Router>
+  //         <Switch>
+  //           <Route path="/" exact component={IndexPage} />
+  //           <Route path="/login" exact component={SignIn} />
+  //           <Route path="/register" component={SignUp} />
+  //           <Route path="/dashboard" component={Dashboard} />
+  //           <Route path="/users/:id" component={UserPage} />
+  //           <Route path="/planters/:id/:type" component={PlanterPage} />
+  //
+  //           {/*<Route path="/dashboard" component={Dashboard} isPrivate />*/}
+  //           {/* redirect user to SignIn page if route does not exist and user is not authenticated */}
+  //           <Route component={SignIn} />
+  //         </Switch>
+  //       </Router>
+  //     </AmplifyRouter>
+  //   );
+  // }
 }
 
 const mapStateToProps = state => {
