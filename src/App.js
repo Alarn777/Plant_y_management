@@ -14,8 +14,9 @@ import Button from "@material-ui/core/Button";
 import Routes from "./Routes";
 
 import AmplifyRouter from "amplify-react-router";
-import { Router, navigate } from "@reach/router";
+// import { Router, navigate } from "@reach/router";
 import { Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import IndexPage from "./Components/IndexPage";
 import SignIn from "./Components/SingIn";
 import SignUp from "./Components/SignUp";
@@ -28,8 +29,27 @@ class App extends React.Component {
     super(props);
   }
 
+  // render() {
+  //   return <Routes />;
+  // }
+
   render() {
-    return <Routes />;
+    return (
+      <Router>
+        <Switch>
+          <Route path="/" exact component={IndexPage} />
+          <Route path="/login" exact component={SignIn} />
+          <Route path="/register" component={SignUp} />
+          <Route path="/dashboard" component={Dashboard} />
+          <Route path="/users/:id" component={UserPage} />
+          <Route path="/planters/:id/:type" component={PlanterPage} />
+
+          {/*<Route path="/dashboard" component={Dashboard} isPrivate />*/}
+          {/* redirect user to SignIn page if route does not exist and user is not authenticated */}
+          <Route component={SignIn} />
+        </Switch>
+      </Router>
+    );
   }
 
   // render() {
