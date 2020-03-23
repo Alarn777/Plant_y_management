@@ -54,17 +54,16 @@ class IndexPage extends React.Component {
   }
   componentDidMount() {
     // console.log(process.env);
-
     // let a = JSON.parse(JSON.stringify(process.env.REACT_APP_CONFIG_AWS));
-    let a = JSON.parse(process.env.REACT_APP_CONFIG_AWS);
-
-    console.log(a);
-
-    let b = JSON.parse(process.env.REACT_APP_API_LINKS);
-
-    console.log(b);
-
-    window.addEventListener("resize", this.updateDimensions);
+    // let a = JSON.parse(process.env.REACT_APP_CONFIG_AWS);
+    //
+    // console.log(a);
+    //
+    // let b = JSON.parse(process.env.REACT_APP_API_LINKS);
+    //
+    // console.log(b);
+    //
+    // window.addEventListener("resize", this.updateDimensions);
   }
 
   componentWillUnmount() {
