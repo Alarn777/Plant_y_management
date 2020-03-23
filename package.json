@@ -38,7 +38,7 @@
 
   "scripts": {
     "start": "env-cmd -f .env.development react-scripts start",
-    "build": "env-cmd $REACT_APP_CONFIG_AWS $REACT_APP_API_LINKS react-scripts build",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
