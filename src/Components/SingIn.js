@@ -81,7 +81,6 @@ class SingIn extends React.Component {
       const user = await Auth.signIn(this.state.username, this.state.password);
       if (user) {
         // The user directly signs in
-        console.log(user);
         this.props.addUser(user);
         //"token", user.signInUserSession.idToken.jwtToken,
 

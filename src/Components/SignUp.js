@@ -153,15 +153,15 @@ class SingUp extends React.Component {
     } else return false;
   }
 
-  // handleSubmit(event) {
-  //   event.preventDefault();
-  // }
-
   handleClickShowPassword = () => {
     this.setState({ showPassword: !this.state.showPassword });
   };
 
   render() {
+    if (true) {
+      return <p>Hellasdasd</p>;
+    }
+
     if (this.state.dashboard === true) {
       return <Redirect to="/dashboard" />;
     } else if (this.state.back === true) {
