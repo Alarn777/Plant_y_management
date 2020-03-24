@@ -25,8 +25,7 @@ import {
 } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
 import Avatar from "@material-ui/core/Avatar";
-import { BrowserView } from "react-device-detect";
-
+import { BrowserView, isMobile } from "react-device-detect";
 class IndexPage extends React.Component {
   constructor(props) {
     super(props);

@@ -38,12 +38,7 @@ import axios from "axios";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Link from "@material-ui/core/Link";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import {
-  BrowserView,
-  MobileView,
-  isBrowser,
-  isMobile
-} from "react-device-detect";
+import { BrowserView, isMobile } from "react-device-detect";
 import CardActions from "@material-ui/core/CardActions";
 
 class UserPage extends React.Component {
@@ -196,14 +191,17 @@ class UserPage extends React.Component {
 
   renderPlanters = planter => {
     //
-
+    let maxWidth = 345;
+    if (isMobile) {
+      maxWidth = "100%";
+    }
     return (
       <Card
         key={planter.name}
         style={{
           float: "left",
           margin: 10,
-          maxWidth: 345,
+          maxWidth: maxWidth,
           backgroundColor: "#e8f5e9"
           // root: { color: "#a5d6a7" }
         }}

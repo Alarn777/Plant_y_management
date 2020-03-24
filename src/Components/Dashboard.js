@@ -40,7 +40,7 @@ import UserPage from "./UserPage";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Link from "@material-ui/core/Link";
 import Avatar from "@material-ui/core/Avatar";
-import { BrowserView } from "react-device-detect";
+import { BrowserView, isMobile } from "react-device-detect";
 
 class Dashboard extends React.Component {
   // static propTypes = {

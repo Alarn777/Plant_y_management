@@ -39,7 +39,7 @@ import Link from "@material-ui/core/Link";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import CardActions from "@material-ui/core/CardActions";
-import { BrowserView } from "react-device-detect";
+import { BrowserView, isMobile } from "react-device-detect";
 
 class PlanterPage extends React.Component {
   // static propTypes = {
@@ -224,7 +224,11 @@ class PlanterPage extends React.Component {
   }
 
   renderPlants = plant => {
-    console.log(plant);
+    let maxWidth = 345;
+    if (isMobile) {
+      maxWidth = "100%";
+    }
+
     return (
       <Card
         onClick={() => {
@@ -234,7 +238,7 @@ class PlanterPage extends React.Component {
         style={{
           float: "left",
           margin: 10,
-          maxWidth: 345,
+          maxWidth: maxWidth,
           backgroundColor: "#e8f5e9"
           // root: { color: "#a5d6a7" }
         }}

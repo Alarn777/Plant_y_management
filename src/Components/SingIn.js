@@ -27,7 +27,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import { Image, Visibility, VisibilityOff } from "@material-ui/icons";
 import InputLabel from "@material-ui/core/InputLabel";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { BrowserView } from "react-device-detect";
+import { BrowserView, isMobile } from "react-device-detect";
 // import { instanceOf } from "prop-types";
 // import { withCookies, Cookies } from "react-cookie";
 
