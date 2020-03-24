@@ -26,7 +26,8 @@ import {
   CardMedia,
   CardContent
 } from "@material-ui/core";
-import { Redirect } from "react-router-dom";
+// import { Redirect } from "react-router-dom";
+import { Redirect, BrowserRouter as Router, Route } from "react-router-dom";
 import Amplify, { Auth } from "aws-amplify";
 // import awsconfig from "../aws-exports";
 //import { instanceOf } from "prop-types";
@@ -43,6 +44,7 @@ import {
   isBrowser,
   isMobile
 } from "react-device-detect";
+import CardActions from "@material-ui/core/CardActions";
 
 class UserPage extends React.Component {
   // static propTypes = {
@@ -60,7 +62,8 @@ class UserPage extends React.Component {
       user: null,
       planters: [],
       customerUsername: this.props.location.pathname.replace("/users/", ""),
-      selectedPlanter: ""
+      selectedPlanter: "",
+      selectedPlanterUUID: ""
     };
     Amplify.configure(JSON.parse(process.env.REACT_APP_CONFIG_AWS));
   }
@@ -84,7 +87,7 @@ class UserPage extends React.Component {
     Auth.currentAuthenticatedUser()
       .then(user => {
         // return Auth.changePassword(user, "oldPassword", "newPassword");
-        console.log(user);
+
         this.setState({ user: user });
         this.props.addUser(user);
         this.loadPlanters()
@@ -136,14 +139,66 @@ class UserPage extends React.Component {
     } else this.setState({ planters: [] });
   };
 
+  async sendAction(action, UUID) {
+    let USER_TOKEN = this.state.user.signInUserSession.idToken.jwtToken;
+    const AuthStr = "Bearer ".concat(USER_TOKEN);
+
+    await axios
+      .post(
+        JSON.parse(process.env.REACT_APP_API_LINKS).apigatewayRoute +
+          "/changeStatusOfPlanter",
+        {
+          username: this.state.customerUsername,
+          planterStatus: action,
+          planterUUID: UUID
+        },
+        {
+          headers: { Authorization: AuthStr }
+        }
+      )
+      .then(response => {
+        this.loadPlanters()
+          .then()
+          .catch();
+      })
+      .catch(error => {
+        console.log("error " + error);
+      });
+  }
+
+  async removePlanter(planterName) {
+    console.log("in remove planter");
+    let USER_TOKEN = this.state.user.signInUserSession.idToken.jwtToken;
+    const AuthStr = "Bearer ".concat(USER_TOKEN);
+
+    await axios
+      .post(
+        JSON.parse(process.env.REACT_APP_API_LINKS).apigatewayRoute +
+          "/removePlanter",
+        {
+          username: this.state.customerUsername,
+          planterName: planterName
+        },
+        {
+          headers: { Authorization: AuthStr }
+        }
+      )
+      .then(response => {
+        console.log(response);
+        this.loadPlanters()
+          .then()
+          .catch();
+      })
+      .catch(error => {
+        console.log("error " + error);
+      });
+  }
+
   renderPlanters = planter => {
     //
 
     return (
       <Card
-        onClick={() => {
-          this.setState({ selectedPlanter: planter.name });
-        }}
         key={planter.name}
         style={{
           float: "left",
@@ -153,11 +208,19 @@ class UserPage extends React.Component {
           // root: { color: "#a5d6a7" }
         }}
       >
-        <CardActionArea>
+        <CardActionArea
+          onClick={() => {
+            this.setState({
+              selectedPlanter: planter.name,
+              selectedPlanterUUID: planter.UUID
+            });
+          }}
+        >
           <CardMedia
             style={{
               height: 200,
-              width: 200
+              width: 200,
+              margin: "0 auto"
             }}
             image={require("../Images/greenhouse.png")}
             title="Contemplative Reptile"
@@ -166,11 +229,34 @@ class UserPage extends React.Component {
             <Typography gutterBottom variant="h5" component="h2">
               Planter {planter.name}
             </Typography>
-            {/*<Typography variant="body2" color="textSecondary" component="p">*/}
-            {/*  One cool user*/}
-            {/*</Typography>*/}
+            <Typography variant="body2" color="textSecondary" component="p">
+              Status: {planter.planterStatus}
+            </Typography>
           </CardContent>
         </CardActionArea>
+        <CardActions>
+          <Button
+            onClick={() => this.sendAction("active", planter.UUID)}
+            size="small"
+            color="primary"
+          >
+            Activate
+          </Button>
+          <Button
+            onClick={() => this.sendAction("inactive", planter.UUID)}
+            size="small"
+            color="primary"
+          >
+            Deactivate
+          </Button>
+          <Button
+            onClick={() => this.removePlanter(planter.name)}
+            size="small"
+            color="primary"
+          >
+            Delete
+          </Button>
+        </CardActions>
       </Card>
     );
   };
@@ -179,7 +265,7 @@ class UserPage extends React.Component {
     if (this.state.selectedPlanter !== "") {
       return (
         <Redirect
-          to={`/planters/${this.state.customerUsername}/${this.state.selectedPlanter}`}
+          to={`/planters/${this.state.customerUsername}/${this.state.selectedPlanter}=${this.state.selectedPlanterUUID}`}
         />
       );
     }
@@ -198,7 +284,7 @@ class UserPage extends React.Component {
     // console.log(this.props.location);
     // console.log(this.props.location.pathname.replace("/user/", ""));
     let username = this.state.customerUsername;
-    console.log(this.state.planters);
+    // console.log(this.state.planters);
     return (
       <div>
         <div
@@ -249,6 +335,8 @@ class UserPage extends React.Component {
                 <Link
                   color="inherit"
                   href="/dashboard"
+                  // to="/dashboard"
+                  // style={{ color: "#9e9e9e" }}
                   // onClick={handleClick}
                 >
                   Dashboard

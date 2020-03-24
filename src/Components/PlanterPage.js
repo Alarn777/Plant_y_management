@@ -56,6 +56,7 @@ class PlanterPage extends React.Component {
       toRegister: false,
       user: null,
       plants: [],
+      planterUUID: "",
       customerUsername: "",
       customerPlanter: ""
     };
@@ -85,7 +86,13 @@ class PlanterPage extends React.Component {
 
   componentDidMount() {
     let array = this.props.location.pathname.split("/");
-    this.setState({ customerUsername: array[2], planterName: array[3] });
+    let uuid = array[3].split("=")[1];
+    console.log(uuid);
+    this.setState({
+      planterUUID: uuid,
+      customerUsername: array[2],
+      planterName: array[3].split("=")[0]
+    });
 
     Auth.currentAuthenticatedUser()
       .then(user => {
@@ -146,7 +153,7 @@ class PlanterPage extends React.Component {
             soil: one.soil,
             pic: data,
             UUID: one.UUID,
-            status: one.status
+            plantStatus: one.plantStatus
           };
           newPlants.push(newOne);
           // console.log(data);
@@ -161,10 +168,63 @@ class PlanterPage extends React.Component {
     // this.setState({ loading: false });
   };
 
-  renderPlants = plant => {
-    //
-    // console.log(plant.pic);
+  async sendAction(action, plantUUID) {
+    let USER_TOKEN = this.state.user.signInUserSession.idToken.jwtToken;
+    const AuthStr = "Bearer ".concat(USER_TOKEN);
+    await axios
+      .post(
+        JSON.parse(process.env.REACT_APP_API_LINKS).apigatewayRoute +
+          "/changeStatusOfPlant",
+        {
+          username: this.state.customerUsername,
+          planterName: this.state.planterName,
+          plantStatus: action,
+          planterUUID: this.state.planterUUID,
+          plantUUID: plantUUID
+        },
+        {
+          headers: { Authorization: AuthStr }
+        }
+      )
+      .then(response => {
+        this.loadPlants()
+          .then()
+          .catch();
+      })
+      .catch(error => {
+        console.log("error " + error);
+      });
+  }
 
+  async deletePlant(plantUUID) {
+    let USER_TOKEN = this.state.user.signInUserSession.idToken.jwtToken;
+    const AuthStr = "Bearer ".concat(USER_TOKEN);
+    await axios
+      .post(
+        JSON.parse(process.env.REACT_APP_API_LINKS).apigatewayRoute +
+          "/removePlantFromPlanter",
+        {
+          username: this.state.customerUsername,
+          planterName: this.state.planterName,
+          planterUUID: this.state.planterUUID,
+          plantUUID: plantUUID
+        },
+        {
+          headers: { Authorization: AuthStr }
+        }
+      )
+      .then(response => {
+        this.loadPlants()
+          .then()
+          .catch();
+      })
+      .catch(error => {
+        console.log("error " + error);
+      });
+  }
+
+  renderPlants = plant => {
+    console.log(plant);
     return (
       <Card
         onClick={() => {
@@ -183,7 +243,8 @@ class PlanterPage extends React.Component {
           <CardMedia
             style={{
               height: 200,
-              width: 200
+              width: 200,
+              margin: "0 auto"
             }}
             image={plant.pic}
             title="Contemplative Reptile"
@@ -193,16 +254,31 @@ class PlanterPage extends React.Component {
               {plant.name}
             </Typography>
             <Typography variant="body2" color="textSecondary" component="p">
-              Status:{plant.status}
+              Status: {plant.plantStatus}
             </Typography>
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <Button size="small" color="primary">
+          <Button
+            onClick={() => this.sendAction("active", plant.UUID)}
+            size="small"
+            color="primary"
+          >
             Activate
           </Button>
-          <Button size="small" color="primary">
+          <Button
+            onClick={() => this.sendAction("inactive", plant.UUID)}
+            size="small"
+            color="primary"
+          >
             Deactivate
+          </Button>
+          <Button
+            onClick={() => this.deletePlant(plant.UUID)}
+            size="small"
+            color="primary"
+          >
+            Delete
           </Button>
         </CardActions>
       </Card>
@@ -210,6 +286,8 @@ class PlanterPage extends React.Component {
   };
 
   render() {
+    console.log(this.props);
+
     // if (!this.state.user) return <Redirect to="/login" />;
     if (this.state.plants === []) {
       return <LinearProgress style={{ width: "100%" }} />;
@@ -295,7 +373,6 @@ class PlanterPage extends React.Component {
                 {/*  User*/}
                 {/*</Link>*/}
                 <Typography color="textPrimary">
-                  {" "}
                   {this.state.planterName}
                 </Typography>
               </Breadcrumbs>

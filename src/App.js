@@ -44,8 +44,12 @@ class App extends React.Component {
           <Route path="/register" component={SignUp} />
           <Route path="/dashboard" component={Dashboard} />
           <Route path="/users/:id" component={UserPage} />
-          <Route path="/planters/:id/:type" component={PlanterPage} />
-
+          {/*<Route path="/planters/:id/:type" component={PlanterPage} />*/}
+          <Route
+            exact
+            path="/planters/:id/:type"
+            render={props => <PlanterPage {...props} />}
+          />
           {/*<Route path="/dashboard" component={Dashboard} isPrivate />*/}
           {/* redirect user to SignIn page if route does not exist and user is not authenticated */}
           <Route component={SignIn} />
