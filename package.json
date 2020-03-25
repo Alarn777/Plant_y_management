@@ -32,7 +32,10 @@
     "react-scripts": "3.4.1",
     "react-sticky-footer": "^0.1.0-rc3",
     "redux": "^4.0.5",
-    "styled-components": "^5.0.1"
+    "sockette": "^2.0.6",
+    "sockette-component": "^1.0.0",
+    "styled-components": "^5.0.1",
+    "websocket": "^1.0.31"
   },
   "old_scripts": {
     "start": "react-scripts start --env=jsdom",

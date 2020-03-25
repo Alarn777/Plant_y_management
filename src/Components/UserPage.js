@@ -40,6 +40,7 @@ import Link from "@material-ui/core/Link";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { BrowserView, isMobile } from "react-device-detect";
 import CardActions from "@material-ui/core/CardActions";
+import { w3cwebsocket as W3CWebSocket } from "websocket";
 
 class UserPage extends React.Component {
   // static propTypes = {
@@ -58,7 +59,8 @@ class UserPage extends React.Component {
       planters: [],
       customerUsername: this.props.location.pathname.replace("/users/", ""),
       selectedPlanter: "",
-      selectedPlanterUUID: ""
+      selectedPlanterUUID: "",
+      ws: null
     };
     Amplify.configure(JSON.parse(process.env.REACT_APP_CONFIG_AWS));
   }
@@ -92,12 +94,75 @@ class UserPage extends React.Component {
       // .then(data => console.log(data))
       .catch(err => console.log(err));
 
+    this.connect();
+
     window.addEventListener("resize", this.updateDimensions);
   }
 
   componentWillUnmount() {
     window.removeEventListener("resize", this.updateDimensions);
   }
+
+  connect = () => {
+    console.log(
+      JSON.parse(process.env.REACT_APP_API_LINKS).apigatewayWebSocket
+    );
+
+    let ws = new WebSocket(
+      JSON.parse(process.env.REACT_APP_API_LINKS).apigatewayWebSocket
+    );
+    let that = this; // cache the this
+    let connectInterval;
+
+    // websocket onopen event listener
+    ws.onopen = () => {
+      console.log("connected websocket main component");
+
+      this.setState({ ws: ws });
+
+      that.timeout = 250; // reset timer to 250 on open of websocket connection
+      clearTimeout(connectInterval); // clear Interval on on open of websocket connection
+    };
+
+    // websocket onclose event listener
+    ws.onclose = e => {
+      console.log(
+        `Socket is closed. Reconnect will be attempted in ${Math.min(
+          10000 / 1000,
+          (that.timeout + that.timeout) / 1000
+        )} second.`,
+        e.reason
+      );
+
+      that.timeout = that.timeout + that.timeout; //increment retry interval
+      connectInterval = setTimeout(this.check, Math.min(10000, that.timeout)); //call check function after timeout
+    };
+
+    // websocket onerror event listener
+    ws.onerror = err => {
+      console.error(
+        "Socket encountered error: ",
+        err.message,
+        "Closing socket"
+      );
+    };
+  };
+
+  sendMessage = () => {
+    const { ws } = this.state; // websocket instance passed as props to the child component.
+
+    try {
+      ws.send(
+        JSON.stringify({
+          message: "Hello from react-web",
+          action: "message"
+        })
+      ); //send data to the server
+      console.log("sent message");
+    } catch (error) {
+      console.log(error); // catch error
+    }
+  };
 
   async loadPlanters() {
     // console.log('called reload plants');
@@ -153,7 +218,7 @@ class UserPage extends React.Component {
       )
       .then(response => {
         this.loadPlanters()
-          .then()
+          .then(() => this.sendMessage())
           .catch();
       })
       .catch(error => {
@@ -181,7 +246,7 @@ class UserPage extends React.Component {
       .then(response => {
         console.log(response);
         this.loadPlanters()
-          .then()
+          .then(() => this.sendMessage())
           .catch();
       })
       .catch(error => {
