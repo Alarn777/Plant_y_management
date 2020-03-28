@@ -104,10 +104,6 @@ class UserPage extends React.Component {
   }
 
   connect = () => {
-    console.log(
-      JSON.parse(process.env.REACT_APP_API_LINKS).apigatewayWebSocket
-    );
-
     let ws = new WebSocket(
       JSON.parse(process.env.REACT_APP_API_LINKS).apigatewayWebSocket
     );
@@ -154,7 +150,7 @@ class UserPage extends React.Component {
     try {
       ws.send(
         JSON.stringify({
-          message: "Hello from react-web",
+          message: "FROM_WEB;none;UPDATE_STATE",
           action: "message"
         })
       ); //send data to the server
