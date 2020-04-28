@@ -174,7 +174,7 @@ class SingIn extends React.Component {
                   <InputLabel
                     error={this.state.error}
                     style={{ marginTop: 10 }}
-                    htmlFor="outlined-adornment-password"
+                    htmlFor="outlined-adornment-username"
                   >
                     Username
                   </InputLabel>
@@ -182,7 +182,7 @@ class SingIn extends React.Component {
                     error={this.state.error}
                     style={{ marginTop: 10 }}
                     // variant="outlined"
-                    id="standard-adornment-password"
+                    id="standard-adornment-username"
                     type={"text"}
                     value={this.state.username}
                     onChange={this.handleChange("username")}

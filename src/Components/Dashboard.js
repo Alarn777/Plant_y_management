@@ -534,12 +534,19 @@ class Dashboard extends React.Component {
         <CardActionArea>
           <CardMedia
             style={{
-              height: 250
+              // height: 100
+              alignContent: "center",
+              textAlign: "center"
             }}
-            image={require("../Images/good-growth-plan.png")}
+            // image={require("../Images/good-growth-plan-copy.png")}
             // title="Contemplative Reptile"
           />
           <CardContent>
+            <img
+              style={{ alignSelf: "center", margin: "14px" }}
+              src={require("../Images/good-growth-plan-copy.png")}
+              alt={"img"}
+            />
             <Typography gutterBottom variant="h5" component="h2">
               {one.growthPlanGroup}
             </Typography>
