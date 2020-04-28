@@ -566,7 +566,7 @@ class Dashboard extends React.Component {
 
     return (
       <ExpansionPanel
-        style={{ width: "99%", backgroundColor: weekColor }}
+        style={{ width: "97%", backgroundColor: weekColor }}
         expanded={this.state.expanded === panel}
         onChange={this.handleChange(panel)}
         key={oneWeek.phaseName}
@@ -1432,6 +1432,7 @@ class Dashboard extends React.Component {
                     <Button
                       style={{
                         margin: 10,
+                        width: 180,
                         padding: -10
                       }}
                       // disabled={!this.validateForm()}
@@ -1448,6 +1449,7 @@ class Dashboard extends React.Component {
                         "Save growth plan"
                       ) : (
                         <CircularProgress
+                          size={24}
                           color="secondary"
                           style={{ root: { flex: 1 } }}
                         />
@@ -1459,7 +1461,7 @@ class Dashboard extends React.Component {
                         marginLeft: 5,
                         marginTop: 20,
                         marginBottom: 20,
-                        width: "98%"
+                        width: "97%"
                       }}
                       required
                       id="growthPlanName"
