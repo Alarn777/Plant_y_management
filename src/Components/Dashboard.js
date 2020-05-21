@@ -85,7 +85,8 @@ class Dashboard extends React.Component {
       selectedGrowthPlan: "",
       growthPlanName: "",
       savingPlan: false,
-      errorText: ""
+      errorText: "",
+      growthPlanDescription: ""
     };
     Amplify.configure(JSON.parse(process.env.REACT_APP_CONFIG_AWS));
   }
@@ -244,6 +245,7 @@ class Dashboard extends React.Component {
       console.log(this.state.growthPlan.phases);
       console.log(this.state.growthPlan.UUID);
       console.log(this.state.growthPlan.growthPlanGroup);
+      console.log(this.state.growthPlan);
       await axios
         .post(
           JSON.parse(process.env.REACT_APP_API_LINKS).apigatewayRoute +
@@ -252,7 +254,8 @@ class Dashboard extends React.Component {
             action: "addGrowthPlan",
             growthPlanGroup: this.state.growthPlan.growthPlanGroup,
             phases: this.state.growthPlan.phases,
-            UUID: this.state.growthPlan.UUID
+            UUID: this.state.growthPlan.UUID,
+            growthPlanDescription: this.state.growthPlan.growthPlanDescription
           },
           {
             headers: { Authorization: AuthStr }
@@ -301,6 +304,7 @@ class Dashboard extends React.Component {
       console.log(this.state.growthPlan.phases);
       console.log(this.state.growthPlan.UUID);
       console.log(this.state.growthPlan.growthPlanGroup);
+      console.log(this.state.growthPlan.growthPlanDescription);
       await axios
         .post(
           JSON.parse(process.env.REACT_APP_API_LINKS).apigatewayRoute +
@@ -309,7 +313,8 @@ class Dashboard extends React.Component {
             action: "saveGrowthPlan",
             growthPlanGroup: this.state.growthPlan.growthPlanGroup,
             phases: this.state.growthPlan.phases,
-            UUID: this.state.growthPlan.UUID
+            UUID: this.state.growthPlan.UUID,
+            growthPlanDescription: this.state.growthPlan.growthPlanDescription
           },
           {
             headers: { Authorization: AuthStr }
@@ -671,26 +676,32 @@ class Dashboard extends React.Component {
                     0
                     <Slider
                       style={{ width: "60%", marginLeft: 25, marginRight: 25 }}
+                      // value={[
+                      //   oneWeek.subPhases[0].uvIntensity.min,
+                      //   oneWeek.subPhases[0].uvIntensity.max
+                      // ]}
                       value={[
-                        oneWeek.subPhases[0].uvIntensity.min,
-                        oneWeek.subPhases[0].uvIntensity.max
+                        oneWeek.subPhases[0].uvIntensity.min
+                        // oneWeek.subPhases[0].uvIntensity.max
                       ]}
                       // onChange={this.handleSliderChange}
                       onChange={(event, newValue) => {
                         // console.log(event);
+                        // console.log(newValue);
 
                         oneWeek.subPhases[0].uvIntensity.min = newValue[0];
                         // this.forceUpdate();
-                        oneWeek.subPhases[0].uvIntensity.max = newValue[1];
+                        // oneWeek.subPhases[0].uvIntensity.max = newValue[1];
                         this.forceUpdate();
                       }}
                       valueLabelDisplay="auto"
                       aria-labelledby="range-slider"
                       min={0}
-                      max={30}
+                      max={4000}
+                      step={100}
                       // getAriaValueText={this.valueTempText}
                     />
-                    30
+                    4000
                     {/*<p style={{ marginTop: 20 }}>35</p>*/}
                   </div>
                 </div>
@@ -823,8 +834,8 @@ class Dashboard extends React.Component {
                     <Slider
                       style={{ width: "60%", marginLeft: 25, marginRight: 25 }}
                       value={[
-                        oneWeek.subPhases[1].uvIntensity.min,
-                        oneWeek.subPhases[1].uvIntensity.max
+                        oneWeek.subPhases[1].uvIntensity.min
+                        // oneWeek.subPhases[1].uvIntensity.max
                       ]}
                       // onChange={this.handleSliderChange}
                       onChange={(event, newValue) => {
@@ -832,16 +843,17 @@ class Dashboard extends React.Component {
 
                         oneWeek.subPhases[1].uvIntensity.min = newValue[0];
                         // this.forceUpdate();
-                        oneWeek.subPhases[1].uvIntensity.max = newValue[1];
+                        // oneWeek.subPhases[1].uvIntensity.max = newValue[1];
                         this.forceUpdate();
                       }}
                       valueLabelDisplay="auto"
                       aria-labelledby="range-slider"
                       min={0}
-                      max={30}
+                      max={4000}
+                      step={100}
                       // getAriaValueText={this.valueTempText}
                     />
-                    30
+                    4000
                     {/*<p style={{ marginTop: 20 }}>35</p>*/}
                   </div>
                 </div>
@@ -977,8 +989,8 @@ class Dashboard extends React.Component {
                     <Slider
                       style={{ width: "60%", marginLeft: 25, marginRight: 25 }}
                       value={[
-                        oneWeek.subPhases[2].uvIntensity.min,
-                        oneWeek.subPhases[2].uvIntensity.max
+                        oneWeek.subPhases[2].uvIntensity.min
+                        // oneWeek.subPhases[2].uvIntensity.max
                       ]}
                       // onChange={this.handleSliderChange}
                       onChange={(event, newValue) => {
@@ -986,16 +998,17 @@ class Dashboard extends React.Component {
 
                         oneWeek.subPhases[2].uvIntensity.min = newValue[0];
                         // this.forceUpdate();
-                        oneWeek.subPhases[2].uvIntensity.max = newValue[1];
+                        // oneWeek.subPhases[2].uvIntensity.max = newValue[1];
                         this.forceUpdate();
                       }}
                       valueLabelDisplay="auto"
                       aria-labelledby="range-slider"
                       min={0}
-                      max={30}
+                      max={4000}
+                      step={100}
                       // getAriaValueText={this.valueTempText}
                     />
-                    30
+                    4000
                     {/*<p style={{ marginTop: 20 }}>35</p>*/}
                   </div>
                 </div>
@@ -1127,8 +1140,8 @@ class Dashboard extends React.Component {
                     <Slider
                       style={{ width: "60%", marginLeft: 25, marginRight: 25 }}
                       value={[
-                        oneWeek.subPhases[3].uvIntensity.min,
-                        oneWeek.subPhases[3].uvIntensity.max
+                        oneWeek.subPhases[3].uvIntensity.min
+                        // oneWeek.subPhases[3].uvIntensity.max
                       ]}
                       // onChange={this.handleSliderChange}
                       onChange={(event, newValue) => {
@@ -1136,16 +1149,17 @@ class Dashboard extends React.Component {
 
                         oneWeek.subPhases[3].uvIntensity.min = newValue[0];
                         // this.forceUpdate();
-                        oneWeek.subPhases[3].uvIntensity.max = newValue[1];
+                        // oneWeek.subPhases[3].uvIntensity.max = newValue[1];
                         this.forceUpdate();
                       }}
                       valueLabelDisplay="auto"
                       aria-labelledby="range-slider"
                       min={0}
-                      max={30}
+                      max={4000}
+                      step={100}
                       // getAriaValueText={this.valueTempText}
                     />
-                    30
+                    4000
                     {/*<p style={{ marginTop: 20 }}>35</p>*/}
                   </div>
                 </div>
@@ -1359,6 +1373,24 @@ class Dashboard extends React.Component {
                           this.forceUpdate();
                         }}
                       />
+                      <TextField
+                        autoFocus
+                        multiline={true}
+                        margin="dense"
+                        id="name"
+                        label="Dialog Name"
+                        type="text"
+                        fullWidth
+                        // value={"asdasd"}
+                        value={this.state.growthPlanDescription}
+                        // onChange={event => console.log(event.target.value)}
+                        onChange={event => {
+                          this.setState({
+                            growthPlanDescription: event.target.value
+                          });
+                          this.forceUpdate();
+                        }}
+                      />
                     </DialogContent>
                     <DialogActions>
                       <Button
@@ -1491,6 +1523,37 @@ class Dashboard extends React.Component {
                         this.forceUpdate();
                       }}
                     />
+                    <TextField
+                      // error={this.state.errorInName}
+                      style={{
+                        marginLeft: 5,
+                        marginTop: 20,
+                        marginBottom: 20,
+                        width: "97%"
+                      }}
+                      multiline={true}
+                      required
+                      id="growthPlanDescription"
+                      label="Plan description"
+                      value={
+                        Object.keys(this.state.growthPlan).length === 0 &&
+                        this.state.growthPlan.constructor === Object
+                          ? this.state.growthPlanDescription
+                          : this.state.growthPlan.growthPlanDescription
+                      }
+                      // onChange={event => console.log(event.target.value)}
+                      onChange={event => {
+                        Object.keys(this.state.growthPlan).length === 0 &&
+                        this.state.growthPlan.constructor === Object
+                          ? this.setState({
+                              growthPlanDescription: event.target.value
+                            })
+                          : (this.state.growthPlan.growthPlanDescription =
+                              event.target.value);
+                        this.forceUpdate();
+                      }}
+                    />
+
                     <p style={{ marginTop: 5, color: errorColor }}>
                       {this.state.errorText}
                     </p>
