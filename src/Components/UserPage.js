@@ -224,7 +224,6 @@ class UserPage extends React.Component {
   }
 
   async removePlanter(planterName) {
-    console.log("in remove planter");
     let USER_TOKEN = this.state.user.signInUserSession.idToken.jwtToken;
     const AuthStr = "Bearer ".concat(USER_TOKEN);
 
@@ -241,7 +240,6 @@ class UserPage extends React.Component {
         }
       )
       .then(response => {
-        console.log(response);
         this.loadPlanters()
           .then(() => this.sendMessage())
           .catch();

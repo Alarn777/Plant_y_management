@@ -93,7 +93,6 @@ class SingUp extends React.Component {
     })
       .then(data => {
         this.setState({ register: false });
-        console.log(data);
       })
       .catch(err => {
         console.log(err);
@@ -112,7 +111,6 @@ class SingUp extends React.Component {
       forceAliasCreation: true
     })
       .then(data => {
-        console.log(data);
         this.setState({ userConfirmed: true });
       })
       .catch(err => {
@@ -127,7 +125,6 @@ class SingUp extends React.Component {
     Auth.resendSignUp(username)
       .then(() => {
         this.setState({ codeMessage: "Code resent successfully" });
-        console.log("code resent successfully");
       })
       .catch(e => {
         console.log(e);

@@ -1,18 +1,12 @@
 import React from "react";
-import StickyFooter from "react-sticky-footer";
-import ReactDOM from "react-dom";
 
 //redux
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { addSocket, addUser, loadPlanters } from "../actions";
-// import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -25,7 +19,6 @@ import RightHard from "@material-ui/icons/FirstPage";
 import ReactPlayer from "react-player";
 import {
   Card,
-  Paper,
   Toolbar,
   Typography,
   Button,
@@ -36,13 +29,8 @@ import {
 } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
 import Amplify, { Auth, Storage } from "aws-amplify";
-//import awsconfig from "../aws-exports";
-//import { instanceOf } from "prop-types";
-//import { Cookies } from "react-cookie";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import { Visibility, VisibilityOff } from "@material-ui/icons";
 import axios from "axios";
-import PlantPage from "./PlantPage";
 import Link from "@material-ui/core/Link";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import LinearProgress from "@material-ui/core/LinearProgress";
@@ -60,10 +48,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 class PlanterPage extends React.Component {
-  // static propTypes = {
-  //   cookies: instanceOf(Cookies).isRequired
-  // };
-
   constructor(props) {
     super(props);
     this.state = {
@@ -94,7 +78,7 @@ class PlanterPage extends React.Component {
 
     Amplify.configure(JSON.parse(process.env.REACT_APP_CONFIG_AWS));
     WS.onMessage(data => {
-      console.log("GOT in planter screen", data.data);
+      // console.log("GOT in planter screen", data.data);
 
       let instructions = data.data.split(";");
       if (instructions.length > 2)
@@ -113,7 +97,6 @@ class PlanterPage extends React.Component {
             break;
           case "FAILED":
             console.log("Failed to communicate with server");
-            // this.forceUpdate();
             break;
           case "MEASUREMENTS":
             if (this.state.planterUUID === instructions[1]) {
@@ -173,7 +156,6 @@ class PlanterPage extends React.Component {
 
     Auth.currentAuthenticatedUser()
       .then(user => {
-        // return Auth.changePassword(user, "oldPassword", "newPassword");
         this.setState({ user: user });
         this.props.addUser(user);
         this.loadPlants()
@@ -215,14 +197,11 @@ class PlanterPage extends React.Component {
   }
 
   dealWithPlantsData = plants => {
-    // console.log(plants);
     let newPlants = [];
     plants.map(one => {
       Storage.get(one.name.toLowerCase() + "_img.jpg", {
         level: "public",
         type: "image/jpg"
-        // bucket: 'plant-pictures-planty',
-        // region: 'eu',
       })
         .then(data => {
           let newOne = {
@@ -239,11 +218,6 @@ class PlanterPage extends React.Component {
         .then(() => this.setState({ plants: newPlants }))
         .catch(error => console.log(error));
     });
-
-    // if (plants) {
-    //   this.setState({ plants: plants });
-    // } else this.setState({ plants: [] });
-    // this.setState({ loading: false });
   };
 
   async sendAction(action, plantUUID) {
@@ -325,22 +299,14 @@ class PlanterPage extends React.Component {
             this.state.streamUrl === undefined ||
             this.state.streamUrl === null
           ) {
-            console.log("SETTING URL");
-            console.log(response.data);
             if (response.data.errorMessage) {
+              console.log(response.data.errorMessage);
               return;
             }
-            // this.addUrl(response.data.HLSStreamingSessionURL);
             this.setState({ streamUrl: response.data.HLSStreamingSessionURL });
           } else {
-            console.log(response.data);
-            console.log("NOT SETTING URL");
-            // this.setState({streamUrl: this.props.plantyData.streamUrl});
           }
         } else {
-          // console.log(response.data);
-          console.log("No stream data URL");
-          console.log(response);
         }
       })
       .catch(error => {
@@ -365,7 +331,6 @@ class PlanterPage extends React.Component {
           margin: 10,
           maxWidth: maxWidth,
           backgroundColor: "#e8f5e9"
-          // root: { color: "#a5d6a7" }
         }}
       >
         <CardActionArea>
@@ -439,27 +404,18 @@ class PlanterPage extends React.Component {
                   if (!this.state.user) this.setState({ toLogin: true });
                 }}
                 edge="start"
-                // className={styles.menuButton}
                 style={{ marginRight: 10 }}
                 color="inherit"
                 aria-label="menu"
               >
                 {this.state.user ? <MenuIcon /> : <ArrowBackIosIcon />}
               </IconButton>
-              <Typography
-                variant="h6"
-                // className={styles.title}
-                style={{ flexGrow: 1 }}
-              >
+              <Typography variant="h6" style={{ flexGrow: 1 }}>
                 Plant'y
               </Typography>
               {this.state.user && (
                 <div>
-                  <Typography
-                    variant="h6"
-                    // className={styles.title}
-                    style={{ flexGrow: 1 }}
-                  >
+                  <Typography variant="h6" style={{ flexGrow: 1 }}>
                     Hello {this.state.user.username}
                   </Typography>
                 </div>
@@ -469,27 +425,15 @@ class PlanterPage extends React.Component {
           {this.state.user ? (
             <div style={{ margin: 10 }}>
               <Breadcrumbs aria-label="breadcrumb">
-                <Link
-                  color="inherit"
-                  href="/dashboard"
-                  // onClick={handleClick}
-                >
+                <Link color="inherit" href="/dashboard">
                   Dashboard
                 </Link>
                 <Link
                   color="inherit"
                   href={"/users/" + this.state.customerUsername}
-                  // onClick={handleClick}
                 >
                   {this.state.customerUsername}
                 </Link>
-                {/*<Link*/}
-                {/*  color="inherit"*/}
-                {/*  href="/getting-started/installation/"*/}
-                {/*  // onClick={handleClick}*/}
-                {/*>*/}
-                {/*  User*/}
-                {/*</Link>*/}
                 <Typography color="textPrimary">
                   {this.state.planterName}
                 </Typography>
@@ -522,22 +466,11 @@ class PlanterPage extends React.Component {
                       textAlign: "center",
                       margin: "0 auto",
                       flexDirection: "row"
-                      // flexWrap: "wrap",
-                      // justifyContent: "space-between",
-                      // padding: 8
                     }}
                   >
                     <h3>Camera Controllers</h3>
                     <Fab
                       color="primary"
-                      // icon={
-                      //   this.state.loadingActions
-                      //     ? "reload"
-                      //     : require("../Images/icons/arrowhead-right-outline.png")
-                      // }
-                      // icon={this.state.loadingActions ? 'reload' : 'arrow-right'}
-                      // color={plantyColor}
-                      // size={40}
                       style={{ margin: 10 }}
                       disabled={
                         this.state.loadingActions || !this.state.streamUrl
@@ -555,14 +488,6 @@ class PlanterPage extends React.Component {
                     <Fab
                       style={{ margin: 10 }}
                       color="primary"
-                      // icon={
-                      //   this.state.loadingActions
-                      //     ? "reload"
-                      //     : require("../Images/icons/arrowhead-right-outline.png")
-                      // }
-                      // icon={this.state.loadingActions ? 'reload' : 'arrow-right'}
-                      // color={plantyColor}
-                      // size={40}
                       disabled={
                         this.state.loadingActions || !this.state.streamUrl
                       }
@@ -579,14 +504,6 @@ class PlanterPage extends React.Component {
                     <Fab
                       style={{ margin: 10 }}
                       color="primary"
-                      // icon={
-                      //   this.state.loadingActions
-                      //     ? "reload"
-                      //     : require("../Images/icons/arrowhead-right-outline.png")
-                      // }
-                      // icon={this.state.loadingActions ? 'reload' : 'arrow-right'}
-                      // color={plantyColor}
-                      // size={40}
                       disabled={
                         this.state.loadingActions || !this.state.streamUrl
                       }
@@ -607,14 +524,6 @@ class PlanterPage extends React.Component {
                     <Fab
                       style={{ margin: 10 }}
                       color="primary"
-                      // icon={
-                      //   this.state.loadingActions
-                      //     ? "reload"
-                      //     : require("../Images/icons/arrowhead-right-outline.png")
-                      // }
-                      // icon={this.state.loadingActions ? 'reload' : 'arrow-right'}
-                      // color={plantyColor}
-                      // size={40}
                       disabled={
                         this.state.loadingActions || !this.state.streamUrl
                       }
@@ -640,7 +549,6 @@ class PlanterPage extends React.Component {
                         width: 180,
                         padding: -10
                       }}
-                      // disabled={!this.validateForm()}
                       variant="contained"
                       color="primary"
                       onClick={() => {
@@ -728,22 +636,7 @@ class PlanterPage extends React.Component {
             <h1>Please log in first</h1>
           )}
         </div>
-        <BrowserView>
-          {/*<StickyFooter*/}
-          {/*  bottomThreshold={20}*/}
-          {/*  normalStyles={{*/}
-          {/*    height: 20,*/}
-          {/*    backgroundColor: "#999999",*/}
-          {/*    padding: "10px"*/}
-          {/*  }}*/}
-          {/*  stickyStyles={{*/}
-          {/*    backgroundColor: "rgba(255,255,255,.8)",*/}
-          {/*    padding: "2rem"*/}
-          {/*  }}*/}
-          {/*>*/}
-          {/*  © 2019 - 2020, Plant'y Inc. or its affiliates. All rights reserved.*/}
-          {/*</StickyFooter>*/}
-        </BrowserView>
+        <BrowserView></BrowserView>
       </div>
     );
   }

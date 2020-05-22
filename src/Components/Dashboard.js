@@ -169,7 +169,6 @@ class Dashboard extends React.Component {
         }
       )
       .then(response => {
-        console.log(response.data.Items);
         this.setState({
           growthPlans: response.data.Items,
           growthPlan: this.state.growthPlans[0]
@@ -226,7 +225,6 @@ class Dashboard extends React.Component {
       )
       .then(response => {
         this.setState({ savingPlan: false });
-        console.log(response.data);
         this.loadAllData()
           .then()
           .catch();
@@ -240,15 +238,9 @@ class Dashboard extends React.Component {
   async saveGrowthPlan() {
     this.setState({ savingPlan: true, errorText: "" });
 
-    // let USER_TOKEN = this.props.plantyData.myCognitoUser.signInUserSession
-    //   .idToken.jwtToken;
     const AuthStr = "Bearer ".concat(this.state.USER_TOKEN);
 
     if (this.state.growthPlan.UUID === "none") {
-      console.log(this.state.growthPlan.phases);
-      console.log(this.state.growthPlan.UUID);
-      console.log(this.state.growthPlan.growthPlanGroup);
-      console.log(this.state.growthPlan);
       await axios
         .post(
           JSON.parse(process.env.REACT_APP_API_LINKS).apigatewayRoute +
@@ -266,7 +258,6 @@ class Dashboard extends React.Component {
         )
         .then(response => {
           this.setState({ savingPlan: false });
-          console.log(response.data);
           this.loadAllData()
             .then()
             .catch();
@@ -304,10 +295,6 @@ class Dashboard extends React.Component {
         }
       }
 
-      console.log(this.state.growthPlan.phases);
-      console.log(this.state.growthPlan.UUID);
-      console.log(this.state.growthPlan.growthPlanGroup);
-      console.log(this.state.growthPlan.growthPlanDescription);
       await axios
         .post(
           JSON.parse(process.env.REACT_APP_API_LINKS).apigatewayRoute +
@@ -325,7 +312,6 @@ class Dashboard extends React.Component {
         )
         .then(response => {
           this.setState({ savingPlan: false });
-          console.log(response.data);
           this.setState({
             // growthPlans: response.data.Items,
             // growthPlan: this.state.growthPlans[0]
@@ -1293,7 +1279,6 @@ class Dashboard extends React.Component {
                       style={{ marginLeft: 20 }}
                       color="inherit"
                       onClick={() => {
-                        console.log("aaaaa");
                         Auth.signOut()
                           .then(data => console.log(data))
                           .catch(err => console.log(err));
@@ -1514,7 +1499,6 @@ class Dashboard extends React.Component {
                           ? this.state.growthPlanName
                           : this.state.growthPlan.growthPlanGroup
                       }
-                      // onChange={event => console.log(event.target.value)}
                       onChange={event => {
                         Object.keys(this.state.growthPlan).length === 0 &&
                         this.state.growthPlan.constructor === Object
