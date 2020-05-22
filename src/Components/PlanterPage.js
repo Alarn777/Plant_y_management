@@ -9,12 +9,20 @@ import { addSocket, addUser, loadPlanters } from "../actions";
 // import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
-// import Toolbar from "@material-ui/core/Toolbar";
-// import Typography from "@material-ui/core/Typography";
-import { withStyles } from "@material-ui/styles";
-//import Consts from "../ENV_VARS";
-// import IconButton from "@material-ui/core/IconButton";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Slide from "@material-ui/core/Slide";
 import MenuIcon from "@material-ui/icons/Menu";
+import ArrowBack from "@material-ui/icons/ArrowBackIos";
+import ArrowForward from "@material-ui/icons/ArrowForwardIos";
+import Reload from "@material-ui/icons/Autorenew";
+import LeftHard from "@material-ui/icons/LastPage";
+import RightHard from "@material-ui/icons/FirstPage";
+
+import ReactPlayer from "react-player";
 import {
   Card,
   Paper,
@@ -40,6 +48,16 @@ import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import CardActions from "@material-ui/core/CardActions";
 import { BrowserView, isMobile } from "react-device-detect";
+import WS from "../websocket";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Fab from "@material-ui/core/Fab";
+
+const plantyColor = "#6f9e04";
+const errorColor = "#ee3e34";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 class PlanterPage extends React.Component {
   // static propTypes = {
@@ -58,15 +76,75 @@ class PlanterPage extends React.Component {
       plants: [],
       planterUUID: "",
       customerUsername: "",
-      customerPlanter: ""
+      customerPlanter: "",
+      entries: {
+        currTemperature: "0",
+        currUV: "0",
+        currHumidity: "0"
+      },
+      waterTurnedOn: false,
+      lightTurnedOn: false,
+      loadingLightTurnedOn: false,
+      waterAdded: false,
+      loadingAddingWater: false,
+      loadingActions: false,
+      streamUrl: ""
     };
+    if (!WS.ws) WS.init();
 
     Amplify.configure(JSON.parse(process.env.REACT_APP_CONFIG_AWS));
-    // if (awsconfig) {
-    //   Amplify.configure(awsconfig);
-    // } else {
-    //   Amplify.configure(process.env.configParamsAWS);
-    // }
+    WS.onMessage(data => {
+      console.log("GOT in planter screen", data.data);
+
+      let instructions = data.data.split(";");
+      if (instructions.length > 2)
+        switch (instructions[2]) {
+          case "WATER_ADDED":
+            this.setState({ waterAdded: true, loadingAddingWater: false });
+            break;
+          case "UV_LAMP_IS_ON":
+            this.setState({ lightTurnedOn: true, loadingLightTurnedOn: false });
+            break;
+          case "UV_LAMP_IS_OFF":
+            this.setState({
+              lightTurnedOn: false,
+              loadingLightTurnedOn: false
+            });
+            break;
+          case "FAILED":
+            console.log("Failed to communicate with server");
+            // this.forceUpdate();
+            break;
+          case "MEASUREMENTS":
+            if (this.state.planterUUID === instructions[1]) {
+              this.setState({
+                entries: {
+                  currTemperature: Math.floor(
+                    parseFloat(instructions[3].split(":")[1])
+                  ),
+                  currUV: instructions[4].split(":")[1],
+                  currHumidity: Math.floor(
+                    parseFloat(instructions[5].split(":")[1]) * 100
+                  )
+                }
+              });
+              let temp = instructions[3].split(":")[1];
+              temp = Math.floor(parseFloat(temp));
+
+              this.setState({
+                currTemperature: temp,
+                currUV: instructions[4].split(":")[1],
+                currHumidity: Math.floor(
+                  parseFloat(instructions[5].split(":")[1]) * 100
+                )
+              });
+            }
+
+            break;
+          default:
+            break;
+        }
+    });
   }
 
   updateDimensions = () => {
@@ -87,7 +165,6 @@ class PlanterPage extends React.Component {
   componentDidMount() {
     let array = this.props.location.pathname.split("/");
     let uuid = array[3].split("=")[1];
-    console.log(uuid);
     this.setState({
       planterUUID: uuid,
       customerUsername: array[2],
@@ -102,6 +179,7 @@ class PlanterPage extends React.Component {
         this.loadPlants()
           .then()
           .catch();
+        this.loadStreamUrl();
       })
       // .then(data => console.log(data))
       .catch(err => console.log(err));
@@ -223,6 +301,53 @@ class PlanterPage extends React.Component {
       });
   }
 
+  async loadStreamUrl() {
+    let USER_TOKEN = this.state.user.signInUserSession.idToken.jwtToken;
+    const AuthStr = "Bearer ".concat(USER_TOKEN);
+
+    if (this.state.streamUrl === undefined || this.state.streamUrl === null) {
+    }
+
+    await axios
+      .post(
+        JSON.parse(process.env.REACT_APP_API_LINKS).apigatewayRoute +
+          "/loadStreamUrlManager",
+        {
+          streamName: "Planty"
+        },
+        {
+          headers: { Authorization: AuthStr }
+        }
+      )
+      .then(response => {
+        if (response.data) {
+          if (
+            this.state.streamUrl === undefined ||
+            this.state.streamUrl === null
+          ) {
+            console.log("SETTING URL");
+            console.log(response.data);
+            if (response.data.errorMessage) {
+              return;
+            }
+            // this.addUrl(response.data.HLSStreamingSessionURL);
+            this.setState({ streamUrl: response.data.HLSStreamingSessionURL });
+          } else {
+            console.log(response.data);
+            console.log("NOT SETTING URL");
+            // this.setState({streamUrl: this.props.plantyData.streamUrl});
+          }
+        } else {
+          // console.log(response.data);
+          console.log("No stream data URL");
+          console.log(response);
+        }
+      })
+      .catch(error => {
+        console.log("error " + error);
+      });
+  }
+
   renderPlants = plant => {
     let maxWidth = 345;
     if (isMobile) {
@@ -290,24 +415,13 @@ class PlanterPage extends React.Component {
   };
 
   render() {
-    console.log(this.props);
-
-    // if (!this.state.user) return <Redirect to="/login" />;
     if (this.state.plants === []) {
       return <LinearProgress style={{ width: "100%" }} />;
     }
-    // if (!this.state.user) return <Redirect to="/login" />;
 
     if (this.state.toLogin === true) {
       return <Redirect to="/login" />;
     }
-
-    if (this.state.toLogin === true) {
-      return <Redirect to="/login" />;
-    }
-    // if (this.state.toRegister === true) {
-    //   return <Redirect to="/register" />;
-    // }
     return (
       <div>
         <div
@@ -381,6 +495,229 @@ class PlanterPage extends React.Component {
                 </Typography>
               </Breadcrumbs>
               <div>
+                <h1>Video for {this.state.planterName}</h1>
+                <div>
+                  <div className="player-wrapper">
+                    <ReactPlayer
+                      style={{ width: this.state.width - 100, height: 100 }}
+                      url={this.state.streamUrl}
+                      width="100%"
+                      height={800}
+                    />
+                  </div>
+                  <Fab
+                    size="small"
+                    color="primary"
+                    style={{ margin: 5 }}
+                    onClick={() => {
+                      this.setState({ streamUrl: undefined });
+                      this.loadStreamUrl();
+                    }}
+                  >
+                    <Reload />
+                  </Fab>
+
+                  <div
+                    style={{
+                      textAlign: "center",
+                      margin: "0 auto",
+                      flexDirection: "row"
+                      // flexWrap: "wrap",
+                      // justifyContent: "space-between",
+                      // padding: 8
+                    }}
+                  >
+                    <h3>Camera Controllers</h3>
+                    <Fab
+                      color="primary"
+                      // icon={
+                      //   this.state.loadingActions
+                      //     ? "reload"
+                      //     : require("../Images/icons/arrowhead-right-outline.png")
+                      // }
+                      // icon={this.state.loadingActions ? 'reload' : 'arrow-right'}
+                      // color={plantyColor}
+                      // size={40}
+                      style={{ margin: 10 }}
+                      disabled={
+                        this.state.loadingActions || !this.state.streamUrl
+                      }
+                      onClick={() => {
+                        WS.sendMessage(
+                          "FROM_WEB;" +
+                            this.state.planterUUID +
+                            ";MOVE_CAMERA_LEFT_LONG"
+                        );
+                      }}
+                    >
+                      {this.state.loadingActions ? <Reload /> : <RightHard />}
+                    </Fab>
+                    <Fab
+                      style={{ margin: 10 }}
+                      color="primary"
+                      // icon={
+                      //   this.state.loadingActions
+                      //     ? "reload"
+                      //     : require("../Images/icons/arrowhead-right-outline.png")
+                      // }
+                      // icon={this.state.loadingActions ? 'reload' : 'arrow-right'}
+                      // color={plantyColor}
+                      // size={40}
+                      disabled={
+                        this.state.loadingActions || !this.state.streamUrl
+                      }
+                      onClick={() => {
+                        WS.sendMessage(
+                          "FROM_WEB;" +
+                            this.state.planterUUID +
+                            ";MOVE_CAMERA_LEFT"
+                        );
+                      }}
+                    >
+                      {this.state.loadingActions ? <Reload /> : <ArrowBack />}
+                    </Fab>
+                    <Fab
+                      style={{ margin: 10 }}
+                      color="primary"
+                      // icon={
+                      //   this.state.loadingActions
+                      //     ? "reload"
+                      //     : require("../Images/icons/arrowhead-right-outline.png")
+                      // }
+                      // icon={this.state.loadingActions ? 'reload' : 'arrow-right'}
+                      // color={plantyColor}
+                      // size={40}
+                      disabled={
+                        this.state.loadingActions || !this.state.streamUrl
+                      }
+                      onClick={() => {
+                        WS.sendMessage(
+                          "FROM_WEB;" +
+                            this.state.planterUUID +
+                            ";MOVE_CAMERA_RIGHT"
+                        );
+                      }}
+                    >
+                      {this.state.loadingActions ? (
+                        <Reload />
+                      ) : (
+                        <ArrowForward />
+                      )}
+                    </Fab>
+                    <Fab
+                      style={{ margin: 10 }}
+                      color="primary"
+                      // icon={
+                      //   this.state.loadingActions
+                      //     ? "reload"
+                      //     : require("../Images/icons/arrowhead-right-outline.png")
+                      // }
+                      // icon={this.state.loadingActions ? 'reload' : 'arrow-right'}
+                      // color={plantyColor}
+                      // size={40}
+                      disabled={
+                        this.state.loadingActions || !this.state.streamUrl
+                      }
+                      onClick={() => {
+                        WS.sendMessage(
+                          "FROM_WEB;" +
+                            this.state.planterUUID +
+                            ";MOVE_CAMERA_RIGHT_LONG"
+                        );
+                      }}
+                    >
+                      {this.state.loadingActions ? <Reload /> : <LeftHard />}
+                    </Fab>
+                  </div>
+                </div>
+
+                <h1>Controllers for {this.state.planterName}</h1>
+                <div>
+                  <div style={{ margin: 10, width: "100%" }}>
+                    <Button
+                      style={{
+                        margin: 10,
+                        width: 180,
+                        padding: -10
+                      }}
+                      // disabled={!this.validateForm()}
+                      variant="contained"
+                      color="primary"
+                      onClick={() => {
+                        this.setState({ loadingAddingWater: true });
+                        WS.sendMessage(
+                          "FROM_WEB;" + this.state.planterUUID + ";ADD_WATER"
+                        );
+                      }}
+                    >
+                      {!this.state.loadingAddingWater ? (
+                        "Add Water"
+                      ) : (
+                        <CircularProgress
+                          size={24}
+                          color="secondary"
+                          style={{ root: { flex: 1 } }}
+                        />
+                      )}
+                    </Button>
+                    <Dialog
+                      open={this.state.waterAdded}
+                      TransitionComponent={Transition}
+                      keepMounted
+                      onClose={() => this.setState({ waterAdded: false })}
+                      aria-labelledby="alert-dialog-slide-title"
+                      aria-describedby="alert-dialog-slide-description"
+                    >
+                      <DialogTitle id="alert-dialog-slide-title">
+                        {"Water was added to the planter"}
+                      </DialogTitle>
+                      <DialogActions>
+                        <Button
+                          onClick={() => this.setState({ waterAdded: false })}
+                          color="primary"
+                        >
+                          OK
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
+                    <Button
+                      style={{
+                        margin: 10,
+                        width: 180,
+                        padding: -10
+                      }}
+                      variant="contained"
+                      color="primary"
+                      onClick={() => {
+                        this.setState({ loadingLightTurnedOn: true });
+                        let action = !this.state.lightTurnedOn ? "on" : "off";
+                        WS.sendMessage(
+                          "FROM_WEB;" +
+                            this.state.planterUUID +
+                            ";UV_LAMP_" +
+                            action.toUpperCase()
+                        );
+                      }}
+                    >
+                      {!this.state.loadingLightTurnedOn ? (
+                        "Toggle light"
+                      ) : (
+                        <CircularProgress
+                          size={24}
+                          color="secondary"
+                          style={{ root: { flex: 1 } }}
+                        />
+                      )}
+                    </Button>
+                  </div>
+                </div>
+                <h1>Current state for {this.state.planterName}</h1>
+                <div>
+                  <h3>Temperature: {this.state.entries.currTemperature} C</h3>
+                  <h3>UV: {this.state.entries.currUV}</h3>
+                  <h3>Humidity: {this.state.entries.currHumidity}%</h3>
+                </div>
+
                 <h1>Plants in {this.state.planterName}</h1>
                 <div>
                   {this.state.plants.map(one => this.renderPlants(one))}
@@ -392,20 +729,20 @@ class PlanterPage extends React.Component {
           )}
         </div>
         <BrowserView>
-          <StickyFooter
-            bottomThreshold={20}
-            normalStyles={{
-              height: 20,
-              backgroundColor: "#999999",
-              padding: "10px"
-            }}
-            stickyStyles={{
-              backgroundColor: "rgba(255,255,255,.8)",
-              padding: "2rem"
-            }}
-          >
-            © 2019 - 2020, Plant'y Inc. or its affiliates. All rights reserved.
-          </StickyFooter>
+          {/*<StickyFooter*/}
+          {/*  bottomThreshold={20}*/}
+          {/*  normalStyles={{*/}
+          {/*    height: 20,*/}
+          {/*    backgroundColor: "#999999",*/}
+          {/*    padding: "10px"*/}
+          {/*  }}*/}
+          {/*  stickyStyles={{*/}
+          {/*    backgroundColor: "rgba(255,255,255,.8)",*/}
+          {/*    padding: "2rem"*/}
+          {/*  }}*/}
+          {/*>*/}
+          {/*  © 2019 - 2020, Plant'y Inc. or its affiliates. All rights reserved.*/}
+          {/*</StickyFooter>*/}
         </BrowserView>
       </div>
     );

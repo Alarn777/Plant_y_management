@@ -55,6 +55,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import WS from "../websocket";
 
 const plantyColor = "#6f9e04";
 const errorColor = "#ee3e34";
@@ -89,6 +90,8 @@ class Dashboard extends React.Component {
       growthPlanDescription: ""
     };
     Amplify.configure(JSON.parse(process.env.REACT_APP_CONFIG_AWS));
+
+    WS.init();
   }
 
   valueTempText(value) {
