@@ -1,4 +1,3 @@
-import Const from "./ENV_VARS";
 export default class WS {
   static init() {
     if (!this.ws || this.ws.readyState === WebSocket.CLOSED) {
