@@ -17,6 +17,7 @@ import LeftHard from "@material-ui/icons/LastPage";
 import RightHard from "@material-ui/icons/FirstPage";
 
 import ReactPlayer from "react-player";
+import ReactHLS from "react-hls-player";
 import {
   Card,
   Toolbar,
@@ -303,6 +304,7 @@ class PlanterPage extends React.Component {
               console.log(response.data.errorMessage);
               return;
             }
+            console.log(response.data.HLSStreamingSessionURL);
             this.setState({ streamUrl: response.data.HLSStreamingSessionURL });
           } else {
           }
@@ -443,11 +445,24 @@ class PlanterPage extends React.Component {
                 <div>
                   <div className="player-wrapper">
                     <ReactPlayer
+                      playing
                       style={{ width: this.state.width - 100, height: 100 }}
                       url={this.state.streamUrl}
                       width="100%"
                       height={800}
+                      file={"forceHLS"}
+                      config={{
+                        file: {}
+                      }}
                     />
+                    {/*<ReactHLS*/}
+                    {/*  // url={"your hls http url"}*/}
+                    {/*  autoplay={true}*/}
+                    {/*  style={{ width: this.state.width - 100, height: 100 }}*/}
+                    {/*  url={this.state.streamUrl}*/}
+                    {/*  width="100%"*/}
+                    {/*  height={800}*/}
+                    {/*/>*/}
                   </div>
                   <Fab
                     size="small"
@@ -599,6 +614,14 @@ class PlanterPage extends React.Component {
                       onClick={() => {
                         this.setState({ loadingLightTurnedOn: true });
                         let action = !this.state.lightTurnedOn ? "on" : "off";
+
+                        // console.log(
+                        //   "FROM_WEB;" +
+                        //     this.state.planterUUID +
+                        //     ";UV_LAMP_" +
+                        //     action.toUpperCase()
+                        // );
+
                         WS.sendMessage(
                           "FROM_WEB;" +
                             this.state.planterUUID +
