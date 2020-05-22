@@ -40,6 +40,7 @@ import { BrowserView, isMobile } from "react-device-detect";
 import WS from "../websocket";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Fab from "@material-ui/core/Fab";
+import Paper from "@material-ui/core/Paper";
 
 const plantyColor = "#6f9e04";
 const errorColor = "#ee3e34";
@@ -304,7 +305,7 @@ class PlanterPage extends React.Component {
               console.log(response.data.errorMessage);
               return;
             }
-            console.log(response.data.HLSStreamingSessionURL);
+            // console.log(response.data.HLSStreamingSessionURL);
             this.setState({ streamUrl: response.data.HLSStreamingSessionURL });
           } else {
           }
@@ -440,8 +441,10 @@ class PlanterPage extends React.Component {
                   {this.state.planterName}
                 </Typography>
               </Breadcrumbs>
-              <div>
-                <h1>Video for {this.state.planterName}</h1>
+              <Paper style={{ margin: 10 }}>
+                <Typography style={{ padding: 10 }} variant="h5" component="h3">
+                  Video for {this.state.planterName}
+                </Typography>
                 <div>
                   <div className="player-wrapper">
                     <ReactPlayer
@@ -467,6 +470,7 @@ class PlanterPage extends React.Component {
                   <Fab
                     size="small"
                     color="primary"
+                    variant="extended"
                     style={{ margin: 5 }}
                     onClick={() => {
                       this.setState({ streamUrl: undefined });
@@ -474,6 +478,7 @@ class PlanterPage extends React.Component {
                     }}
                   >
                     <Reload />
+                    Reload Video
                   </Fab>
 
                   <div
@@ -554,106 +559,120 @@ class PlanterPage extends React.Component {
                     </Fab>
                   </div>
                 </div>
+              </Paper>
+              <Paper style={{ margin: 10 }}>
+                <Typography style={{ padding: 10 }} variant="h5" component="h3">
+                  Controllers for {this.state.planterName}
+                </Typography>
+                <div style={{ margin: 10, width: "100%" }}>
+                  <Button
+                    style={{
+                      margin: 10,
+                      width: 180,
+                      padding: -10
+                    }}
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      this.setState({ loadingAddingWater: true });
+                      WS.sendMessage(
+                        "FROM_WEB;" + this.state.planterUUID + ";ADD_WATER"
+                      );
+                    }}
+                  >
+                    {!this.state.loadingAddingWater ? (
+                      "Add Water"
+                    ) : (
+                      <CircularProgress
+                        size={24}
+                        color="secondary"
+                        style={{ root: { flex: 1 } }}
+                      />
+                    )}
+                  </Button>
+                  <Dialog
+                    open={this.state.waterAdded}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    onClose={() => this.setState({ waterAdded: false })}
+                    aria-labelledby="alert-dialog-slide-title"
+                    aria-describedby="alert-dialog-slide-description"
+                  >
+                    <DialogTitle id="alert-dialog-slide-title">
+                      {"Water was added to the planter"}
+                    </DialogTitle>
+                    <DialogActions>
+                      <Button
+                        onClick={() => this.setState({ waterAdded: false })}
+                        color="primary"
+                      >
+                        OK
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                  <Button
+                    style={{
+                      margin: 10,
+                      width: 180,
+                      padding: -10
+                    }}
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      this.setState({ loadingLightTurnedOn: true });
+                      let action = !this.state.lightTurnedOn ? "on" : "off";
 
-                <h1>Controllers for {this.state.planterName}</h1>
-                <div>
-                  <div style={{ margin: 10, width: "100%" }}>
-                    <Button
-                      style={{
-                        margin: 10,
-                        width: 180,
-                        padding: -10
-                      }}
-                      variant="contained"
-                      color="primary"
-                      onClick={() => {
-                        this.setState({ loadingAddingWater: true });
-                        WS.sendMessage(
-                          "FROM_WEB;" + this.state.planterUUID + ";ADD_WATER"
-                        );
-                      }}
-                    >
-                      {!this.state.loadingAddingWater ? (
-                        "Add Water"
-                      ) : (
-                        <CircularProgress
-                          size={24}
-                          color="secondary"
-                          style={{ root: { flex: 1 } }}
-                        />
-                      )}
-                    </Button>
-                    <Dialog
-                      open={this.state.waterAdded}
-                      TransitionComponent={Transition}
-                      keepMounted
-                      onClose={() => this.setState({ waterAdded: false })}
-                      aria-labelledby="alert-dialog-slide-title"
-                      aria-describedby="alert-dialog-slide-description"
-                    >
-                      <DialogTitle id="alert-dialog-slide-title">
-                        {"Water was added to the planter"}
-                      </DialogTitle>
-                      <DialogActions>
-                        <Button
-                          onClick={() => this.setState({ waterAdded: false })}
-                          color="primary"
-                        >
-                          OK
-                        </Button>
-                      </DialogActions>
-                    </Dialog>
-                    <Button
-                      style={{
-                        margin: 10,
-                        width: 180,
-                        padding: -10
-                      }}
-                      variant="contained"
-                      color="primary"
-                      onClick={() => {
-                        this.setState({ loadingLightTurnedOn: true });
-                        let action = !this.state.lightTurnedOn ? "on" : "off";
+                      // console.log(
+                      //   "FROM_WEB;" +
+                      //     this.state.planterUUID +
+                      //     ";UV_LAMP_" +
+                      //     action.toUpperCase()
+                      // );
 
-                        // console.log(
-                        //   "FROM_WEB;" +
-                        //     this.state.planterUUID +
-                        //     ";UV_LAMP_" +
-                        //     action.toUpperCase()
-                        // );
-
-                        WS.sendMessage(
-                          "FROM_WEB;" +
-                            this.state.planterUUID +
-                            ";UV_LAMP_" +
-                            action.toUpperCase()
-                        );
-                      }}
-                    >
-                      {!this.state.loadingLightTurnedOn ? (
-                        "Toggle light"
-                      ) : (
-                        <CircularProgress
-                          size={24}
-                          color="secondary"
-                          style={{ root: { flex: 1 } }}
-                        />
-                      )}
-                    </Button>
-                  </div>
+                      WS.sendMessage(
+                        "FROM_WEB;" +
+                          this.state.planterUUID +
+                          ";UV_LAMP_" +
+                          action.toUpperCase()
+                      );
+                    }}
+                  >
+                    {!this.state.loadingLightTurnedOn ? (
+                      "Toggle light"
+                    ) : (
+                      <CircularProgress
+                        size={24}
+                        color="secondary"
+                        style={{ root: { flex: 1 } }}
+                      />
+                    )}
+                  </Button>
                 </div>
-                <h1>Current state for {this.state.planterName}</h1>
-                <div>
-                  <h3>Temperature: {this.state.entries.currTemperature} C</h3>
-                  <h3>UV: {this.state.entries.currUV}</h3>
-                  <h3>Humidity: {this.state.entries.currHumidity}%</h3>
-                </div>
-
-                <h1>Plants in {this.state.planterName}</h1>
-                <div>
-                  {this.state.plants.map(one => this.renderPlants(one))}
-                </div>
-              </div>
+              </Paper>
+              <Paper style={{ margin: 10 }}>
+                <Typography style={{ padding: 10 }} variant="h5" component="h3">
+                  Current state for {this.state.planterName}
+                </Typography>
+                <Typography
+                  style={{
+                    padding: 10,
+                    textAlign: "left",
+                    alignSelf: "stretch"
+                  }}
+                  component="p"
+                >
+                  Temperature: {this.state.entries.currTemperature} C<br />
+                  UV: {this.state.entries.currUV}
+                  <br />
+                  Humidity: {this.state.entries.currHumidity}%
+                </Typography>
+              </Paper>
+              <Paper style={{ margin: 10 }}>
+                <Typography style={{ padding: 10 }} variant="h5" component="h3">
+                  Plants in {this.state.planterName}
+                </Typography>
+                {this.state.plants.map(one => this.renderPlants(one))}
+              </Paper>
             </div>
           ) : (
             <h1>Please log in first</h1>
