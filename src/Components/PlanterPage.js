@@ -620,25 +620,38 @@ class PlanterPage extends React.Component {
                     color="primary"
                     onClick={() => {
                       this.setState({ loadingLightTurnedOn: true });
-                      let action = !this.state.lightTurnedOn ? "on" : "off";
-
-                      // console.log(
-                      //   "FROM_WEB;" +
-                      //     this.state.planterUUID +
-                      //     ";UV_LAMP_" +
-                      //     action.toUpperCase()
-                      // );
-
                       WS.sendMessage(
-                        "FROM_WEB;" +
-                          this.state.planterUUID +
-                          ";UV_LAMP_" +
-                          action.toUpperCase()
+                        "FROM_WEB;" + this.state.planterUUID + ";UV_LAMP_ON"
                       );
                     }}
                   >
                     {!this.state.loadingLightTurnedOn ? (
-                      "Toggle light"
+                      "Turn light on"
+                    ) : (
+                      <CircularProgress
+                        size={24}
+                        color="secondary"
+                        style={{ root: { flex: 1 } }}
+                      />
+                    )}
+                  </Button>
+                  <Button
+                    style={{
+                      margin: 10,
+                      width: 180,
+                      padding: -10
+                    }}
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      this.setState({ loadingLightTurnedOn: true });
+                      WS.sendMessage(
+                        "FROM_WEB;" + this.state.planterUUID + ";UV_LAMP_OFF"
+                      );
+                    }}
+                  >
+                    {!this.state.loadingLightTurnedOn ? (
+                      "Turn light off"
                     ) : (
                       <CircularProgress
                         size={24}
