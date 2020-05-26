@@ -253,7 +253,7 @@ class UserPage extends React.Component {
     //
     let maxWidth = 345;
     if (isMobile) {
-      maxWidth = "100%";
+      maxWidth = this.state.width - 30;
     }
     return (
       <Card
@@ -261,7 +261,7 @@ class UserPage extends React.Component {
         style={{
           float: "left",
           margin: 10,
-          maxWidth: maxWidth,
+          width: maxWidth,
           backgroundColor: "#e8f5e9"
           // root: { color: "#a5d6a7" }
         }}

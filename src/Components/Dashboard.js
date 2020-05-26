@@ -25,11 +25,11 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Link from "@material-ui/core/Link";
 import Avatar from "@material-ui/core/Avatar";
-import { BrowserView } from "react-device-detect";
+import { BrowserView, isBrowser, isMobile } from "react-device-detect";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Slider from "@material-ui/core/Slider";
 import TextField from "@material-ui/core/TextField";
@@ -465,6 +465,10 @@ class Dashboard extends React.Component {
 
   renderUsers = user => {
     //
+    let maxWidth = 150;
+    if (isMobile) {
+      maxWidth = this.state.width - 10;
+    }
 
     return (
       <Card
@@ -477,7 +481,8 @@ class Dashboard extends React.Component {
         <CardActionArea>
           <CardMedia
             style={{
-              height: 140
+              height: 200,
+              width: maxWidth
             }}
             image={user.pic}
             title="Contemplative Reptile"
@@ -500,6 +505,11 @@ class Dashboard extends React.Component {
       return <div />;
     }
 
+    let maxWidth = 345;
+    if (isMobile) {
+      maxWidth = this.state.width - 10;
+    }
+
     return (
       <Card
         onClick={() => {
@@ -507,21 +517,26 @@ class Dashboard extends React.Component {
           this.setState({ growthPlanActive: true });
         }}
         key={one.UUID}
-        style={{ float: "left", margin: 10, maxWidth: 345 }}
+        style={{ float: "left", margin: 10, maxWidth: maxWidth }}
       >
         <CardActionArea>
           <CardMedia
             style={{
               // height: 100
               alignContent: "center",
-              textAlign: "center"
+              textAlign: "center",
+              width: maxWidth - 20
             }}
             // image={require("../Images/good-growth-plan-copy.png")}
             // title="Contemplative Reptile"
           />
           <CardContent>
             <img
-              style={{ alignSelf: "center", margin: "14px" }}
+              style={{
+                alignSelf: "center",
+                margin: "14px",
+                width: maxWidth - 100
+              }}
               src={require("../Images/good-growth-plan-copy.png")}
               alt={"img"}
             />
@@ -1193,7 +1208,6 @@ class Dashboard extends React.Component {
 
   render() {
     // return <div />;
-
     if (this.state.selectedUser !== "none") {
       return <Redirect to={`/users/${this.state.selectedUser}`} />;
     }
@@ -1207,6 +1221,10 @@ class Dashboard extends React.Component {
     }
 
     let growthPlanName = "";
+    let maxWidth = 300;
+    if (isMobile) {
+      maxWidth = "95%";
+    }
 
     return (
       <div>
@@ -1252,16 +1270,9 @@ class Dashboard extends React.Component {
               </Typography>
               {this.state.user && (
                 <div>
-                  <Typography
-                    variant="h6"
-                    // className={styles.title}
-                    style={{ flexGrow: 1 }}
-                  >
-                    Hello {this.state.user.username}
-                    <Button
-                      variant="outlined"
-                      style={{ marginLeft: 20 }}
-                      color="inherit"
+                  {isMobile ? (
+                    <ExitToAppIcon
+                      style={{ marginLeft: 5 }}
                       onClick={() => {
                         Auth.signOut()
                           .then(data => console.log(data))
@@ -1269,10 +1280,30 @@ class Dashboard extends React.Component {
 
                         this.setState({ user: null, toLogin: true });
                       }}
+                    />
+                  ) : (
+                    <Typography
+                      variant="h6"
+                      // className={styles.title}
+                      style={{ flexGrow: 1 }}
                     >
-                      Log Out
-                    </Button>
-                  </Typography>
+                      Hello {this.state.user.username}
+                      <Button
+                        variant="outlined"
+                        style={{ marginLeft: 20 }}
+                        color="inherit"
+                        onClick={() => {
+                          Auth.signOut()
+                            .then(data => console.log(data))
+                            .catch(err => console.log(err));
+
+                          this.setState({ user: null, toLogin: true });
+                        }}
+                      >
+                        Log Out
+                      </Button>
+                    </Typography>
+                  )}
                 </div>
               )}
             </Toolbar>
@@ -1306,7 +1337,7 @@ class Dashboard extends React.Component {
                   <h1 style={{ margin: 10 }}>All growth plans</h1>
                   <Button
                     variant="outlined"
-                    style={{ color: plantyColor, margin: 10 }}
+                    style={{ color: plantyColor, margin: 10, width: maxWidth }}
                     onClick={() => {
                       this.setState({ dialogOpen: true });
 

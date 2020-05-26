@@ -431,7 +431,7 @@ class PlanterPage extends React.Component {
   renderPlants = plant => {
     let maxWidth = 345;
     if (isMobile) {
-      maxWidth = "100%";
+      maxWidth = this.state.width - 60;
     }
 
     return (
@@ -443,7 +443,7 @@ class PlanterPage extends React.Component {
         style={{
           float: "left",
           margin: 10,
-          maxWidth: maxWidth,
+          width: maxWidth,
           backgroundColor: "#e8f5e9"
         }}
       >
@@ -494,6 +494,17 @@ class PlanterPage extends React.Component {
   };
 
   render() {
+    let playerHeight = 800;
+    let float = "left";
+    let videoWidth = this.state.width - 100;
+    let maxWidth = this.state.width / 3 - 30;
+    if (isMobile) {
+      playerHeight = 500;
+      float = "none";
+      videoWidth = this.state.width - 20;
+      maxWidth = this.state.width - 30;
+    }
+
     if (this.state.plants === []) {
       return <LinearProgress style={{ width: "100%" }} />;
     }
@@ -557,27 +568,19 @@ class PlanterPage extends React.Component {
                   Video for {this.state.planterName}
                 </Typography>
                 <div>
-                  <div className="player-wrapper">
-                    <ReactPlayer
-                      playing
-                      style={{ width: this.state.width - 100, height: 100 }}
-                      url={this.state.streamUrl}
-                      width="100%"
-                      height={800}
-                      file={"forceHLS"}
-                      config={{
-                        file: {}
-                      }}
-                    />
-                    {/*<ReactHLS*/}
-                    {/*  // url={"your hls http url"}*/}
-                    {/*  autoplay={true}*/}
-                    {/*  style={{ width: this.state.width - 100, height: 100 }}*/}
-                    {/*  url={this.state.streamUrl}*/}
-                    {/*  width="100%"*/}
-                    {/*  height={800}*/}
-                    {/*/>*/}
-                  </div>
+                  {/*<div className="player-wrapper">*/}
+                  <ReactPlayer
+                    playing
+                    // style={{ backgroundColor: "grey" }}
+                    url={this.state.streamUrl}
+                    width={videoWidth - 20}
+                    height={playerHeight}
+                    file={"forceHLS"}
+                    config={{
+                      file: {}
+                    }}
+                  />
+                  {/*</div>*/}
                   <Fab
                     size="small"
                     color="primary"
@@ -679,7 +682,7 @@ class PlanterPage extends React.Component {
                 <Typography style={{ padding: 10 }} variant="h5" component="h3">
                   Controllers for {this.state.planterName}
                 </Typography>
-                <div style={{ margin: 10, width: "100%" }}>
+                <div style={{ margin: 10, width: "100%", textAlign: "center" }}>
                   <Button
                     style={{
                       margin: 10,
@@ -885,8 +888,8 @@ class PlanterPage extends React.Component {
               <Paper
                 style={{
                   margin: 10,
-                  width: this.state.width / 3 - 30,
-                  float: "left"
+                  width: maxWidth,
+                  float: float
                 }}
               >
                 <Typography style={{ padding: 10 }} variant="p" component="h3">
@@ -894,7 +897,7 @@ class PlanterPage extends React.Component {
                 </Typography>
 
                 <AreaChart
-                  width={this.state.width / 3 - 30}
+                  width={maxWidth}
                   height={300}
                   data={this.state.dataForGraph}
                   margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
@@ -939,8 +942,8 @@ class PlanterPage extends React.Component {
               <Paper
                 style={{
                   margin: 10,
-                  width: this.state.width / 3 - 30,
-                  float: "left"
+                  width: maxWidth,
+                  float: float
                 }}
               >
                 <Typography style={{ padding: 10 }} variant="p" component="h3">
@@ -948,7 +951,7 @@ class PlanterPage extends React.Component {
                 </Typography>
 
                 <AreaChart
-                  width={this.state.width / 3 - 30}
+                  width={maxWidth}
                   height={300}
                   data={this.state.dataForGraphUV}
                   margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
@@ -993,8 +996,8 @@ class PlanterPage extends React.Component {
               <Paper
                 style={{
                   margin: 10,
-                  float: "left",
-                  width: this.state.width / 3 - 30
+                  width: maxWidth,
+                  float: float
                 }}
               >
                 <Typography style={{ padding: 10 }} variant="p" component="h3">
@@ -1002,7 +1005,7 @@ class PlanterPage extends React.Component {
                 </Typography>
 
                 <AreaChart
-                  width={this.state.width / 3 - 30}
+                  width={maxWidth}
                   height={300}
                   data={this.state.dataForGraphHumidity}
                   margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
@@ -1049,7 +1052,7 @@ class PlanterPage extends React.Component {
             <h1>Please log in first</h1>
           )}
         </div>
-        <BrowserView></BrowserView>
+        {/*<BrowserView></BrowserView>*/}
       </div>
     );
   }
