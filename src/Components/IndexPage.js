@@ -1,28 +1,13 @@
 import React from "react";
 import StickyFooter from "react-sticky-footer";
-import ReactDOM from "react-dom";
 
 //redux
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { addSocket, addUser, loadPlanters } from "../actions";
-// import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
-// import Toolbar from "@material-ui/core/Toolbar";
-// import Typography from "@material-ui/core/Typography";
-import { withStyles } from "@material-ui/styles";
 import "../Styles/Signin.css";
-// import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import {
-  Card,
-  Paper,
-  Toolbar,
-  Typography,
-  Button,
-  IconButton
-} from "@material-ui/core";
+import { Paper, Toolbar, Typography, Button } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
 import Avatar from "@material-ui/core/Avatar";
 import { BrowserView, isMobile } from "react-device-detect";

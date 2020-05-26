@@ -10,32 +10,21 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import MenuIcon from "@material-ui/icons/Menu";
-import ArrowBack from "@material-ui/icons/ArrowBackIos";
-import ArrowForward from "@material-ui/icons/ArrowForwardIos";
+import ArrowBack from "@material-ui/icons/NavigateBefore";
+import ArrowForward from "@material-ui/icons/NavigateNext";
 import Reload from "@material-ui/icons/Autorenew";
 import LeftHard from "@material-ui/icons/LastPage";
 import RightHard from "@material-ui/icons/FirstPage";
 import {
-  RadarChart,
-  PolarGrid,
   Legend,
-  PolarRadiusAxis,
-  PolarAngleAxis,
-  Radar,
   AreaChart,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  Area,
-  BarChart,
-  Bar,
-  ScatterChart,
-  Scatter
+  Area
 } from "recharts";
-import { validateWidthHeight } from "recharts/lib/util/ReactUtils";
 import ReactPlayer from "react-player";
-import ReactHLS from "react-hls-player";
 import {
   Card,
   Toolbar,

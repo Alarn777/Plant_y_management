@@ -1,23 +1,14 @@
 import React from "react";
 import StickyFooter from "react-sticky-footer";
-import ReactDOM from "react-dom";
 
 //redux
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { addSocket, addUser, loadPlanters } from "../actions";
-// import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
-// import Toolbar from "@material-ui/core/Toolbar";
-// import Typography from "@material-ui/core/Typography";
-import { withStyles } from "@material-ui/styles";
-// import Consts from "../ENV_VARS";
-// import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import {
   Card,
-  Paper,
   CardActionArea,
   CardContent,
   CardMedia,
@@ -28,32 +19,24 @@ import {
 } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
 import Amplify, { Auth, Storage } from "aws-amplify";
-// import awsconfig from "../aws-exports";
-//import { instanceOf } from "prop-types";
-//import { Cookies } from "react-cookie";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import { Visibility, VisibilityOff } from "@material-ui/icons";
 import axios from "axios";
-import CardActions from "@material-ui/core/CardActions";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import UserPage from "./UserPage";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Link from "@material-ui/core/Link";
 import Avatar from "@material-ui/core/Avatar";
-import { BrowserView, isMobile } from "react-device-detect";
+import { BrowserView } from "react-device-detect";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-// import Typography from '@material-ui/core/Typography';
+
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Slider from "@material-ui/core/Slider";
 import TextField from "@material-ui/core/TextField";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import FormGroup from "@material-ui/core/FormGroup";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import WS from "../websocket";
 
@@ -61,10 +44,6 @@ const plantyColor = "#6f9e04";
 const errorColor = "#ee3e34";
 
 class Dashboard extends React.Component {
-  // static propTypes = {
-  //   cookies: instanceOf(Cookies).isRequired
-  // };
-
   constructor(props) {
     super(props);
     this.state = {
@@ -236,6 +215,9 @@ class Dashboard extends React.Component {
   }
 
   async saveGrowthPlan() {
+    // console.log("saving plan");
+    // console.log(this.state.growthPlan);
+
     this.setState({ savingPlan: true, errorText: "" });
 
     const AuthStr = "Bearer ".concat(this.state.USER_TOKEN);
@@ -258,6 +240,7 @@ class Dashboard extends React.Component {
         )
         .then(response => {
           this.setState({ savingPlan: false });
+          console.log("Saving plan", response);
           this.loadAllData()
             .then()
             .catch();
@@ -474,7 +457,8 @@ class Dashboard extends React.Component {
       growthPlan: {
         growthPlanGroup: "New Plan",
         phases: [],
-        UUID: "none"
+        UUID: "none",
+        growthPlanDescription: ""
       }
     });
   };
@@ -686,11 +670,11 @@ class Dashboard extends React.Component {
                       valueLabelDisplay="auto"
                       aria-labelledby="range-slider"
                       min={0}
-                      max={4000}
+                      max={400}
                       step={100}
                       // getAriaValueText={this.valueTempText}
                     />
-                    4000
+                    400
                     {/*<p style={{ marginTop: 20 }}>35</p>*/}
                   </div>
                 </div>
@@ -838,11 +822,11 @@ class Dashboard extends React.Component {
                       valueLabelDisplay="auto"
                       aria-labelledby="range-slider"
                       min={0}
-                      max={4000}
+                      max={400}
                       step={100}
                       // getAriaValueText={this.valueTempText}
                     />
-                    4000
+                    400
                     {/*<p style={{ marginTop: 20 }}>35</p>*/}
                   </div>
                 </div>
@@ -993,11 +977,11 @@ class Dashboard extends React.Component {
                       valueLabelDisplay="auto"
                       aria-labelledby="range-slider"
                       min={0}
-                      max={4000}
+                      max={400}
                       step={100}
                       // getAriaValueText={this.valueTempText}
                     />
-                    4000
+                    400
                     {/*<p style={{ marginTop: 20 }}>35</p>*/}
                   </div>
                 </div>
@@ -1144,11 +1128,11 @@ class Dashboard extends React.Component {
                       valueLabelDisplay="auto"
                       aria-labelledby="range-slider"
                       min={0}
-                      max={4000}
+                      max={400}
                       step={100}
                       // getAriaValueText={this.valueTempText}
                     />
-                    4000
+                    400
                     {/*<p style={{ marginTop: 20 }}>35</p>*/}
                   </div>
                 </div>
@@ -1341,14 +1325,14 @@ class Dashboard extends React.Component {
                       New growth plan
                     </DialogTitle>
                     <DialogContent>
-                      <DialogContentText>
-                        Please enter a name for your growth plan
-                      </DialogContentText>
+                      {/*<DialogContentText>*/}
+                      {/*  Please enter a name for your growth plan*/}
+                      {/*</DialogContentText>*/}
                       <TextField
                         autoFocus
                         margin="dense"
                         id="name"
-                        label="Dialog Name"
+                        label="Growth Plan Name"
                         type="text"
                         fullWidth
                         // value={"asdasd"}
@@ -1366,7 +1350,7 @@ class Dashboard extends React.Component {
                         multiline={true}
                         margin="dense"
                         id="name"
-                        label="Dialog Name"
+                        label="Growth Plan Description"
                         type="text"
                         fullWidth
                         // value={"asdasd"}
@@ -1393,6 +1377,7 @@ class Dashboard extends React.Component {
                           // console.log(this.state.growthPlanName);
                           // console.log(this.state.growthPlan);
                           this.state.growthPlan.growthPlanGroup = this.state.growthPlanName;
+                          this.state.growthPlan.growthPlanDescription = this.state.growthPlanDescription;
                           // console.log(this.state.growthPlan);
 
                           this.saveGrowthPlan()
@@ -1558,19 +1543,32 @@ class Dashboard extends React.Component {
           )}
         </div>
         <BrowserView>
+          <img
+            style={{
+              zIndex: -100,
+              width: "100%",
+              position: "absolute",
+              bottom: 0
+            }}
+            src={require("../Images/grass.png")}
+            alt="footer"
+          />
           <StickyFooter
             bottomThreshold={20}
             normalStyles={{
               height: 20,
-              backgroundColor: "#999999",
+              // backgroundColor: "#999999",
               padding: "10px"
             }}
             stickyStyles={{
-              backgroundColor: "rgba(255,255,255,.8)",
+              // backgroundColor: "rgba(255,255,255,.8)",
               padding: "2rem"
             }}
           >
-            © 2019 - 2020, Plant'y Inc. or its affiliates. All rights reserved.
+            <p style={{ color: "white", marginTop: -10 }}>
+              © 2019 - 2020, Plant'y Inc. or its affiliates. All rights
+              reserved.
+            </p>
           </StickyFooter>
         </BrowserView>
       </div>
