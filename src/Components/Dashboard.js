@@ -467,7 +467,7 @@ class Dashboard extends React.Component {
     //
     let maxWidth = 150;
     if (isMobile) {
-      maxWidth = this.state.width - 10;
+      maxWidth = this.state.width - 20;
     }
 
     return (
@@ -476,13 +476,13 @@ class Dashboard extends React.Component {
           this.setState({ selectedUser: user.name });
         }}
         key={user.name}
-        style={{ float: "left", margin: 10, maxWidth: 345 }}
+        style={{ float: "left", margin: 10, maxWidth: maxWidth }}
       >
         <CardActionArea>
           <CardMedia
             style={{
               height: 200,
-              width: maxWidth
+              width: maxWidth - 10
             }}
             image={user.pic}
             title="Contemplative Reptile"
@@ -1561,7 +1561,6 @@ class Dashboard extends React.Component {
                       {this.state.errorText}
                     </p>
                     <br />
-                    {/*{this.renderWeeks()}*/}
                     {this.state.growthPlan.phases.map(one =>
                       this.renderWeeks(one)
                     )}
@@ -1579,7 +1578,7 @@ class Dashboard extends React.Component {
               zIndex: -100,
               width: "100%",
               position: "absolute",
-              bottom: 0
+              bottom: -1
             }}
             src={require("../Images/grass.png")}
             alt="footer"

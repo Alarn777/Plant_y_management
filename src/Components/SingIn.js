@@ -165,9 +165,9 @@ class SingIn extends React.Component {
             </Typography>
             <div className="Login">
               <form onSubmit={this.handleSubmit}>
-                <FormGroup>
+                <FormGroup style={{ margin: 10 }}>
                   <img
-                    style={{ width: 300 }}
+                    style={{ width: 300, margin: "0 auto" }}
                     src={require("../Images/logo.png")}
                     alt="logo"
                   />
@@ -188,7 +188,7 @@ class SingIn extends React.Component {
                     onChange={this.handleChange("username")}
                   />
                 </FormGroup>
-                <FormGroup>
+                <FormGroup style={{ margin: 10 }}>
                   <InputLabel
                     error={this.state.error}
                     style={{ marginTop: 10 }}
@@ -249,20 +249,32 @@ class SingIn extends React.Component {
             {/*</Paper>*/}
           </div>
           <BrowserView>
+            <img
+              style={{
+                zIndex: -100,
+                width: "100%",
+                position: "absolute",
+                bottom: -1
+              }}
+              src={require("../Images/grass.png")}
+              alt="footer"
+            />
             <StickyFooter
               bottomThreshold={20}
               normalStyles={{
                 height: 20,
-                backgroundColor: "#999999",
+                // backgroundColor: "#999999",
                 padding: "10px"
               }}
               stickyStyles={{
-                backgroundColor: "rgba(255,255,255,.8)",
+                // backgroundColor: "rgba(255,255,255,.8)",
                 padding: "2rem"
               }}
             >
-              © 2019 - 2020, Plant'y Inc. or its affiliates. All rights
-              reserved.
+              <p style={{ color: "white", marginTop: -10 }}>
+                © 2019 - 2020, Plant'y Inc. or its affiliates. All rights
+                reserved.
+              </p>
             </StickyFooter>
           </BrowserView>
         </div>

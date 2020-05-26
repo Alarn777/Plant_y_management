@@ -42,6 +42,7 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import { BrowserView, isMobile } from "react-device-detect";
 import CardActions from "@material-ui/core/CardActions";
 import { w3cwebsocket as W3CWebSocket } from "websocket";
+import Avatar from "@material-ui/core/Avatar";
 
 class UserPage extends React.Component {
   // static propTypes = {
@@ -365,7 +366,20 @@ class UserPage extends React.Component {
                 color="inherit"
                 aria-label="menu"
               >
-                {this.state.user ? <MenuIcon /> : <ArrowBackIosIcon />}
+                {this.state.user ? (
+                  <Avatar
+                    variant="square"
+                    alt="Remy Sharp"
+                    style={{
+                      backgroundColor: "white",
+                      borderRadius: 5,
+                      marginRight: 10
+                    }}
+                    src={require("../Images/logo.png")}
+                  />
+                ) : (
+                  <ArrowBackIosIcon />
+                )}
               </IconButton>
               <Typography
                 variant="h6"
@@ -420,19 +434,32 @@ class UserPage extends React.Component {
           )}
         </div>
         <BrowserView>
+          <img
+            style={{
+              zIndex: -100,
+              width: "100%",
+              position: "absolute",
+              bottom: -1
+            }}
+            src={require("../Images/grass.png")}
+            alt="footer"
+          />
           <StickyFooter
             bottomThreshold={20}
             normalStyles={{
               height: 20,
-              backgroundColor: "#999999",
+              // backgroundColor: "#999999",
               padding: "10px"
             }}
             stickyStyles={{
-              backgroundColor: "rgba(255,255,255,.8)",
+              // backgroundColor: "rgba(255,255,255,.8)",
               padding: "2rem"
             }}
           >
-            © 2019 - 2020, Plant'y Inc. or its affiliates. All rights reserved.
+            <p style={{ color: "white", marginTop: -10 }}>
+              © 2019 - 2020, Plant'y Inc. or its affiliates. All rights
+              reserved.
+            </p>
           </StickyFooter>
         </BrowserView>
       </div>

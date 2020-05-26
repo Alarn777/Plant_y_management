@@ -11,14 +11,10 @@ import { bindActionCreators } from "redux";
 import { addSocket, addUser, loadPlanters } from "../actions";
 import Button from "@material-ui/core/Button";
 import Amplify, { Auth } from "aws-amplify";
-// import awsconfig from "../aws-exports";
-import FormControl from "@material-ui/core/FormControl";
 import FormGroup from "@material-ui/core/FormGroup";
 import "../Styles/Signin.css";
-import TextField from "@material-ui/core/TextField";
 import AppBar from "@material-ui/core/AppBar";
 import { IconButton, Paper, Toolbar, Typography, Fab } from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
 import StickyFooter from "react-sticky-footer";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Redirect } from "react-router-dom";
@@ -28,6 +24,10 @@ import { Image, Visibility, VisibilityOff } from "@material-ui/icons";
 import InputLabel from "@material-ui/core/InputLabel";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { BrowserView, isMobile } from "react-device-detect";
+import Alert from "@material-ui/lab/Alert";
+
+const plantyColor = "#6f9e04";
+const errorColor = "#ee3e34";
 
 class SingUp extends React.Component {
   constructor(props) {
@@ -185,20 +185,35 @@ class SingUp extends React.Component {
             </Typography>
             {/*</Paper>*/}
           </div>
-          <StickyFooter
-            bottomThreshold={20}
-            normalStyles={{
-              height: 10,
-              backgroundColor: "#999999",
-              padding: "2rem"
-            }}
-            stickyStyles={{
-              backgroundColor: "rgba(255,255,255,.8)",
-              padding: "2rem"
-            }}
-          >
-            © 2019 - 2020, Plant'y Inc. or its affiliates. All rights reserved.
-          </StickyFooter>
+          <BrowserView>
+            <img
+              style={{
+                zIndex: -100,
+                width: "100%",
+                position: "absolute",
+                bottom: -1
+              }}
+              src={require("../Images/grass.png")}
+              alt="footer"
+            />
+            <StickyFooter
+              bottomThreshold={20}
+              normalStyles={{
+                height: 20,
+                // backgroundColor: "#999999",
+                padding: "10px"
+              }}
+              stickyStyles={{
+                // backgroundColor: "rgba(255,255,255,.8)",
+                padding: "2rem"
+              }}
+            >
+              <p style={{ color: "white", marginTop: -10 }}>
+                © 2019 - 2020, Plant'y Inc. or its affiliates. All rights
+                reserved.
+              </p>
+            </StickyFooter>
+          </BrowserView>
         </div>
       );
     } else {
@@ -241,12 +256,33 @@ class SingUp extends React.Component {
               <form>
                 {this.state.register ? (
                   <div>
-                    <FormGroup>
+                    <FormGroup style={{ margin: 10 }}>
                       <img
-                        style={{ width: 300 }}
+                        style={{ width: 300, margin: "0 auto" }}
                         src={require("../Images/logo.png")}
                         alt="logo"
                       />
+                      {/*<p*/}
+                      {/*  style={{*/}
+                      {/*    marginTop: 10,*/}
+                      {/*    borderColor: errorColor,*/}
+                      {/*    borderWidth: 1,*/}
+                      {/*    borderRadius: 3,*/}
+                      {/*    padding: 10,*/}
+                      {/*    color: errorColor*/}
+                      {/*  }}*/}
+                      {/*>*/}
+                      {/*  Please contact system administrator to register*/}
+                      {/*</p>*/}
+                      <Alert
+                        style={{
+                          marginTop: 10
+                        }}
+                        severity="warning"
+                      >
+                        Please contact admin to register
+                      </Alert>
+
                       <InputLabel
                         error={this.state.error}
                         style={{ marginTop: 10 }}
@@ -280,7 +316,7 @@ class SingUp extends React.Component {
                         onChange={this.handleChange("userEmail")}
                       />
                     </FormGroup>
-                    <FormGroup>
+                    <FormGroup style={{ margin: 10 }}>
                       <InputLabel
                         error={this.state.error}
                         style={{ marginTop: 10 }}
@@ -448,20 +484,32 @@ class SingUp extends React.Component {
             {/*</Paper>*/}
           </div>
           <BrowserView>
+            <img
+              style={{
+                zIndex: -100,
+                width: "100%",
+                position: "absolute",
+                bottom: -1
+              }}
+              src={require("../Images/grass.png")}
+              alt="footer"
+            />
             <StickyFooter
-              bottomThreshold={0}
+              bottomThreshold={20}
               normalStyles={{
                 height: 20,
-                backgroundColor: "#999999",
+                // backgroundColor: "#999999",
                 padding: "10px"
               }}
               stickyStyles={{
-                backgroundColor: "rgba(255,255,255,.8)"
-                // padding: "2rem",
+                // backgroundColor: "rgba(255,255,255,.8)",
+                padding: "2rem"
               }}
             >
-              © 2019 - 2020, Plant'y Inc. or its affiliates. All rights
-              reserved.
+              <p style={{ color: "white", marginTop: -10 }}>
+                © 2019 - 2020, Plant'y Inc. or its affiliates. All rights
+                reserved.
+              </p>
             </StickyFooter>
           </BrowserView>
         </div>

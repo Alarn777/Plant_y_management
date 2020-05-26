@@ -48,6 +48,8 @@ import WS from "../websocket";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Fab from "@material-ui/core/Fab";
 import Paper from "@material-ui/core/Paper";
+import Alert from "@material-ui/lab/Alert";
+import Avatar from "@material-ui/core/Avatar";
 
 const plantyColor = "#6f9e04";
 const errorColor = "#ee3e34";
@@ -499,7 +501,7 @@ class PlanterPage extends React.Component {
     let videoWidth = this.state.width - 100;
     let maxWidth = this.state.width / 3 - 30;
     if (isMobile) {
-      playerHeight = 500;
+      playerHeight = 300;
       float = "none";
       videoWidth = this.state.width - 20;
       maxWidth = this.state.width - 30;
@@ -533,7 +535,20 @@ class PlanterPage extends React.Component {
                 color="inherit"
                 aria-label="menu"
               >
-                {this.state.user ? <MenuIcon /> : <ArrowBackIosIcon />}
+                {this.state.user ? (
+                  <Avatar
+                    variant="square"
+                    alt="Remy Sharp"
+                    style={{
+                      backgroundColor: "white",
+                      borderRadius: 5,
+                      marginRight: 10
+                    }}
+                    src={require("../Images/logo.png")}
+                  />
+                ) : (
+                  <ArrowBackIosIcon />
+                )}
               </IconButton>
               <Typography variant="h6" style={{ flexGrow: 1 }}>
                 Plant'y
@@ -594,10 +609,19 @@ class PlanterPage extends React.Component {
                     <Reload />
                     Reload Video
                   </Fab>
-                  <p style={{ margin: 12, color: errorColor, float: "left" }}>
-                    {this.state.streamError}
-                  </p>
+                  {/*<p style={{ margin: 12, color: errorColor, float: "left" }}>*/}
+                  {/*  {this.state.streamError}*/}
+                  {/*</p>*/}
+
                   <div style={{ clear: "both" }} />
+                  {this.state.streamError === "" ? (
+                    <div />
+                  ) : (
+                    <Alert style={{ margin: 5 }} severity="error">
+                      {this.state.streamError +
+                        ", Enable stream to fix this error"}
+                    </Alert>
+                  )}
 
                   <div
                     style={{
