@@ -89,17 +89,21 @@ class PlanterPage extends React.Component {
       waterTurnedOn: false,
       lightTurnedOn: false,
       loadingLightTurnedOn: false,
+      loadingLightTurnedOff: false,
       waterAdded: false,
       loadingAddingWater: false,
       loadingActions: false,
       streamUrl: "",
-      dataForGraph: []
+      dataForGraph: [],
+      loadingStreamTurnedOff: false,
+      loadingStreamTurnedOn: false,
+      streamTurnedOn: false,
+      streamError: ""
     };
     if (!WS.ws) WS.init();
-
     Amplify.configure(JSON.parse(process.env.REACT_APP_CONFIG_AWS));
     WS.onMessage(data => {
-      // console.log("GOT in planter screen", data.data);
+      console.log("GOT in planter screen", data.data);
 
       let instructions = data.data.split(";");
       if (instructions.length > 2)
@@ -111,18 +115,31 @@ class PlanterPage extends React.Component {
             this.loadStreamUrl()
               .then()
               .catch(e => console.log(e));
-            this.setState({ loadingStreamTurnedOn: false });
+            this.setState({
+              loadingStreamTurnedOn: false,
+              streamTurnedOn: true
+            });
             break;
           case "STREAM_STOPPED":
-            this.setState({ loadingStreamTurnedOn: false });
+            this.setState({
+              loadingStreamTurnedOff: false,
+              streamTurnedOn: true
+            });
             break;
           case "UV_LAMP_IS_ON":
             this.setState({ lightTurnedOn: true, loadingLightTurnedOn: false });
             break;
+          case "LAMP_IS_OFF":
+            this.setState({ lightTurnedOn: false });
+            break;
+          case "LAMP_IS_ON":
+            this.setState({ lightTurnedOn: true });
+            break;
+
           case "UV_LAMP_IS_OFF":
             this.setState({
               lightTurnedOn: false,
-              loadingLightTurnedOn: false
+              loadingLightTurnedOff: false
             });
             break;
           case "FAILED":
@@ -159,6 +176,11 @@ class PlanterPage extends React.Component {
         }
     });
   }
+
+  checkLight = () => {
+    if (WS.ws)
+      WS.sendMessage("FROM_WEB;" + this.state.planterUUID + ";UV_LAMP_STATUS");
+  };
 
   updateDimensions = () => {
     let w = window,
@@ -208,22 +230,15 @@ class PlanterPage extends React.Component {
   }
 
   parceData(plots) {
-    console.log(plots);
     let dataArray = [];
-
-    console.log(plots.daily.ambientTemperatureCelsius.labels.length);
-
     for (
       let i = 0;
       i < plots.daily.ambientTemperatureCelsius.labels.length;
       i++
     ) {
       let object = {
-        // subject: arr[i],
         name: plots.daily.ambientTemperatureCelsius.labels[i],
         temperature: plots.daily.ambientTemperatureCelsius.datasets[0].data[i]
-        // Japanese: jap["prefix"],
-        // fullMark: 60000
       };
       dataArray.push(object);
     }
@@ -233,11 +248,8 @@ class PlanterPage extends React.Component {
 
     for (let i = 0; i < plots.daily.uvIntensity.labels.length; i++) {
       let object = {
-        // subject: arr[i],
         name: plots.daily.uvIntensity.labels[i],
         uv: plots.daily.uvIntensity.datasets[0].data[i]
-        // Japanese: jap["prefix"],
-        // fullMark: 60000
       };
       dataArray.push(object);
     }
@@ -252,29 +264,10 @@ class PlanterPage extends React.Component {
         humidity: Math.floor(
           parseFloat(plots.daily.soilHumidity.datasets[0].data[i]) * 100
         )
-        // Japanese: jap["prefix"],
-        // fullMark: 60000
       };
       dataArray.push(object);
     }
-
-    // let arr = [];
-    // for (let i = 0; i < arr.length; i++) {
-    //   if (arr[i] === "Preposition") {
-    //     let object = {
-    //       // subject: arr[i],
-    //       name: arr[i],
-    //       value: 0
-    //       // Japanese: jap["prefix"],
-    //       // fullMark: 60000
-    //     };
-    //     dataArray.push(object);
-    //   }
-    // }
-
     this.setState({ dataForGraphHumidity: dataArray });
-    // this.state.data = false
-    // this.setState({data: false})
     this.forceUpdate();
   }
 
@@ -299,6 +292,8 @@ class PlanterPage extends React.Component {
       .catch(error => {
         console.log("error " + error);
       });
+
+    this.checkLight();
   }
 
   async loadPlanter() {
@@ -342,7 +337,6 @@ class PlanterPage extends React.Component {
             plantStatus: one.plantStatus
           };
           newPlants.push(newOne);
-          // console.log(data);
         })
         .then(() => this.setState({ plants: newPlants }))
         .catch(error => console.log(error));
@@ -429,6 +423,7 @@ class PlanterPage extends React.Component {
             this.state.streamUrl === null
           ) {
             if (response.data.errorMessage) {
+              this.setState({ streamError: response.data.errorMessage });
               console.log(response.data.errorMessage);
               return;
             }
@@ -598,15 +593,19 @@ class PlanterPage extends React.Component {
                     size="small"
                     color="primary"
                     variant="extended"
-                    style={{ margin: 5 }}
+                    style={{ margin: 5, float: "left" }}
                     onClick={() => {
-                      this.setState({ streamUrl: undefined });
+                      this.setState({ streamUrl: undefined, streamError: "" });
                       this.loadStreamUrl();
                     }}
                   >
                     <Reload />
                     Reload Video
                   </Fab>
+                  <p style={{ margin: 12, color: errorColor, float: "left" }}>
+                    {this.state.streamError}
+                  </p>
+                  <div style={{ clear: "both" }} />
 
                   <div
                     style={{
@@ -745,6 +744,7 @@ class PlanterPage extends React.Component {
                     }}
                     variant="contained"
                     color="primary"
+                    disabled={this.state.lightTurnedOn}
                     onClick={() => {
                       this.setState({ loadingLightTurnedOn: true });
                       WS.sendMessage(
@@ -770,14 +770,15 @@ class PlanterPage extends React.Component {
                     }}
                     variant="contained"
                     color="primary"
+                    disabled={!this.state.lightTurnedOn}
                     onClick={() => {
-                      this.setState({ loadingLightTurnedOn: true });
+                      this.setState({ loadingLightTurnedOff: true });
                       WS.sendMessage(
                         "FROM_WEB;" + this.state.planterUUID + ";UV_LAMP_OFF"
                       );
                     }}
                   >
-                    {!this.state.loadingLightTurnedOn ? (
+                    {!this.state.loadingLightTurnedOff ? (
                       "Turn light off"
                     ) : (
                       <CircularProgress
@@ -795,6 +796,7 @@ class PlanterPage extends React.Component {
                     }}
                     variant="contained"
                     color="primary"
+                    // disabled={this.state.streamTurnedOn}
                     onClick={() => {
                       this.setState({ loadingStreamTurnedOn: true });
                       WS.sendMessage(
@@ -822,8 +824,9 @@ class PlanterPage extends React.Component {
                     }}
                     variant="contained"
                     color="primary"
+                    // disabled={!this.state.streamTurnedOn}
                     onClick={() => {
-                      this.setState({ loadingStreamTurnedOn: true });
+                      this.setState({ loadingStreamTurnedOff: true });
                       WS.sendMessage(
                         "FROM_WEB;" +
                           this.state.planterUUID +
@@ -831,7 +834,7 @@ class PlanterPage extends React.Component {
                       );
                     }}
                   >
-                    {!this.state.loadingStreamTurnedOn ? (
+                    {!this.state.loadingStreamTurnedOff ? (
                       "Disable stream"
                     ) : (
                       <CircularProgress
@@ -841,6 +844,23 @@ class PlanterPage extends React.Component {
                       />
                     )}
                   </Button>
+
+                  {/*<Button*/}
+                  {/*  style={{*/}
+                  {/*    margin: 10,*/}
+                  {/*    width: 180,*/}
+                  {/*    padding: -10*/}
+                  {/*  }}*/}
+                  {/*  variant="contained"*/}
+                  {/*  color="primary"*/}
+                  {/*  onClick={() => {*/}
+                  {/*    WS.sendMessage(*/}
+                  {/*      "FROM_WEB;" + this.state.planterUUID + ";UV_LAMP_STATUS"*/}
+                  {/*    );*/}
+                  {/*  }}*/}
+                  {/*>*/}
+                  {/*  Lamp status*/}
+                  {/*</Button>*/}
                 </div>
               </Paper>
               <Paper style={{ margin: 10 }}>

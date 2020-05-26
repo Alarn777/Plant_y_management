@@ -7,4 +7,14 @@
         margin: 0 auto;
         max-width: 310px;
     }
+    .logo form{
+        margin: 0 auto;
+        max-width: 310px;
+        /*max-width: 1000px;*/
+        text-align: center;
+    }
+}
+.logo {
+    margin: 0 auto;
+    /*max-width: 1000px;*/
 }

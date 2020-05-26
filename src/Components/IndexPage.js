@@ -12,7 +12,7 @@ import AppBar from "@material-ui/core/AppBar";
 // import Toolbar from "@material-ui/core/Toolbar";
 // import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/styles";
-
+import "../Styles/Signin.css";
 // import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import {
@@ -26,6 +26,11 @@ import {
 import { Redirect } from "react-router-dom";
 import Avatar from "@material-ui/core/Avatar";
 import { BrowserView, isMobile } from "react-device-detect";
+import FormGroup from "@material-ui/core/FormGroup";
+
+const plantyColor = "#6f9e04";
+const errorColor = "#ee3e34";
+
 class IndexPage extends React.Component {
   constructor(props) {
     super(props);
@@ -165,6 +170,20 @@ class IndexPage extends React.Component {
               </Button>
             </div>
           </Paper>
+          <div className="logo">
+            <form onSubmit={this.handleSubmit}>
+              <FormGroup>
+                <img
+                  style={{ width: 300 }}
+                  src={require("../Images/logo.png")}
+                  alt="logo"
+                />
+              </FormGroup>
+              {/*<p style={{ color: plantyColor, fontSize: 20 }}>*/}
+              {/*  Grow your plants with us*/}
+              {/*</p>*/}
+            </form>
+          </div>
         </div>
         <BrowserView>
           <StickyFooter
