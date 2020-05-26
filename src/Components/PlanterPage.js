@@ -15,7 +15,25 @@ import ArrowForward from "@material-ui/icons/ArrowForwardIos";
 import Reload from "@material-ui/icons/Autorenew";
 import LeftHard from "@material-ui/icons/LastPage";
 import RightHard from "@material-ui/icons/FirstPage";
-
+import {
+  RadarChart,
+  PolarGrid,
+  Legend,
+  PolarRadiusAxis,
+  PolarAngleAxis,
+  Radar,
+  AreaChart,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Area,
+  BarChart,
+  Bar,
+  ScatterChart,
+  Scatter
+} from "recharts";
+import { validateWidthHeight } from "recharts/lib/util/ReactUtils";
 import ReactPlayer from "react-player";
 import ReactHLS from "react-hls-player";
 import {
@@ -74,7 +92,8 @@ class PlanterPage extends React.Component {
       waterAdded: false,
       loadingAddingWater: false,
       loadingActions: false,
-      streamUrl: ""
+      streamUrl: "",
+      dataForGraph: []
     };
     if (!WS.ws) WS.init();
 
@@ -87,6 +106,15 @@ class PlanterPage extends React.Component {
         switch (instructions[2]) {
           case "WATER_ADDED":
             this.setState({ waterAdded: true, loadingAddingWater: false });
+            break;
+          case "STREAM_STARTED":
+            this.loadStreamUrl()
+              .then()
+              .catch(e => console.log(e));
+            this.setState({ loadingStreamTurnedOn: false });
+            break;
+          case "STREAM_STOPPED":
+            this.setState({ loadingStreamTurnedOn: false });
             break;
           case "UV_LAMP_IS_ON":
             this.setState({ lightTurnedOn: true, loadingLightTurnedOn: false });
@@ -164,6 +192,10 @@ class PlanterPage extends React.Component {
           .then()
           .catch();
         this.loadStreamUrl();
+
+        this.loadPlanter()
+          .then()
+          .catch();
       })
       // .then(data => console.log(data))
       .catch(err => console.log(err));
@@ -173,6 +205,77 @@ class PlanterPage extends React.Component {
 
   componentWillUnmount() {
     window.removeEventListener("resize", this.updateDimensions);
+  }
+
+  parceData(plots) {
+    console.log(plots);
+    let dataArray = [];
+
+    console.log(plots.daily.ambientTemperatureCelsius.labels.length);
+
+    for (
+      let i = 0;
+      i < plots.daily.ambientTemperatureCelsius.labels.length;
+      i++
+    ) {
+      let object = {
+        // subject: arr[i],
+        name: plots.daily.ambientTemperatureCelsius.labels[i],
+        temperature: plots.daily.ambientTemperatureCelsius.datasets[0].data[i]
+        // Japanese: jap["prefix"],
+        // fullMark: 60000
+      };
+      dataArray.push(object);
+    }
+
+    this.setState({ dataForGraph: dataArray });
+    dataArray = [];
+
+    for (let i = 0; i < plots.daily.uvIntensity.labels.length; i++) {
+      let object = {
+        // subject: arr[i],
+        name: plots.daily.uvIntensity.labels[i],
+        uv: plots.daily.uvIntensity.datasets[0].data[i]
+        // Japanese: jap["prefix"],
+        // fullMark: 60000
+      };
+      dataArray.push(object);
+    }
+
+    this.setState({ dataForGraphUV: dataArray });
+    dataArray = [];
+
+    for (let i = 0; i < plots.daily.soilHumidity.labels.length; i++) {
+      let object = {
+        // subject: arr[i],
+        name: plots.daily.soilHumidity.labels[i],
+        humidity: Math.floor(
+          parseFloat(plots.daily.soilHumidity.datasets[0].data[i]) * 100
+        )
+        // Japanese: jap["prefix"],
+        // fullMark: 60000
+      };
+      dataArray.push(object);
+    }
+
+    // let arr = [];
+    // for (let i = 0; i < arr.length; i++) {
+    //   if (arr[i] === "Preposition") {
+    //     let object = {
+    //       // subject: arr[i],
+    //       name: arr[i],
+    //       value: 0
+    //       // Japanese: jap["prefix"],
+    //       // fullMark: 60000
+    //     };
+    //     dataArray.push(object);
+    //   }
+    // }
+
+    this.setState({ dataForGraphHumidity: dataArray });
+    // this.state.data = false
+    // this.setState({data: false})
+    this.forceUpdate();
   }
 
   async loadPlants() {
@@ -192,6 +295,30 @@ class PlanterPage extends React.Component {
       )
       .then(response => {
         this.dealWithPlantsData(response.data);
+      })
+      .catch(error => {
+        console.log("error " + error);
+      });
+  }
+
+  async loadPlanter() {
+    let USER_TOKEN = this.state.user.signInUserSession.idToken.jwtToken;
+    const AuthStr = "Bearer ".concat(USER_TOKEN);
+    await axios
+      .post(
+        JSON.parse(process.env.REACT_APP_API_LINKS).apigatewayRoute +
+          "/getplanter",
+        {
+          username: this.state.customerUsername,
+          UUID: this.state.planterUUID
+        },
+        {
+          headers: { Authorization: AuthStr }
+        }
+      )
+      .then(response => {
+        this.parceData(response.data.plots);
+        // this.dealWithPlantsData(response.data);
       })
       .catch(error => {
         console.log("error " + error);
@@ -328,7 +455,7 @@ class PlanterPage extends React.Component {
         onClick={() => {
           this.setState({ selectedPlanter: plant.name });
         }}
-        key={plant.name}
+        key={plant.name + Math.random().toString()}
         style={{
           float: "left",
           margin: 10,
@@ -660,6 +787,60 @@ class PlanterPage extends React.Component {
                       />
                     )}
                   </Button>
+                  <Button
+                    style={{
+                      margin: 10,
+                      width: 180,
+                      padding: -10
+                    }}
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      this.setState({ loadingStreamTurnedOn: true });
+                      WS.sendMessage(
+                        "FROM_WEB;" +
+                          this.state.planterUUID +
+                          ";VIDEO_STREAM_ON"
+                      );
+                    }}
+                  >
+                    {!this.state.loadingStreamTurnedOn ? (
+                      "Enable stream"
+                    ) : (
+                      <CircularProgress
+                        size={24}
+                        color="secondary"
+                        style={{ root: { flex: 1 } }}
+                      />
+                    )}
+                  </Button>
+                  <Button
+                    style={{
+                      margin: 10,
+                      width: 180,
+                      padding: -10
+                    }}
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      this.setState({ loadingStreamTurnedOn: true });
+                      WS.sendMessage(
+                        "FROM_WEB;" +
+                          this.state.planterUUID +
+                          ";VIDEO_STREAM_OFF"
+                      );
+                    }}
+                  >
+                    {!this.state.loadingStreamTurnedOn ? (
+                      "Disable stream"
+                    ) : (
+                      <CircularProgress
+                        size={24}
+                        color="secondary"
+                        style={{ root: { flex: 1 } }}
+                      />
+                    )}
+                  </Button>
                 </div>
               </Paper>
               <Paper style={{ margin: 10 }}>
@@ -685,6 +866,174 @@ class PlanterPage extends React.Component {
                   Plants in {this.state.planterName}
                 </Typography>
                 {this.state.plants.map(one => this.renderPlants(one))}
+              </Paper>
+              <div style={{ clear: "both" }} />
+              <Paper style={{ margin: 10 }}>
+                <Typography style={{ padding: 10 }} variant="h5" component="h3">
+                  Data for {this.state.planterName}
+                </Typography>
+              </Paper>
+              <Paper
+                style={{
+                  margin: 10,
+                  width: this.state.width / 3 - 30,
+                  float: "left"
+                }}
+              >
+                <Typography style={{ padding: 10 }} variant="p" component="h3">
+                  Temperature over this day
+                </Typography>
+
+                <AreaChart
+                  width={this.state.width / 3 - 30}
+                  height={300}
+                  data={this.state.dataForGraph}
+                  margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                >
+                  <defs>
+                    <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                      <stop
+                        offset="10%"
+                        stopColor={plantyColor}
+                        stopOpacity={0.8}
+                      />
+                      <stop
+                        offset="95%"
+                        stopColor={plantyColor}
+                        stopOpacity={0}
+                      />
+                    </linearGradient>
+                    <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+                      <stop
+                        offset="5%"
+                        stopColor={plantyColor}
+                        stopOpacity={0.8}
+                      />
+                      <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <XAxis label="Hours" dataKey="name" />
+                  <YAxis />
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <Tooltip />
+                  <Legend />
+                  <Area
+                    type="monotone"
+                    dataKey="temperature"
+                    stopColor={plantyColor}
+                    fillOpacity={1}
+                    fill="url(#colorUv)"
+                  />
+                </AreaChart>
+                {/*</Card>*/}
+              </Paper>
+              <Paper
+                style={{
+                  margin: 10,
+                  width: this.state.width / 3 - 30,
+                  float: "left"
+                }}
+              >
+                <Typography style={{ padding: 10 }} variant="p" component="h3">
+                  UV over this day
+                </Typography>
+
+                <AreaChart
+                  width={this.state.width / 3 - 30}
+                  height={300}
+                  data={this.state.dataForGraphUV}
+                  margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                >
+                  <defs>
+                    <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                      <stop
+                        offset="10%"
+                        stopColor={plantyColor}
+                        stopOpacity={0.8}
+                      />
+                      <stop
+                        offset="95%"
+                        stopColor={plantyColor}
+                        stopOpacity={0}
+                      />
+                    </linearGradient>
+                    <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+                      <stop
+                        offset="5%"
+                        stopColor={plantyColor}
+                        stopOpacity={0.8}
+                      />
+                      <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <XAxis label="Hours" dataKey="name" />
+                  <YAxis label="" />
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <Tooltip />
+                  <Legend />
+                  <Area
+                    type="monotone"
+                    dataKey="uv"
+                    stopColor={plantyColor}
+                    fillOpacity={1}
+                    fill="url(#colorUv)"
+                  />
+                </AreaChart>
+                {/*</Card>*/}
+              </Paper>
+              <Paper
+                style={{
+                  margin: 10,
+                  float: "left",
+                  width: this.state.width / 3 - 30
+                }}
+              >
+                <Typography style={{ padding: 10 }} variant="p" component="h3">
+                  Humidity over this day
+                </Typography>
+
+                <AreaChart
+                  width={this.state.width / 3 - 30}
+                  height={300}
+                  data={this.state.dataForGraphHumidity}
+                  margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                >
+                  <defs>
+                    <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                      <stop
+                        offset="10%"
+                        stopColor={plantyColor}
+                        stopOpacity={0.8}
+                      />
+                      <stop
+                        offset="95%"
+                        stopColor={plantyColor}
+                        stopOpacity={0}
+                      />
+                    </linearGradient>
+                    <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+                      <stop
+                        offset="5%"
+                        stopColor={plantyColor}
+                        stopOpacity={0.8}
+                      />
+                      <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <XAxis label="Hours" dataKey="name" />
+                  <YAxis />
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <Tooltip />
+                  <Legend />
+                  <Area
+                    type="monotone"
+                    dataKey="humidity"
+                    stopColor={plantyColor}
+                    fillOpacity={1}
+                    fill="url(#colorUv)"
+                  />
+                </AreaChart>
+                {/*</Card>*/}
               </Paper>
             </div>
           ) : (
