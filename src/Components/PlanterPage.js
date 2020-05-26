@@ -103,7 +103,7 @@ class PlanterPage extends React.Component {
     if (!WS.ws) WS.init();
     Amplify.configure(JSON.parse(process.env.REACT_APP_CONFIG_AWS));
     WS.onMessage(data => {
-      console.log("GOT in planter screen", data.data);
+      // console.log("GOT in planter screen", data.data);
 
       let instructions = data.data.split(";");
       if (instructions.length > 2)
