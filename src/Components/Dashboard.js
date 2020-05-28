@@ -625,7 +625,7 @@ class Dashboard extends React.Component {
                       display: "inline"
                     }}
                   >
-                    15
+                    {isMobile ? "" : 15}
                     <Slider
                       style={{ width: "50%", marginLeft: 25, marginRight: 25 }}
                       value={[
@@ -647,7 +647,7 @@ class Dashboard extends React.Component {
                       max={35}
                       getAriaValueText={this.valueTempText}
                     />
-                    35
+                    {isMobile ? "" : 35}
                   </div>
                 </div>
                 <div style={{ width: "100%" }}>
@@ -661,7 +661,7 @@ class Dashboard extends React.Component {
                       display: "inline"
                     }}
                   >
-                    0
+                    {isMobile ? "" : 0}
                     <Slider
                       style={{ width: "60%", marginLeft: 25, marginRight: 25 }}
                       // value={[
@@ -689,7 +689,7 @@ class Dashboard extends React.Component {
                       step={100}
                       // getAriaValueText={this.valueTempText}
                     />
-                    400
+                    {isMobile ? "" : 400}
                     {/*<p style={{ marginTop: 20 }}>35</p>*/}
                   </div>
                 </div>
@@ -712,7 +712,7 @@ class Dashboard extends React.Component {
                       display: "inline"
                     }}
                   >
-                    0
+                    {isMobile ? "" : 0}
                     <Slider
                       style={{ width: "60%", marginLeft: 25, marginRight: 25 }}
                       value={[
@@ -736,7 +736,7 @@ class Dashboard extends React.Component {
                       max={100}
                       getAriaValueText={this.valueHumidText}
                     />
-                    100
+                    {isMobile ? "" : 100}
                     {/*<p style={{ marginTop: 20 }}>35</p>*/}
                   </div>
                 </div>
@@ -781,7 +781,7 @@ class Dashboard extends React.Component {
                       display: "inline"
                     }}
                   >
-                    15
+                    {isMobile ? "" : 15}
                     <Slider
                       style={{ width: "60%", marginLeft: 25, marginRight: 25 }}
                       value={[
@@ -803,7 +803,7 @@ class Dashboard extends React.Component {
                       max={35}
                       getAriaValueText={this.valueTempText}
                     />
-                    35
+                    {isMobile ? "" : 35}
                     {/*<p style={{ marginTop: 20 }}>35</p>*/}
                   </div>
                 </div>
@@ -818,7 +818,7 @@ class Dashboard extends React.Component {
                       display: "inline"
                     }}
                   >
-                    0
+                    {isMobile ? "" : 0}
                     <Slider
                       style={{ width: "60%", marginLeft: 25, marginRight: 25 }}
                       value={[
@@ -841,7 +841,7 @@ class Dashboard extends React.Component {
                       step={100}
                       // getAriaValueText={this.valueTempText}
                     />
-                    400
+                    {isMobile ? "" : 400}
                     {/*<p style={{ marginTop: 20 }}>35</p>*/}
                   </div>
                 </div>
@@ -864,7 +864,7 @@ class Dashboard extends React.Component {
                       display: "inline"
                     }}
                   >
-                    0
+                    {isMobile ? "" : 0}
                     <Slider
                       style={{ width: "60%", marginLeft: 25, marginRight: 25 }}
                       value={[
@@ -888,7 +888,7 @@ class Dashboard extends React.Component {
                       max={100}
                       getAriaValueText={this.valueHumidText}
                     />
-                    100
+                    {isMobile ? "" : 100}
                     {/*<p style={{ marginTop: 20 }}>35</p>*/}
                   </div>
                 </div>
@@ -936,7 +936,7 @@ class Dashboard extends React.Component {
                       display: "inline"
                     }}
                   >
-                    15
+                    {isMobile ? "" : 15}
                     <Slider
                       style={{ width: "60%", marginLeft: 25, marginRight: 25 }}
                       value={[
@@ -958,7 +958,7 @@ class Dashboard extends React.Component {
                       max={35}
                       getAriaValueText={this.valueTempText}
                     />
-                    35
+                    {isMobile ? "" : 35}
                     {/*<p style={{ marginTop: 20 }}>35</p>*/}
                   </div>
                 </div>
@@ -973,7 +973,7 @@ class Dashboard extends React.Component {
                       display: "inline"
                     }}
                   >
-                    0
+                    {isMobile ? "" : 0}
                     <Slider
                       style={{ width: "60%", marginLeft: 25, marginRight: 25 }}
                       value={[
@@ -996,7 +996,7 @@ class Dashboard extends React.Component {
                       step={100}
                       // getAriaValueText={this.valueTempText}
                     />
-                    400
+                    {isMobile ? "" : 400}
                     {/*<p style={{ marginTop: 20 }}>35</p>*/}
                   </div>
                 </div>
@@ -1019,7 +1019,7 @@ class Dashboard extends React.Component {
                       display: "inline"
                     }}
                   >
-                    0
+                    {isMobile ? "" : 0}
                     <Slider
                       style={{ width: "60%", marginLeft: 25, marginRight: 25 }}
                       value={[
@@ -1043,7 +1043,7 @@ class Dashboard extends React.Component {
                       max={100}
                       getAriaValueText={this.valueHumidText}
                     />
-                    100
+                    {isMobile ? "" : 100}
                     {/*<p style={{ marginTop: 20 }}>35</p>*/}
                   </div>
                 </div>
@@ -1087,7 +1087,7 @@ class Dashboard extends React.Component {
                       display: "inline"
                     }}
                   >
-                    15
+                    {isMobile ? "" : 15}
                     <Slider
                       style={{ width: "60%", marginLeft: 25, marginRight: 25 }}
                       value={[
@@ -1109,7 +1109,7 @@ class Dashboard extends React.Component {
                       max={35}
                       getAriaValueText={this.valueTempText}
                     />
-                    35
+                    {isMobile ? "" : 35}
                     {/*<p style={{ marginTop: 20 }}>35</p>*/}
                   </div>
                 </div>
@@ -1124,7 +1124,7 @@ class Dashboard extends React.Component {
                       display: "inline"
                     }}
                   >
-                    0
+                    {isMobile ? "" : 0}
                     <Slider
                       style={{ width: "60%", marginLeft: 25, marginRight: 25 }}
                       value={[
@@ -1147,7 +1147,7 @@ class Dashboard extends React.Component {
                       step={100}
                       // getAriaValueText={this.valueTempText}
                     />
-                    400
+                    {isMobile ? "" : 400}
                     {/*<p style={{ marginTop: 20 }}>35</p>*/}
                   </div>
                 </div>
@@ -1170,7 +1170,7 @@ class Dashboard extends React.Component {
                       display: "inline"
                     }}
                   >
-                    0
+                    {isMobile ? "" : 0}
                     <Slider
                       style={{ width: "60%", marginLeft: 25, marginRight: 25 }}
                       value={[
@@ -1194,7 +1194,7 @@ class Dashboard extends React.Component {
                       max={100}
                       getAriaValueText={this.valueHumidText}
                     />
-                    100
+                    {isMobile ? "" : 100}
                     {/*<p style={{ marginTop: 20 }}>35</p>*/}
                   </div>
                 </div>
@@ -1205,7 +1205,6 @@ class Dashboard extends React.Component {
       </ExpansionPanel>
     );
   }
-
   render() {
     // return <div />;
     if (this.state.selectedUser !== "none") {
