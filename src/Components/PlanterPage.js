@@ -525,7 +525,10 @@ class PlanterPage extends React.Component {
 
     if (isMacintosh()) {
       maxWidth = this.state.width / 3 - 30;
-    } else maxWidth = this.state.width / 3 - 20;
+    } else {
+      console.log("windows");
+      maxWidth = this.state.width / 3 - 50;
+    }
 
     if (isMobile) {
       playerHeight = 300;
