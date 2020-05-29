@@ -28,8 +28,11 @@ import { Image, Visibility, VisibilityOff } from "@material-ui/icons";
 import InputLabel from "@material-ui/core/InputLabel";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { BrowserView, isMobile } from "react-device-detect";
+import Link from "@material-ui/core/Link";
+import Alert from "@material-ui/lab/Alert";
 // import { instanceOf } from "prop-types";
 // import { withCookies, Cookies } from "react-cookie";
+const plantyColor = "#6f9e04";
 
 class SingIn extends React.Component {
   // static propTypes = {
@@ -41,12 +44,17 @@ class SingIn extends React.Component {
     this.state = {
       password: "",
       username: "",
+      code: "",
+      newPasswordString: "",
       back: false,
       showPassword: false,
       error: false,
       loading: false,
       width: 0,
-      height: 0
+      height: 0,
+      forgotPassword: false,
+      newPassword: false,
+      delivery: null
     };
 
     Amplify.configure(JSON.parse(process.env.REACT_APP_CONFIG_AWS));
@@ -77,6 +85,7 @@ class SingIn extends React.Component {
   }
 
   async SignIn() {
+    this.setState({ error: false });
     try {
       const user = await Auth.signIn(this.state.username, this.state.password);
       if (user) {
@@ -113,6 +122,86 @@ class SingIn extends React.Component {
     }
   }
 
+  // error(error) {}
+
+  sendForgotPassword() {
+    const username = this.state.username;
+    console.log(username);
+    if (!username) {
+      // this.error("Username cannot be empty");
+      return;
+    }
+    this.setState({ loading: false, forgotPassword: false, newPassword: true });
+
+    Auth.forgotPassword(username)
+      .then(data => {
+        this.setState({ delivery: data.CodeDeliveryDetails });
+        // console.log(data.CodeDeliveryDetails);
+        this.setState({
+          loading: false,
+          forgotPassword: false,
+          newPassword: true
+        });
+      })
+      .catch(err => {
+        console.log(err);
+        // this.error(err)
+      });
+  }
+
+  sendNewPassword = () => {
+    // console.log(this.state.username);
+    // console.log(this.state.code);
+    //  console.log(this.state.newPasswordString);
+
+    if (this.state.code === "" || this.state.newPasswordString === "") {
+      this.setState({ error: true });
+      return;
+    }
+
+    if (
+      this.state.newPasswordString.match(/\d/) &&
+      this.state.newPasswordString.match(/[A-Z]/) &&
+      this.state.newPasswordString.length >= 6
+    ) {
+      //passed Checks
+      this.setState({ error: false });
+      Auth.forgotPasswordSubmit(
+        this.state.username,
+        this.state.code,
+        this.state.newPasswordString
+      )
+        .then(data => {
+          // console.log(data);
+          this.setState({ loading: false });
+          this.setState({ forgotPassword: false, newPassword: false });
+          // this.changeState('signIn');
+        })
+        .catch(err => {
+          // this.error(err)
+          console.log(err);
+          this.setState({ error: true });
+        });
+    } else {
+      this.setState({ error: true, loading: false });
+      return;
+    }
+    // console.log("'Didint get it");
+
+    // Auth.forgotPasswordSubmit(
+    //   this.state.username,
+    //   this.state.code,
+    //   this.state.newPassword
+    // )
+    //   .then(data => {
+    //     console.log(data);
+    //     this.setState({ loading: false });
+    //     this.setState({ forgotPassword: false, newPassword: false });
+    //     // this.changeState('signIn');
+    //   })
+    //   .catch(err => this.error(err));
+  };
+
   handleChange = name => event => {
     this.setState({ [name]: event.target.value });
   };
@@ -126,6 +215,296 @@ class SingIn extends React.Component {
   }
   handleClickShowPassword = () => {
     this.setState({ showPassword: !this.state.showPassword });
+  };
+
+  renderError = () => {
+    if (this.state.error) {
+      return (
+        <Alert
+          style={{
+            marginTop: 10
+          }}
+          severity="error"
+        >
+          Invalid data
+        </Alert>
+      );
+    } else return <div />;
+  };
+
+  renderNeededForm = () => {
+    if (this.state.newPassword) {
+      return (
+        <form onSubmit={this.handleSubmit}>
+          <FormGroup style={{ margin: 10 }}>
+            <img
+              style={{ width: 300, margin: "0 auto" }}
+              src={require("../Images/logo.png")}
+              alt="logo"
+            />
+            <p
+              style={{
+                alignSelf: "center",
+                fontSize: 20,
+                color: plantyColor
+              }}
+            >
+              Reset password
+            </p>
+            <InputLabel
+              error={this.state.error}
+              style={{ marginTop: 10 }}
+              htmlFor="outlined-adornment-code"
+            >
+              Code *
+            </InputLabel>
+            <Input
+              error={this.state.error}
+              style={{ marginTop: 10 }}
+              // variant="outlined"
+              id="standard-adornment-code"
+              type={"text"}
+              value={this.state.code}
+              onChange={this.handleChange("code")}
+            />
+            <InputLabel
+              error={this.state.error}
+              style={{ marginTop: 10 }}
+              htmlFor="outlined-adornment-newPass"
+            >
+              New Password *
+            </InputLabel>
+            <Input
+              error={this.state.error}
+              style={{ marginTop: 10 }}
+              variant="outlined"
+              id="standard-adornment-newPass"
+              type={this.state.showPassword ? "text" : "password"}
+              value={this.state.newPasswordString}
+              onChange={this.handleChange("newPasswordString")}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={this.handleClickShowPassword}
+                  >
+                    {this.state.showPassword ? (
+                      <Visibility />
+                    ) : (
+                      <VisibilityOff />
+                    )}
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+            <Alert
+              style={{
+                marginTop: 10
+              }}
+              severity="warning"
+            >
+              New password must be at least 6 characters long, contain one
+              capital letter and one digit
+            </Alert>
+            {this.renderError()}
+            {/*<p>New password must contain one capital letter and one number</p>*/}
+
+            {/*<Input*/}
+            {/*  error={this.state.error}*/}
+            {/*  style={{ marginTop: 10 }}*/}
+            {/*  // variant="outlined"*/}
+            {/*  id="standard-adornment-newPass"*/}
+            {/*  type={"password"}*/}
+            {/*  value={this.state.newPasswordString}*/}
+            {/*  onChange={this.handleChange("newPasswordString")}*/}
+            {/*/>*/}
+          </FormGroup>
+          <FormGroup style={{ margin: 10 }}>
+            <Button
+              style={{
+                marginTop: 20,
+                width: "100%"
+              }}
+              // disabled={!this.validateForm()}
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                this.setState({ loading: true });
+                this.sendNewPassword();
+              }}
+            >
+              {!this.state.loading ? (
+                <p>Submit</p>
+              ) : (
+                <CircularProgress
+                  color="secondary"
+                  style={{ root: { flex: 1 } }}
+                />
+              )}
+              {/*Login*/}
+            </Button>
+          </FormGroup>
+        </form>
+      );
+    } else if (this.state.forgotPassword) {
+      return (
+        <form onSubmit={this.handleSubmit}>
+          <FormGroup style={{ margin: 10 }}>
+            <img
+              style={{ width: 300, margin: "0 auto" }}
+              src={require("../Images/logo.png")}
+              alt="logo"
+            />
+            <p
+              style={{
+                alignSelf: "center",
+                fontSize: 20,
+                color: plantyColor
+              }}
+            >
+              Forgot password
+            </p>
+            <InputLabel
+              error={this.state.error}
+              style={{ marginTop: 10 }}
+              htmlFor="outlined-adornment-username"
+            >
+              Username *
+            </InputLabel>
+            <Input
+              error={this.state.error}
+              style={{ marginTop: 10 }}
+              // variant="outlined"
+              id="standard-adornment-username"
+              type={"text"}
+              value={this.state.username}
+              onChange={this.handleChange("username")}
+            />
+          </FormGroup>
+          <FormGroup style={{ margin: 10 }}>
+            <Button
+              style={{
+                marginTop: 20,
+                width: "100%"
+              }}
+              disabled={!this.validateForm()}
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                this.setState({ loading: true });
+                this.sendForgotPassword();
+              }}
+            >
+              {!this.state.loading ? (
+                <p>Send Email</p>
+              ) : (
+                <CircularProgress
+                  color="secondary"
+                  style={{ root: { flex: 1 } }}
+                />
+              )}
+              {/*Login*/}
+            </Button>
+          </FormGroup>
+        </form>
+      );
+    } else {
+      return (
+        <form onSubmit={this.handleSubmit}>
+          <FormGroup style={{ margin: 10 }}>
+            <img
+              style={{ width: 300, margin: "0 auto" }}
+              src={require("../Images/logo.png")}
+              alt="logo"
+            />
+            <InputLabel
+              error={this.state.error}
+              style={{ marginTop: 10 }}
+              htmlFor="outlined-adornment-username"
+            >
+              Username *
+            </InputLabel>
+            <Input
+              error={this.state.error}
+              style={{ marginTop: 10 }}
+              // variant="outlined"
+              id="standard-adornment-username"
+              type={"text"}
+              value={this.state.username}
+              onChange={this.handleChange("username")}
+            />
+          </FormGroup>
+          <FormGroup style={{ margin: 10 }}>
+            <InputLabel
+              error={this.state.error}
+              style={{ marginTop: 10 }}
+              htmlFor="outlined-adornment-password"
+            >
+              Password *
+            </InputLabel>
+            <Input
+              error={this.state.error}
+              style={{ marginTop: 10 }}
+              variant="outlined"
+              id="standard-adornment-password"
+              type={this.state.showPassword ? "text" : "password"}
+              value={this.state.password}
+              onChange={this.handleChange("password")}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={this.handleClickShowPassword}
+                  >
+                    {this.state.showPassword ? (
+                      <Visibility />
+                    ) : (
+                      <VisibilityOff />
+                    )}
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+            <Link
+              style={{ marginTop: 5, fontSize: 15, alignSelf: "start" }}
+              href="#"
+              component={"button"}
+              onClick={() => {
+                // console.log("aaaa");
+                this.setState({ forgotPassword: true });
+              }}
+            >
+              Forgot password
+            </Link>
+            {this.renderError()}
+            <Button
+              style={{
+                marginTop: 20
+              }}
+              disabled={!this.validateForm()}
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                this.setState({ loading: true });
+                this.SignIn()
+                  .then()
+                  .catch();
+              }}
+            >
+              {!this.state.loading ? (
+                <p>Login</p>
+              ) : (
+                <CircularProgress
+                  color="secondary"
+                  style={{ root: { flex: 1 } }}
+                />
+              )}
+              {/*Login*/}
+            </Button>
+          </FormGroup>
+        </form>
+      );
+    }
   };
 
   render() {
@@ -164,87 +543,100 @@ class SingIn extends React.Component {
               Login
             </Typography>
             <div className="Login">
-              <form onSubmit={this.handleSubmit}>
-                <FormGroup style={{ margin: 10 }}>
-                  <img
-                    style={{ width: 300, margin: "0 auto" }}
-                    src={require("../Images/logo.png")}
-                    alt="logo"
-                  />
-                  <InputLabel
-                    error={this.state.error}
-                    style={{ marginTop: 10 }}
-                    htmlFor="outlined-adornment-username"
-                  >
-                    Username
-                  </InputLabel>
-                  <Input
-                    error={this.state.error}
-                    style={{ marginTop: 10 }}
-                    // variant="outlined"
-                    id="standard-adornment-username"
-                    type={"text"}
-                    value={this.state.username}
-                    onChange={this.handleChange("username")}
-                  />
-                </FormGroup>
-                <FormGroup style={{ margin: 10 }}>
-                  <InputLabel
-                    error={this.state.error}
-                    style={{ marginTop: 10 }}
-                    htmlFor="outlined-adornment-password"
-                  >
-                    Password
-                  </InputLabel>
-                  <Input
-                    error={this.state.error}
-                    style={{ marginTop: 10 }}
-                    variant="outlined"
-                    id="standard-adornment-password"
-                    type={this.state.showPassword ? "text" : "password"}
-                    value={this.state.password}
-                    onChange={this.handleChange("password")}
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={this.handleClickShowPassword}
-                        >
-                          {this.state.showPassword ? (
-                            <Visibility />
-                          ) : (
-                            <VisibilityOff />
-                          )}
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                  />
-                  <Button
-                    style={{
-                      marginTop: 20
-                    }}
-                    disabled={!this.validateForm()}
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                      this.setState({ loading: true });
-                      this.SignIn()
-                        .then()
-                        .catch();
-                    }}
-                  >
-                    {!this.state.loading ? (
-                      <p>Login</p>
-                    ) : (
-                      <CircularProgress
-                        color="secondary"
-                        style={{ root: { flex: 1 } }}
-                      />
-                    )}
-                    {/*Login*/}
-                  </Button>
-                </FormGroup>
-              </form>
+              {this.renderNeededForm()}
+
+              {/*<form onSubmit={this.handleSubmit}>*/}
+              {/*  <FormGroup style={{ margin: 10 }}>*/}
+              {/*    <img*/}
+              {/*      style={{ width: 300, margin: "0 auto" }}*/}
+              {/*      src={require("../Images/logo.png")}*/}
+              {/*      alt="logo"*/}
+              {/*    />*/}
+              {/*    <InputLabel*/}
+              {/*      error={this.state.error}*/}
+              {/*      style={{ marginTop: 10 }}*/}
+              {/*      htmlFor="outlined-adornment-username"*/}
+              {/*    >*/}
+              {/*      Username*/}
+              {/*    </InputLabel>*/}
+              {/*    <Input*/}
+              {/*      error={this.state.error}*/}
+              {/*      style={{ marginTop: 10 }}*/}
+              {/*      // variant="outlined"*/}
+              {/*      id="standard-adornment-username"*/}
+              {/*      type={"text"}*/}
+              {/*      value={this.state.username}*/}
+              {/*      onChange={this.handleChange("username")}*/}
+              {/*    />*/}
+              {/*  </FormGroup>*/}
+              {/*  <FormGroup style={{ margin: 10 }}>*/}
+              {/*    <InputLabel*/}
+              {/*      error={this.state.error}*/}
+              {/*      style={{ marginTop: 10 }}*/}
+              {/*      htmlFor="outlined-adornment-password"*/}
+              {/*    >*/}
+              {/*      Password*/}
+              {/*    </InputLabel>*/}
+              {/*    <Input*/}
+              {/*      error={this.state.error}*/}
+              {/*      style={{ marginTop: 10 }}*/}
+              {/*      variant="outlined"*/}
+              {/*      id="standard-adornment-password"*/}
+              {/*      type={this.state.showPassword ? "text" : "password"}*/}
+              {/*      value={this.state.password}*/}
+              {/*      onChange={this.handleChange("password")}*/}
+              {/*      endAdornment={*/}
+              {/*        <InputAdornment position="end">*/}
+              {/*          <IconButton*/}
+              {/*            aria-label="toggle password visibility"*/}
+              {/*            onClick={this.handleClickShowPassword}*/}
+              {/*          >*/}
+              {/*            {this.state.showPassword ? (*/}
+              {/*              <Visibility />*/}
+              {/*            ) : (*/}
+              {/*              <VisibilityOff />*/}
+              {/*            )}*/}
+              {/*          </IconButton>*/}
+              {/*        </InputAdornment>*/}
+              {/*      }*/}
+              {/*    />*/}
+              {/*    <Link*/}
+              {/*      style={{ marginTop: 5, fontSize: 15, alignSelf: "start" }}*/}
+              {/*      href="#"*/}
+              {/*      component={"button"}*/}
+              {/*      onClick={() => {*/}
+              {/*        // console.log("aaaa");*/}
+              {/*        this.setState({ forgotPassword: true });*/}
+              {/*      }}*/}
+              {/*    >*/}
+              {/*      Forgot password*/}
+              {/*    </Link>*/}
+              {/*    <Button*/}
+              {/*      style={{*/}
+              {/*        marginTop: 20*/}
+              {/*      }}*/}
+              {/*      disabled={!this.validateForm()}*/}
+              {/*      variant="contained"*/}
+              {/*      color="primary"*/}
+              {/*      onClick={() => {*/}
+              {/*        this.setState({ loading: true });*/}
+              {/*        this.SignIn()*/}
+              {/*          .then()*/}
+              {/*          .catch();*/}
+              {/*      }}*/}
+              {/*    >*/}
+              {/*      {!this.state.loading ? (*/}
+              {/*        <p>Login</p>*/}
+              {/*      ) : (*/}
+              {/*        <CircularProgress*/}
+              {/*          color="secondary"*/}
+              {/*          style={{ root: { flex: 1 } }}*/}
+              {/*        />*/}
+              {/*      )}*/}
+              {/*      /!*Login*!/*/}
+              {/*    </Button>*/}
+              {/*  </FormGroup>*/}
+              {/*</form>*/}
             </div>
             {/*</Paper>*/}
           </div>
