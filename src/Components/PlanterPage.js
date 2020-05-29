@@ -60,6 +60,14 @@ import TextField from "@material-ui/core/TextField";
 const plantyColor = "#6f9e04";
 const errorColor = "#ee3e34";
 
+function isMacintosh() {
+  return navigator.platform.indexOf("Mac") > -1;
+}
+
+function isWindows() {
+  return navigator.platform.indexOf("Win") > -1;
+}
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -511,7 +519,14 @@ class PlanterPage extends React.Component {
     let playerHeight = 800;
     let float = "left";
     let videoWidth = this.state.width - 100;
-    let maxWidth = this.state.width / 3 - 30;
+    // console.log(isMacintosh());
+
+    let maxWidth = 0;
+
+    if (isMacintosh()) {
+      maxWidth = this.state.width / 3 - 30;
+    } else maxWidth = this.state.width / 3 - 20;
+
     if (isMobile) {
       playerHeight = 300;
       float = "none";
