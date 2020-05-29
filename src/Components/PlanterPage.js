@@ -1083,6 +1083,7 @@ class PlanterPage extends React.Component {
                 </AreaChart>
                 {/*</Card>*/}
               </Paper>
+              <div style={{ clear: "both" }} />
               <Paper style={{ margin: 10 }}>
                 <Typography style={{ padding: 10 }} variant="h5" component="h3">
                   Growth plan for {this.state.planterName}
