@@ -141,6 +141,17 @@ class PlanterPage extends React.Component {
           case "LAMP_IS_OFF":
             this.setState({ lightTurnedOn: false });
             break;
+
+          case "STREAM_ON":
+            this.setState({
+              streamTurnedOn: true
+            });
+            break;
+          case "STREAM_OFF":
+            this.setState({
+              streamTurnedOn: false
+            });
+            break;
           case "LAMP_IS_ON":
             this.setState({ lightTurnedOn: true });
             break;
@@ -189,6 +200,13 @@ class PlanterPage extends React.Component {
   checkLight = () => {
     if (WS.ws)
       WS.sendMessage("FROM_WEB;" + this.state.planterUUID + ";UV_LAMP_STATUS");
+  };
+
+  checkStream = () => {
+    if (WS.ws)
+      WS.sendMessage(
+        "FROM_WEB;" + this.state.planterUUID + ";VIDEO_STREAM_STATUS"
+      );
   };
 
   updateDimensions = () => {
@@ -303,6 +321,7 @@ class PlanterPage extends React.Component {
       });
 
     this.checkLight();
+    this.checkStream();
   }
 
   async loadPlanter() {
@@ -664,9 +683,7 @@ class PlanterPage extends React.Component {
                     <Fab
                       color="primary"
                       style={{ margin: 10 }}
-                      disabled={
-                        this.state.loadingActions || !this.state.streamUrl
-                      }
+                      disabled={this.state.loadingActions}
                       onClick={() => {
                         WS.sendMessage(
                           "FROM_WEB;" +
@@ -680,9 +697,7 @@ class PlanterPage extends React.Component {
                     <Fab
                       style={{ margin: 10 }}
                       color="primary"
-                      disabled={
-                        this.state.loadingActions || !this.state.streamUrl
-                      }
+                      disabled={this.state.loadingActions}
                       onClick={() => {
                         WS.sendMessage(
                           "FROM_WEB;" +
@@ -696,9 +711,7 @@ class PlanterPage extends React.Component {
                     <Fab
                       style={{ margin: 10 }}
                       color="primary"
-                      disabled={
-                        this.state.loadingActions || !this.state.streamUrl
-                      }
+                      disabled={this.state.loadingActions}
                       onClick={() => {
                         WS.sendMessage(
                           "FROM_WEB;" +
@@ -716,9 +729,7 @@ class PlanterPage extends React.Component {
                     <Fab
                       style={{ margin: 10 }}
                       color="primary"
-                      disabled={
-                        this.state.loadingActions || !this.state.streamUrl
-                      }
+                      disabled={this.state.loadingActions}
                       onClick={() => {
                         WS.sendMessage(
                           "FROM_WEB;" +
@@ -842,7 +853,7 @@ class PlanterPage extends React.Component {
                     }}
                     variant="contained"
                     color="primary"
-                    // disabled={this.state.streamTurnedOn}
+                    disabled={this.state.streamTurnedOn}
                     onClick={() => {
                       this.setState({ loadingStreamTurnedOn: true });
                       WS.sendMessage(
@@ -870,7 +881,7 @@ class PlanterPage extends React.Component {
                     }}
                     variant="contained"
                     color="primary"
-                    // disabled={!this.state.streamTurnedOn}
+                    disabled={!this.state.streamTurnedOn}
                     onClick={() => {
                       this.setState({ loadingStreamTurnedOff: true });
                       WS.sendMessage(
