@@ -484,33 +484,33 @@ class SingUp extends React.Component {
             {/*</Paper>*/}
           </div>
           <BrowserView>
-            <img
-              style={{
-                zIndex: -100,
-                width: "100%",
-                position: "absolute",
-                bottom: -1
-              }}
-              src={require("../Images/grass.png")}
-              alt="footer"
-            />
-            <StickyFooter
-              bottomThreshold={20}
-              normalStyles={{
-                height: 20,
-                // backgroundColor: "#999999",
-                padding: "10px"
-              }}
-              stickyStyles={{
-                // backgroundColor: "rgba(255,255,255,.8)",
-                padding: "2rem"
-              }}
-            >
-              <p style={{ color: "white", marginTop: -10 }}>
-                © 2019 - 2020, Plant'y Inc. or its affiliates. All rights
-                reserved.
-              </p>
-            </StickyFooter>
+            {/*<img*/}
+            {/*  style={{*/}
+            {/*    zIndex: -100,*/}
+            {/*    width: "100%",*/}
+            {/*    position: "absolute",*/}
+            {/*    bottom: -1*/}
+            {/*  }}*/}
+            {/*  src={require("../Images/grass.png")}*/}
+            {/*  alt="footer"*/}
+            {/*/>*/}
+            {/*<StickyFooter*/}
+            {/*  bottomThreshold={20}*/}
+            {/*  normalStyles={{*/}
+            {/*    height: 20,*/}
+            {/*    // backgroundColor: "#999999",*/}
+            {/*    padding: "10px"*/}
+            {/*  }}*/}
+            {/*  stickyStyles={{*/}
+            {/*    // backgroundColor: "rgba(255,255,255,.8)",*/}
+            {/*    padding: "2rem"*/}
+            {/*  }}*/}
+            {/*>*/}
+            {/*  <p style={{ color: "white", marginTop: -10 }}>*/}
+            {/*    © 2019 - 2020, Plant'y Inc. or its affiliates. All rights*/}
+            {/*    reserved.*/}
+            {/*  </p>*/}
+            {/*</StickyFooter>*/}
           </BrowserView>
         </div>
       );
