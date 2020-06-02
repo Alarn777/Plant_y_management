@@ -225,6 +225,16 @@ class PlanterPage extends React.Component {
       WS.sendMessage("FROM_WEB;" + this.state.planterUUID + ";UV_LAMP_STATUS");
   };
 
+  checkHeater = () => {
+    if (WS.ws)
+      WS.sendMessage("FROM_WEB;" + this.state.planterUUID + ";HEATER_STATUS");
+  };
+
+  checkFan = () => {
+    if (WS.ws)
+      WS.sendMessage("FROM_WEB;" + this.state.planterUUID + ";FAN_STATUS");
+  };
+
   checkStream = () => {
     if (WS.ws)
       WS.sendMessage(
@@ -345,6 +355,8 @@ class PlanterPage extends React.Component {
 
     this.checkLight();
     this.checkStream();
+    this.checkFan();
+    this.checkHeater();
   }
 
   async loadPlanter() {
