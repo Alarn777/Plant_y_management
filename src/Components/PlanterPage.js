@@ -95,6 +95,15 @@ class PlanterPage extends React.Component {
       lightTurnedOn: false,
       loadingLightTurnedOn: false,
       loadingLightTurnedOff: false,
+
+      heaterTurnedOn: false,
+      loadingHeaterTurnedOn: false,
+      loadingHeaterTurnedOff: false,
+
+      fanTurnedOn: false,
+      loadingFanTurnedOn: false,
+      loadingFanTurnedOff: false,
+
       waterAdded: false,
       loadingAddingWater: false,
       loadingActions: false,
@@ -141,6 +150,20 @@ class PlanterPage extends React.Component {
           case "LAMP_IS_OFF":
             this.setState({ lightTurnedOn: false });
             break;
+
+          case "HEATER_IS_ON":
+              this.setState({ heaterTurnedOn: true, loadingHeaterTurnedOn: false });
+              break;
+          case "HEATER_IS_OFF":
+              this.setState({ heaterTurnedOn: false });
+              break;
+
+          case "FAN_IS_ON":
+              this.setState({ fanTurnedOn: true, loadingFanTurnedOn: false });
+              break;
+          case "FAN_IS_OFF":
+              this.setState({ fanTurnedOn: false });
+              break;
 
           case "STREAM_ON":
             this.setState({
@@ -845,6 +868,113 @@ class PlanterPage extends React.Component {
                       />
                     )}
                   </Button>
+
+                  <Button
+                    style={{
+                      margin: 10,
+                      width: 180,
+                      padding: -10
+                    }}
+                    variant="contained"
+                    color="primary"
+                    disabled={this.state.heaterTurnedOn}
+                    onClick={() => {
+                      this.setState({ loadingHeaterTurnedOn: true });
+                      WS.sendMessage(
+                        "FROM_WEB;" + this.state.planterUUID + ";HEATER_ON"
+                      );
+                    }}
+                  >
+                    {!this.state.loadingHeaterTurnedOn ? (
+                      "Turn heater on"
+                    ) : (
+                      <CircularProgress
+                        size={24}
+                        color="secondary"
+                        style={{ root: { flex: 1 } }}
+                      />
+                    )}
+                  </Button>
+                  <Button
+                    style={{
+                      margin: 10,
+                      width: 180,
+                      padding: -10
+                    }}
+                    variant="contained"
+                    color="primary"
+                    disabled={!this.state.heaterTurnedOn}
+                    onClick={() => {
+                      this.setState({ loadingHeaterTurnedOff: true });
+                      WS.sendMessage(
+                        "FROM_WEB;" + this.state.planterUUID + ";HEATER_OFF"
+                      );
+                    }}
+                  >
+                    {!this.state.loadingHeaterTurnedOff ? (
+                      "Turn heater off"
+                    ) : (
+                      <CircularProgress
+                        size={24}
+                        color="secondary"
+                        style={{ root: { flex: 1 } }}
+                      />
+                    )}
+                  </Button>
+                  
+                  <Button
+                    style={{
+                      margin: 10,
+                      width: 180,
+                      padding: -10
+                    }}
+                    variant="contained"
+                    color="primary"
+                    disabled={this.state.fanTurnedOn}
+                    onClick={() => {
+                      this.setState({ loadingFanTurnedOn: true });
+                      WS.sendMessage(
+                        "FROM_WEB;" + this.state.planterUUID + ";FAN_ON"
+                      );
+                    }}
+                  >
+                    {!this.state.loadingFanTurnedOn ? (
+                      "Turn fan on"
+                    ) : (
+                      <CircularProgress
+                        size={24}
+                        color="secondary"
+                        style={{ root: { flex: 1 } }}
+                      />
+                    )}
+                  </Button>
+                  <Button
+                    style={{
+                      margin: 10,
+                      width: 180,
+                      padding: -10
+                    }}
+                    variant="contained"
+                    color="primary"
+                    disabled={!this.state.fanTurnedOn}
+                    onClick={() => {
+                      this.setState({ loadingFanTurnedOff: true });
+                      WS.sendMessage(
+                        "FROM_WEB;" + this.state.planterUUID + ";FAN_OFF"
+                      );
+                    }}
+                  >
+                    {!this.state.loadingHeaterTurnedOff ? (
+                      "Turn fan off"
+                    ) : (
+                      <CircularProgress
+                        size={24}
+                        color="secondary"
+                        style={{ root: { flex: 1 } }}
+                      />
+                    )}
+                  </Button>
+
                   <Button
                     style={{
                       margin: 10,
