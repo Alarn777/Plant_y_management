@@ -132,7 +132,7 @@ class PlanterPage extends React.Component {
           case "STREAM_STOPPED":
             this.setState({
               loadingStreamTurnedOff: false,
-              streamTurnedOn: true
+              streamTurnedOn: false
             });
             break;
           case "UV_LAMP_IS_ON":
@@ -545,7 +545,7 @@ class PlanterPage extends React.Component {
     if (isMacintosh()) {
       maxWidth = this.state.width / 3 - 30;
     } else {
-      console.log("windows");
+      //console.log("windows");
       maxWidth = this.state.width / 3 - 50;
     }
 
@@ -1607,7 +1607,7 @@ class PlanterPage extends React.Component {
                       aria-labelledby="range-slider"
                       min={0}
                       max={400}
-                      step={100}
+                      step={10}
                       // getAriaValueText={this.valueTempText}
                     />
                     {isMobile ? "" : 400}
@@ -1759,7 +1759,7 @@ class PlanterPage extends React.Component {
                       aria-labelledby="range-slider"
                       min={0}
                       max={400}
-                      step={100}
+                      step={10}
                       // getAriaValueText={this.valueTempText}
                     />
                     {isMobile ? "" : 400}
@@ -1914,7 +1914,7 @@ class PlanterPage extends React.Component {
                       aria-labelledby="range-slider"
                       min={0}
                       max={400}
-                      step={100}
+                      step={10}
                       // getAriaValueText={this.valueTempText}
                     />
                     {isMobile ? "" : 400}
@@ -2065,7 +2065,7 @@ class PlanterPage extends React.Component {
                       aria-labelledby="range-slider"
                       min={0}
                       max={400}
-                      step={100}
+                      step={10}
                       // getAriaValueText={this.valueTempText}
                     />
                     {isMobile ? "" : 400}
