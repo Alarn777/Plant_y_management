@@ -116,7 +116,8 @@ class PlanterPage extends React.Component {
       growthPlan: { phases: [] },
       savingPlan: false,
       growthPlanDescription: "",
-      growthPlanGroup: ""
+      growthPlanGroup: "",
+      currentWeek: 0
     };
     if (!WS.ws) WS.init();
     Amplify.configure(JSON.parse(process.env.REACT_APP_CONFIG_AWS));
@@ -378,6 +379,13 @@ class PlanterPage extends React.Component {
         }
       )
       .then(response => {
+        let currentTime = new Date().getTime() / 1000;
+        let activatedTime = response.data.TimeActivated;
+        let currentWeek = parseInt((currentTime - activatedTime) / 86400);
+        currentWeek = parseInt(currentWeek / 7);
+
+        this.setState({ currentWeek: currentWeek });
+
         this.setState({ growthPlan: response.data.activeGrowthPlan });
 
         this.parceData(response.data.plots);
@@ -1628,7 +1636,6 @@ class PlanterPage extends React.Component {
     if (this.state.expanded === panel) {
       weekColor = "#a5d6a7";
     }
-
     return (
       <ExpansionPanel
         style={{ width: "97%", backgroundColor: weekColor }}
@@ -1643,8 +1650,19 @@ class PlanterPage extends React.Component {
           aria-controls="panel1bh-content"
           id={"week" + number}
         >
-          <Typography style={{ flexBasis: "33.33%", flexShrink: 0 }}>
-            Week {number}
+          <Typography
+            style={{ flexBasis: "33.33%", flexShrink: 0 }}
+            style={
+              parseInt(oneWeek.phaseName.replace("Week ", "")) ===
+              this.state.currentWeek
+                ? { flexBasis: "33.33%", flexShrink: 0, color: plantyColor }
+                : { flexBasis: "33.33%", flexShrink: 0 }
+            }
+          >
+            {parseInt(oneWeek.phaseName.replace("Week ", "")) ===
+            this.state.currentWeek
+              ? oneWeek.phaseName + " - Current"
+              : oneWeek.phaseName}
           </Typography>
           <Typography style={{ color: "gray" }}>
             From day {oneWeek.fromDay} to day {oneWeek.toDay}
