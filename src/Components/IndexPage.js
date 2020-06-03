@@ -107,7 +107,7 @@ class IndexPage extends React.Component {
               </Typography>
             </Toolbar>
           </AppBar>
-          <Paper style={{ margin: 10 }}>
+          <Paper style={{ margin: 10, textAlign: "center" }}>
             <Typography style={{ padding: 10 }} variant="h3" component="h3">
               Welcome to Plant'y administration
             </Typography>

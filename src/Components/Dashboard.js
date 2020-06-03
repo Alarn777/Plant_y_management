@@ -1528,7 +1528,7 @@ class Dashboard extends React.Component {
                     <TextField
                       // error={this.state.errorInName}
                       style={{
-                        marginLeft: 5,
+                        marginLeftW: 5,
                         marginTop: 20,
                         marginBottom: 20,
                         width: "97%"

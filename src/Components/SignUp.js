@@ -16,7 +16,10 @@ import "../Styles/Signin.css";
 import AppBar from "@material-ui/core/AppBar";
 import { IconButton, Paper, Toolbar, Typography, Fab } from "@material-ui/core";
 import StickyFooter from "react-sticky-footer";
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
+// import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
+
+import ArrowBackIosIcon from "@material-ui/icons/NavigateBefore";
+
 import { Redirect } from "react-router-dom";
 import Input from "@material-ui/core/Input";
 import InputAdornment from "@material-ui/core/InputAdornment";

@@ -121,7 +121,7 @@ class PlanterPage extends React.Component {
     if (!WS.ws) WS.init();
     Amplify.configure(JSON.parse(process.env.REACT_APP_CONFIG_AWS));
     WS.onMessage(data => {
-      // console.log("GOT in planter screen", data.data);
+      console.log("GOT in planter screen", data.data);
 
       let instructions = data.data.split(";");
       if (instructions.length > 2)
@@ -152,18 +152,21 @@ class PlanterPage extends React.Component {
             break;
 
           case "HEATER_IS_ON":
-              this.setState({ heaterTurnedOn: true, loadingHeaterTurnedOn: false });
-              break;
+            this.setState({
+              heaterTurnedOn: true,
+              loadingHeaterTurnedOn: false
+            });
+            break;
           case "HEATER_IS_OFF":
-              this.setState({ heaterTurnedOn: false });
-              break;
+            this.setState({ heaterTurnedOn: false });
+            break;
 
           case "FAN_IS_ON":
-              this.setState({ fanTurnedOn: true, loadingFanTurnedOn: false });
-              break;
+            this.setState({ fanTurnedOn: true, loadingFanTurnedOn: false });
+            break;
           case "FAN_IS_OFF":
-              this.setState({ fanTurnedOn: false });
-              break;
+            this.setState({ fanTurnedOn: false });
+            break;
 
           case "STREAM_ON":
             this.setState({
@@ -933,7 +936,6 @@ class PlanterPage extends React.Component {
                       />
                     )}
                   </Button>
-                  
                   <Button
                     style={{
                       margin: 10,
@@ -1374,7 +1376,7 @@ class PlanterPage extends React.Component {
               </Paper>
             </div>
           ) : (
-            <h1>Please log in first</h1>
+            <h1 style={{ margin: 10 }}>Please log in first</h1>
           )}
         </div>
         {/*<BrowserView></BrowserView>*/}
