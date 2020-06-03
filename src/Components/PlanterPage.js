@@ -381,10 +381,15 @@ class PlanterPage extends React.Component {
       .then(response => {
         let currentTime = new Date().getTime() / 1000;
         let activatedTime = response.data.TimeActivated;
+        console.log(response.data.TimeActivated);
+
+        console.log(currentTime);
         let currentWeek = parseInt((currentTime - activatedTime) / 86400);
+
+        console.log(currentWeek);
         currentWeek = parseInt(currentWeek / 7);
 
-        this.setState({ currentWeek: currentWeek });
+        this.setState({ currentWeek: currentWeek + 1 });
 
         this.setState({ growthPlan: response.data.activeGrowthPlan });
 
@@ -1434,7 +1439,7 @@ class PlanterPage extends React.Component {
       newWeekNum = 1;
       fromDay = 1;
     } else {
-      fromDay = currentWeeks[currentWeeks.length - 1].toDay;
+      fromDay = currentWeeks[currentWeeks.length - 1].toDay + 1;
     }
 
     let newWeek = {

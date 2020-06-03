@@ -350,7 +350,7 @@ class Dashboard extends React.Component {
       newWeekNum = 1;
       fromDay = 1;
     } else {
-      fromDay = currentWeeks[currentWeeks.length - 1].toDay;
+      fromDay = currentWeeks[currentWeeks.length - 1].toDay + 1;
     }
 
     let newWeek = {
