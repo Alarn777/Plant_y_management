@@ -240,7 +240,7 @@ class Dashboard extends React.Component {
         )
         .then(response => {
           this.setState({ savingPlan: false });
-          console.log("Saving plan", response);
+          // console.log("Saving plan", response);
           this.loadAllData()
             .then()
             .catch();
@@ -489,7 +489,8 @@ class Dashboard extends React.Component {
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">
-              {user.name}
+              {/*{user.name}*/}
+              {user.name === "Test" ? "Yukio" : user.name}
             </Typography>
             <Typography variant="body2" color="textSecondary" component="p">
               One cool user

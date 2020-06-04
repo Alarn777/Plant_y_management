@@ -381,12 +381,12 @@ class PlanterPage extends React.Component {
       .then(response => {
         let currentTime = new Date().getTime() / 1000;
         let activatedTime = response.data.TimeActivated;
-        console.log(response.data.TimeActivated);
+        // console.log(response.data.TimeActivated);
 
-        console.log(currentTime);
+        // console.log(currentTime);
         let currentWeek = parseInt((currentTime - activatedTime) / 86400);
 
-        console.log(currentWeek);
+        // console.log(currentWeek);
         currentWeek = parseInt(currentWeek / 7);
 
         this.setState({ currentWeek: currentWeek + 1 });
@@ -505,7 +505,7 @@ class PlanterPage extends React.Component {
           ) {
             if (response.data.errorMessage) {
               this.setState({ streamError: response.data.errorMessage });
-              console.log(response.data.errorMessage);
+              console.log("error: ", response.data.errorMessage);
               return;
             }
             // console.log(response.data.HLSStreamingSessionURL);
@@ -672,7 +672,10 @@ class PlanterPage extends React.Component {
                   color="inherit"
                   href={"/users/" + this.state.customerUsername}
                 >
-                  {this.state.customerUsername}
+                  {/*{this.state.customerUsername}*/}
+                  {this.state.customerUsername === "Test"
+                    ? "Yukio"
+                    : this.state.username}
                 </Link>
                 <Typography color="textPrimary">
                   {this.state.planterName}

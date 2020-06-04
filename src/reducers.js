@@ -162,7 +162,7 @@ const cleanerReducer = (state = INITIAL_STATE, action) => {
       };
 
     case "FETCH_POST":
-      console.log(action.payload);
+      // console.log(action.payload);
       return {
         // events: [],
         // favorite_cleaners: [],
@@ -210,7 +210,7 @@ const cleanerReducer = (state = INITIAL_STATE, action) => {
 const manualCategories = (state = [], action) => {
   switch (action.type) {
     case LOCATION_CHANGE:
-      /*
+    /*
         action.payload is something like:
         {
           pathname: '/',
@@ -226,8 +226,8 @@ const manualCategories = (state = [], action) => {
           }
         }
       */
-      console.log("CALLED ACTION");
-      console.log(action.payload);
+    // console.log("CALLED ACTION");
+    // console.log(action.payload);
 
     default:
       return state;

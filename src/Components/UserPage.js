@@ -420,10 +420,16 @@ class UserPage extends React.Component {
                 {/*>*/}
                 {/*  User*/}
                 {/*</Link>*/}
-                <Typography color="textPrimary">{username}</Typography>
+                <Typography color="textPrimary">
+                  {/*{username}*/}
+                  {username === "Test" ? "Yukio" : username}
+                </Typography>
               </Breadcrumbs>
               <div>
-                <h1>{username}'s Planters</h1>
+                <h1>
+                  {username === "Test" ? "Yukio" : username}'s Planters
+                  {/*{username}'s Planters*/}
+                </h1>
                 <div>
                   {this.state.planters.map(one => this.renderPlanters(one))}
                 </div>

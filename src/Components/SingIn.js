@@ -127,7 +127,7 @@ class SingIn extends React.Component {
 
   sendForgotPassword() {
     const username = this.state.username;
-    console.log(username);
+    // console.log(username);
     if (!username) {
       // this.error("Username cannot be empty");
       return;

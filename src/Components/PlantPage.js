@@ -71,7 +71,7 @@ class PlantPage extends React.Component {
     Auth.currentAuthenticatedUser()
       .then(user => {
         // return Auth.changePassword(user, "oldPassword", "newPassword");
-        console.log(user);
+        // console.log(user);
         this.setState({ user: user });
         this.props.addUser(user);
         this.loadAllData();
@@ -88,7 +88,7 @@ class PlantPage extends React.Component {
 
   async loadAllData() {
     let USER_TOKEN = "";
-    console.log(this.state.user);
+    // console.log(this.state.user);
     USER_TOKEN = this.state.user.signInUserSession.idToken.jwtToken;
     this.state.USER_TOKEN = USER_TOKEN;
 
@@ -123,7 +123,7 @@ class PlantPage extends React.Component {
   }
 
   render() {
-    console.log(this.state);
+    // console.log(this.state);
     // if (!this.state.user) return <Redirect to="/login" />;
 
     if (this.state.toLogin === true) {
