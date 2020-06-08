@@ -72,6 +72,51 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+const data = [
+  {
+    name: "Page A",
+    uv: 4000,
+    pv: 2400,
+    amt: 2400
+  },
+  {
+    name: "Page B",
+    uv: 3000,
+    pv: 1398,
+    amt: 2210
+  },
+  {
+    name: "Page C",
+    uv: 2000,
+    pv: 9800,
+    amt: 2290
+  },
+  {
+    name: "Page D",
+    uv: 2780,
+    pv: 3908,
+    amt: 2000
+  },
+  {
+    name: "Page E",
+    uv: 1890,
+    pv: 4800,
+    amt: 2181
+  },
+  {
+    name: "Page F",
+    uv: 2390,
+    pv: 3800,
+    amt: 2500
+  },
+  {
+    name: "Page G",
+    uv: 3490,
+    pv: 4300,
+    amt: 2100
+  }
+];
+
 class PlanterPage extends React.Component {
   constructor(props) {
     super(props);
@@ -332,7 +377,87 @@ class PlanterPage extends React.Component {
       dataArray.push(object);
     }
     this.setState({ dataForGraphHumidity: dataArray });
+
+    //parsing weekly data
+
+    dataArray = [];
+    dataArray = Array(Object.keys(plots.weekly).length);
+    let index = 0;
+    for (let i = 0; i < Object.keys(plots.weekly).length; i++) {
+      index = this.WeekdayToInt(Object.keys(plots.weekly)[i]);
+      dataArray[index] = {
+        min: Math.floor(
+          plots.weekly[Object.keys(plots.weekly)[i]].uvIntensity.min
+        ),
+        avg: Math.floor(
+          plots.weekly[Object.keys(plots.weekly)[i]].uvIntensity.avg
+        ),
+        max: Math.floor(
+          plots.weekly[Object.keys(plots.weekly)[i]].uvIntensity.max
+        ),
+        label: Object.keys(plots.weekly)[i]
+      };
+    }
+    this.setState({ dataForUvIntensityWeekly: dataArray });
+
+    dataArray = [];
+    dataArray = Array(Object.keys(plots.weekly).length);
+    index = 0;
+    for (let i = 0; i < Object.keys(plots.weekly).length; i++) {
+      index = this.WeekdayToInt(Object.keys(plots.weekly)[i]);
+      dataArray[index] = {
+        min: Math.floor(
+          plots.weekly[Object.keys(plots.weekly)[i]].ambientTemperatureCelsius
+            .min
+        ),
+        avg: Math.floor(
+          plots.weekly[Object.keys(plots.weekly)[i]].ambientTemperatureCelsius
+            .avg
+        ),
+        max: Math.floor(
+          plots.weekly[Object.keys(plots.weekly)[i]].ambientTemperatureCelsius
+            .max
+        ),
+        label: Object.keys(plots.weekly)[i]
+      };
+      // this.state.label_data[index] = Object.keys(this.props.data)[i];
+    }
+
+    console.log("temp:", dataArray);
+    this.setState({ dataForTempWeekly: dataArray });
+
+    dataArray = [];
+    dataArray = Array(Object.keys(plots.weekly).length);
+    index = 0;
+    for (let i = 0; i < Object.keys(plots.weekly).length; i++) {
+      index = this.WeekdayToInt(Object.keys(plots.weekly)[i]);
+      dataArray[index] = {
+        min: Math.floor(
+          plots.weekly[Object.keys(plots.weekly)[i]].soilHumidity.min * 100
+        ),
+        avg: Math.floor(
+          plots.weekly[Object.keys(plots.weekly)[i]].soilHumidity.avg * 100
+        ),
+        max: Math.floor(
+          plots.weekly[Object.keys(plots.weekly)[i]].soilHumidity.max * 100
+        ),
+        label: Object.keys(plots.weekly)[i]
+      };
+      // this.state.label_data[index] = Object.keys(this.props.data)[i];
+    }
+    this.setState({ dataForSoilHumidityWeekly: dataArray });
+
     this.forceUpdate();
+  }
+
+  WeekdayToInt(weekday) {
+    if (weekday === "Mon") return 0;
+    if (weekday === "Tue") return 1;
+    if (weekday === "Wed") return 2;
+    if (weekday === "Thu") return 3;
+    if (weekday === "Fri") return 4;
+    if (weekday === "Sat") return 5;
+    if (weekday === "Sun") return 6;
   }
 
   async loadPlants() {
@@ -1270,8 +1395,8 @@ class PlanterPage extends React.Component {
                     fill="url(#colorUv)"
                   />
                 </AreaChart>
-                {/*</Card>*/}
               </Paper>
+              {this.renderWeekGraphs()}
               <div style={{ clear: "both" }} />
               <Paper style={{ margin: 10 }}>
                 <Typography style={{ padding: 10 }} variant="h5" component="h3">
@@ -2296,6 +2421,203 @@ class PlanterPage extends React.Component {
       </ExpansionPanel>
     );
   }
+
+  renderWeekGraphs = () => {
+    let playerHeight = 800;
+    let float = "left";
+    let videoWidth = this.state.width - 100;
+    // console.log(isMacintosh());
+
+    let maxWidth = 0;
+
+    if (isMacintosh()) {
+      maxWidth = this.state.width / 3 - 50;
+    } else {
+      //console.log("windows");
+      maxWidth = this.state.width / 3 - 50;
+    }
+
+    if (isMobile) {
+      playerHeight = 300;
+      float = "none";
+      videoWidth = this.state.width - 20;
+      maxWidth = this.state.width - 30;
+    }
+
+    return (
+      <div>
+        <Paper
+          style={{
+            margin: 10,
+            width: maxWidth,
+            float: float
+          }}
+        >
+          <Typography style={{ padding: 10 }} variant="p" component="h3">
+            Temperature over this week
+          </Typography>
+
+          <AreaChart
+            width={maxWidth}
+            height={300}
+            data={this.state.dataForTempWeekly}
+            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+          >
+            <defs>
+              <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="10%" stopColor={plantyColor} stopOpacity={0.8} />
+                <stop offset="95%" stopColor={plantyColor} stopOpacity={0} />
+              </linearGradient>
+              <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor={plantyColor} stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <XAxis label="" dataKey="label" />
+            <YAxis label="" />
+            <CartesianGrid strokeDasharray="3 3" />
+            <Tooltip />
+            <Legend />
+            <Area
+              type="monotone"
+              dataKey="min"
+              stopColor={plantyColor}
+              fillOpacity={1}
+              stroke={plantyColor}
+              fill="url(#colorUv)"
+            />
+            <Area
+              type="monotone"
+              dataKey="avg"
+              stroke="#81c784"
+              fillOpacity={0.5}
+              fill="#81c784"
+            />
+            <Area
+              type="monotone"
+              dataKey="max"
+              fillOpacity={0.5}
+              stroke="#c8e6c9"
+              fill="#c8e6c9"
+            />
+          </AreaChart>
+          {/*</Card>*/}
+        </Paper>
+        <Paper
+          style={{
+            margin: 10,
+            width: maxWidth,
+            float: float
+          }}
+        >
+          <Typography style={{ padding: 10 }} variant="p" component="h3">
+            UV over this week
+          </Typography>
+
+          <AreaChart
+            width={maxWidth}
+            height={300}
+            data={this.state.dataForUvIntensityWeekly}
+            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+          >
+            <defs>
+              <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="10%" stopColor={plantyColor} stopOpacity={0.8} />
+                <stop offset="95%" stopColor={plantyColor} stopOpacity={0} />
+              </linearGradient>
+              <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor={plantyColor} stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <XAxis label="" dataKey="label" />
+            <YAxis label="" />
+            <CartesianGrid strokeDasharray="3 3" />
+            <Tooltip />
+            <Legend />
+            <Area
+              type="monotone"
+              dataKey="min"
+              stopColor={plantyColor}
+              fillOpacity={1}
+              stroke={plantyColor}
+              fill="url(#colorUv)"
+            />
+            <Area
+              type="monotone"
+              dataKey="avg"
+              stroke="#81c784"
+              fillOpacity={0.5}
+              fill="#81c784"
+            />
+            <Area
+              type="monotone"
+              dataKey="max"
+              fillOpacity={0.5}
+              stroke="#c8e6c9"
+              fill="#c8e6c9"
+            />
+          </AreaChart>
+        </Paper>
+        <Paper
+          style={{
+            margin: 10,
+            width: maxWidth,
+            float: float
+          }}
+        >
+          <Typography style={{ padding: 10 }} variant="p" component="h3">
+            Humidity over this week
+          </Typography>
+
+          <AreaChart
+            width={maxWidth}
+            height={300}
+            data={this.state.dataForSoilHumidityWeekly}
+            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+          >
+            <defs>
+              <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="10%" stopColor={plantyColor} stopOpacity={0.8} />
+                <stop offset="95%" stopColor={plantyColor} stopOpacity={0} />
+              </linearGradient>
+              <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor={plantyColor} stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <XAxis label="" dataKey="label" />
+            <YAxis label="" />
+            <CartesianGrid strokeDasharray="3 3" />
+            <Tooltip />
+            <Legend />
+            <Area
+              type="monotone"
+              dataKey="min"
+              stopColor={plantyColor}
+              fillOpacity={1}
+              stroke={plantyColor}
+              fill="url(#colorUv)"
+            />
+            <Area
+              type="monotone"
+              dataKey="avg"
+              stroke="#81c784"
+              fillOpacity={0.5}
+              fill="#81c784"
+            />
+            <Area
+              type="monotone"
+              dataKey="max"
+              fillOpacity={0.5}
+              stroke="#c8e6c9"
+              fill="#c8e6c9"
+            />
+          </AreaChart>
+        </Paper>
+      </div>
+    );
+  };
 }
 
 const mapStateToProps = state => {
