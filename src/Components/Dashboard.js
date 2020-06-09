@@ -39,6 +39,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import WS from "../websocket";
+import Paper from "@material-ui/core/Paper";
 
 const plantyColor = "#6f9e04";
 const errorColor = "#ee3e34";
@@ -476,7 +477,12 @@ class Dashboard extends React.Component {
           this.setState({ selectedUser: user.name });
         }}
         key={user.name}
-        style={{ float: "left", margin: 10, maxWidth: maxWidth }}
+        style={{
+          float: "left",
+          margin: 10,
+          maxWidth: maxWidth,
+          backgroundColor: "#e8f5e9"
+        }}
       >
         <CardActionArea>
           <CardMedia
@@ -518,7 +524,12 @@ class Dashboard extends React.Component {
           this.setState({ growthPlanActive: true });
         }}
         key={one.UUID}
-        style={{ float: "left", margin: 10, maxWidth: maxWidth }}
+        style={{
+          float: "left",
+          margin: 10,
+          maxWidth: maxWidth,
+          backgroundColor: "#e8f5e9"
+        }}
       >
         <CardActionArea>
           <CardMedia
@@ -532,15 +543,15 @@ class Dashboard extends React.Component {
             // title="Contemplative Reptile"
           />
           <CardContent>
-            <img
-              style={{
-                alignSelf: "center",
-                margin: "14px",
-                width: maxWidth - 100
-              }}
-              src={require("../Images/good-growth-plan-copy.png")}
-              alt={"img"}
-            />
+            {/*<img*/}
+            {/*  style={{*/}
+            {/*    alignSelf: "center",*/}
+            {/*    margin: "14px",*/}
+            {/*    width: maxWidth - 100*/}
+            {/*  }}*/}
+            {/*  src={require("../Images/good-growth-plan-copy.png")}*/}
+            {/*  alt={"img"}*/}
+            {/*/>*/}
             <Typography gutterBottom variant="h5" component="h2">
               {one.growthPlanGroup}
             </Typography>
@@ -1238,18 +1249,18 @@ class Dashboard extends React.Component {
         >
           <AppBar position="static">
             <Toolbar>
-              <IconButton
-                onClick={() => {
-                  if (!this.state.user) this.setState({ toLogin: true });
-                }}
-                edge="start"
-                // className={styles.menuButton}
-                style={{ marginRight: 10 }}
-                color="inherit"
-                aria-label="menu"
-              >
-                {this.state.user ? <MenuIcon /> : <ArrowBackIosIcon />}
-              </IconButton>
+              {/*<IconButton*/}
+              {/*  onClick={() => {*/}
+              {/*    if (!this.state.user) this.setState({ toLogin: true });*/}
+              {/*  }}*/}
+              {/*  edge="start"*/}
+              {/*  // className={styles.menuButton}*/}
+              {/*  style={{ marginRight: 10 }}*/}
+              {/*  color="inherit"*/}
+              {/*  aria-label="menu"*/}
+              {/*>*/}
+              {/*  {this.state.user ? <MenuIcon /> : <ArrowBackIosIcon />}*/}
+              {/*</IconButton>*/}
               <Avatar
                 variant="square"
                 alt="Remy Sharp"
@@ -1329,12 +1340,30 @@ class Dashboard extends React.Component {
               </Breadcrumbs>
               {!this.state.growthPlanActive ? (
                 <div>
-                  <h1 style={{ margin: 10 }}>All Users</h1>
-                  <div style={{ margin: 10 }}>
+                  <Paper style={{ margin: 10 }}>
+                    <Typography
+                      style={{ padding: 10 }}
+                      variant="h5"
+                      component="h3"
+                    >
+                      All Users
+                    </Typography>
+                  </Paper>
+                  {/*<h1 style={{ margin: 10 }}>All Users</h1>*/}
+                  <div>
                     {this.state.systemUsers.map(one => this.renderUsers(one))}
                   </div>
                   <div style={{ clear: "both" }} />
-                  <h1 style={{ margin: 10 }}>All growth plans</h1>
+                  <Paper style={{ margin: 10 }}>
+                    <Typography
+                      style={{ padding: 10 }}
+                      variant="h5"
+                      component="h3"
+                    >
+                      All growth plans
+                    </Typography>
+                  </Paper>
+                  {/*<h1 style={{ margin: 10 }}>All growth plans</h1>*/}
                   <Button
                     variant="outlined"
                     style={{ color: plantyColor, margin: 10, width: maxWidth }}
@@ -1421,7 +1450,7 @@ class Dashboard extends React.Component {
                       </Button>
                     </DialogActions>
                   </Dialog>
-                  <div style={{ margin: 10 }}>
+                  <div>
                     {this.state.growthPlans.map(one =>
                       this.renderGrowthPlan(one)
                     )}
@@ -1569,7 +1598,19 @@ class Dashboard extends React.Component {
               )}
             </div>
           ) : (
-            <h1>Please log in first</h1>
+            <div style={{ margin: 10 }}>
+              <h1>Please log in first</h1>
+
+              <Button
+                variant="outlined"
+                style={{ color: plantyColor, width: maxWidth }}
+                onClick={() => {
+                  this.setState({ toLogin: true });
+                }}
+              >
+                Back to login
+              </Button>
+            </div>
           )}
         </div>
         <BrowserView>

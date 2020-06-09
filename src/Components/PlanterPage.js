@@ -9,7 +9,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
-import MenuIcon from "@material-ui/icons/Menu";
+import NoVideoIcon from "@material-ui/icons/VideocamOff";
 import ArrowBack from "@material-ui/icons/NavigateBefore";
 import ArrowForward from "@material-ui/icons/NavigateNext";
 import Reload from "@material-ui/icons/Autorenew";
@@ -167,7 +167,7 @@ class PlanterPage extends React.Component {
     if (!WS.ws) WS.init();
     Amplify.configure(JSON.parse(process.env.REACT_APP_CONFIG_AWS));
     WS.onMessage(data => {
-      // console.log("GOT in planter screen", data.data);
+      console.log("GOT in planter screen", data.data);
 
       let instructions = data.data.split(";");
       if (instructions.length > 2)
@@ -215,6 +215,7 @@ class PlanterPage extends React.Component {
             break;
 
           case "STREAM_ON":
+            // this.loadStreamUrl();
             this.setState({
               streamTurnedOn: true
             });
@@ -368,7 +369,6 @@ class PlanterPage extends React.Component {
 
     for (let i = 0; i < plots.daily.soilHumidity.labels.length; i++) {
       let object = {
-        // subject: arr[i],
         name: plots.daily.soilHumidity.labels[i],
         humidity: Math.floor(
           parseFloat(plots.daily.soilHumidity.datasets[0].data[i]) * 100
@@ -420,10 +420,8 @@ class PlanterPage extends React.Component {
         ),
         label: Object.keys(plots.weekly)[i]
       };
-      // this.state.label_data[index] = Object.keys(this.props.data)[i];
     }
 
-    console.log("temp:", dataArray);
     this.setState({ dataForTempWeekly: dataArray });
 
     dataArray = [];
@@ -443,7 +441,6 @@ class PlanterPage extends React.Component {
         ),
         label: Object.keys(plots.weekly)[i]
       };
-      // this.state.label_data[index] = Object.keys(this.props.data)[i];
     }
     this.setState({ dataForSoilHumidityWeekly: dataArray });
 
@@ -646,7 +643,7 @@ class PlanterPage extends React.Component {
   }
 
   renderPlants = plant => {
-    let maxWidth = 345;
+    let maxWidth = 250;
     if (isMobile) {
       maxWidth = this.state.width - 60;
     }
@@ -711,7 +708,7 @@ class PlanterPage extends React.Component {
   };
 
   render() {
-    let playerHeight = 800;
+    let playerHeight = 0;
     let float = "left";
     let videoWidth = this.state.width - 100;
     // console.log(isMacintosh());
@@ -723,6 +720,10 @@ class PlanterPage extends React.Component {
     } else {
       //console.log("windows");
       maxWidth = this.state.width / 3 - 50;
+    }
+
+    if (this.state.streamUrl) {
+      playerHeight = 800;
     }
 
     if (isMobile) {
@@ -812,34 +813,58 @@ class PlanterPage extends React.Component {
                 </Typography>
                 <div>
                   {/*<div className="player-wrapper">*/}
-                  <ReactPlayer
-                    playing
-                    // style={{ backgroundColor: "grey" }}
-                    url={this.state.streamUrl}
-                    width={videoWidth - 20}
-                    height={playerHeight}
-                    file={"forceHLS"}
-                    config={{
-                      file: {}
-                    }}
-                  />
-                  {/*</div>*/}
-                  <Fab
-                    size="small"
-                    color="primary"
-                    variant="extended"
-                    style={{ margin: 5, float: "left" }}
-                    onClick={() => {
-                      this.setState({ streamUrl: undefined, streamError: "" });
-                      this.loadStreamUrl();
-                    }}
-                  >
-                    <Reload />
-                    Reload Video
-                  </Fab>
-                  {/*<p style={{ margin: 12, color: errorColor, float: "left" }}>*/}
-                  {/*  {this.state.streamError}*/}
-                  {/*</p>*/}
+                  {this.state.streamUrl ? (
+                    <div>
+                      <ReactPlayer
+                        playing
+                        url={this.state.streamUrl}
+                        width={videoWidth - 20}
+                        height={playerHeight}
+                        file={"forceHLS"}
+                        config={{
+                          file: {}
+                        }}
+                      />
+                      <Fab
+                        size="small"
+                        color="primary"
+                        variant="extended"
+                        style={{ margin: 5, float: "left" }}
+                        onClick={() => {
+                          this.setState({
+                            streamUrl: undefined,
+                            streamError: ""
+                          });
+                          this.loadStreamUrl();
+                        }}
+                      >
+                        <Reload />
+                        Reload Video
+                      </Fab>
+                    </div>
+                  ) : (
+                    <div style={{ textAlign: "center" }}>
+                      <NoVideoIcon
+                        style={{ height: 40, width: 40, marginLeft: -150 }}
+                      />
+                      <Fab
+                        size="small"
+                        color="primary"
+                        variant="extended"
+                        style={{ margin: 5, float: "left" }}
+                        onClick={() => {
+                          this.setState({
+                            streamUrl: undefined,
+                            streamError: ""
+                          });
+                          this.loadStreamUrl();
+                        }}
+                      >
+                        <Reload />
+                        Reload Video
+                      </Fab>
+                    </div>
+                  )}
 
                   <div style={{ clear: "both" }} />
                   {this.state.streamError === "" ? (
@@ -1206,7 +1231,11 @@ class PlanterPage extends React.Component {
                 </div>
               </Paper>
               <Paper style={{ margin: 10 }}>
-                <Typography style={{ padding: 10 }} variant="h5" component="h3">
+                <Typography
+                  style={{ paddingLeft: 10 }}
+                  variant="h5"
+                  component="h3"
+                >
                   Current state for {this.state.planterName}
                 </Typography>
                 <Typography
@@ -1217,10 +1246,10 @@ class PlanterPage extends React.Component {
                   }}
                   component="p"
                 >
-                  Temperature: {this.state.entries.currTemperature} C<br />
-                  UV: {this.state.entries.currUV}
+                  Temperature:<b> {this.state.entries.currTemperature}C</b>
                   <br />
-                  Humidity: {this.state.entries.currHumidity}%
+                  UV: <b>{this.state.entries.currUV}</b> <br />
+                  Humidity: <b>{this.state.entries.currHumidity}% </b>
                 </Typography>
               </Paper>
               <Paper style={{ margin: 10 }}>
@@ -1517,7 +1546,19 @@ class PlanterPage extends React.Component {
               </Paper>
             </div>
           ) : (
-            <h1 style={{ margin: 10 }}>Please log in first</h1>
+            <div style={{ margin: 10 }}>
+              <h1>Please log in first</h1>
+
+              <Button
+                variant="outlined"
+                style={{ color: plantyColor, width: maxWidth }}
+                onClick={() => {
+                  this.setState({ toLogin: true });
+                }}
+              >
+                Back to login
+              </Button>
+            </div>
           )}
         </div>
         {/*<BrowserView></BrowserView>*/}

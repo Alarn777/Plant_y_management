@@ -252,7 +252,7 @@ class UserPage extends React.Component {
 
   renderPlanters = planter => {
     //
-    let maxWidth = 345;
+    let maxWidth = 250;
     if (isMobile) {
       maxWidth = this.state.width - 30;
     }
@@ -425,11 +425,16 @@ class UserPage extends React.Component {
                   {username === "Test" ? "Yukio" : username}
                 </Typography>
               </Breadcrumbs>
-              <div>
-                <h1>
+              <Paper style={{ margin: 10 }}>
+                <Typography style={{ padding: 10 }} variant="h5" component="h3">
                   {username === "Test" ? "Yukio" : username}'s Planters
-                  {/*{username}'s Planters*/}
-                </h1>
+                </Typography>
+              </Paper>
+              <div>
+                {/*<h1>*/}
+                {/*  {username === "Test" ? "Yukio" : username}'s Planters*/}
+                {/*  /!*{username}'s Planters*!/*/}
+                {/*</h1>*/}
                 <div>
                   {this.state.planters.map(one => this.renderPlanters(one))}
                 </div>
