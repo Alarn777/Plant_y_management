@@ -1,20 +1,11 @@
 import React from "react";
 import StickyFooter from "react-sticky-footer";
-import ReactDOM from "react-dom";
 
 //redux
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { addSocket, addUser, loadPlanters } from "../actions";
-// import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
-// import Toolbar from "@material-ui/core/Toolbar";
-// import Typography from "@material-ui/core/Typography";
-import { withStyles } from "@material-ui/styles";
-// import Consts from "../ENV_VARS";
-// import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
 import {
   Card,
   Paper,
@@ -26,28 +17,20 @@ import {
   CardMedia,
   CardContent
 } from "@material-ui/core";
-// import { Redirect } from "react-router-dom";
-import { Redirect, BrowserRouter as Router, Route } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import Amplify, { Auth } from "aws-amplify";
-// import awsconfig from "../aws-exports";
-//import { instanceOf } from "prop-types";
-//import { Cookies } from "react-cookie";
 
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import { Visibility, VisibilityOff } from "@material-ui/icons";
 import axios from "axios";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Link from "@material-ui/core/Link";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { BrowserView, isMobile } from "react-device-detect";
 import CardActions from "@material-ui/core/CardActions";
-import { w3cwebsocket as W3CWebSocket } from "websocket";
 import Avatar from "@material-ui/core/Avatar";
+import {Logger} from "../Logger";
 
 class UserPage extends React.Component {
-  // static propTypes = {
-  //   cookies: instanceOf(Cookies).isRequired
-  // };
 
   constructor(props) {
     super(props);
@@ -85,7 +68,7 @@ class UserPage extends React.Component {
   componentDidMount() {
     Auth.currentAuthenticatedUser()
       .then(user => {
-        // return Auth.changePassword(user, "oldPassword", "newPassword");
+
 
         this.setState({ user: user });
         this.props.addUser(user);
@@ -93,8 +76,13 @@ class UserPage extends React.Component {
           .then()
           .catch();
       })
-      // .then(data => console.log(data))
-      .catch(err => console.log(err));
+        .catch(err => {
+          Logger.saveLogs(
+              this.props.plantyData.myCognitoUser.username,
+              err.toString(),
+              'didmount - userpage',
+          );
+          console.log(err)});
 
     this.connect();
 
@@ -156,14 +144,14 @@ class UserPage extends React.Component {
           action: "message"
         })
       ); //send data to the server
-      console.log("sent message");
+      // console.log("sent message");
     } catch (error) {
       console.log(error); // catch error
     }
   };
 
   async loadPlanters() {
-    // console.log('called reload plants');
+
 
     let USER_TOKEN = "";
 
@@ -183,12 +171,16 @@ class UserPage extends React.Component {
         }
       )
       .then(response => {
-        // console.log(response.data);
+
         this.dealWithPlantsData(response.data);
       })
-      .catch(error => {
-        console.log("error " + error);
-      });
+        .catch(err => {
+          Logger.saveLogs(
+              this.props.plantyData.myCognitoUser.username,
+              err.toString(),
+              'loadPlanters',
+          );
+          console.log(err)});
   }
 
   dealWithPlantsData = plants => {
@@ -219,9 +211,13 @@ class UserPage extends React.Component {
           .then(() => this.sendMessage())
           .catch();
       })
-      .catch(error => {
-        console.log("error " + error);
-      });
+        .catch(err => {
+          Logger.saveLogs(
+              this.props.plantyData.myCognitoUser.username,
+              err.toString(),
+              'sendAction',
+          );
+          console.log(err)});
   }
 
   async removePlanter(planterName) {
@@ -245,9 +241,13 @@ class UserPage extends React.Component {
           .then(() => this.sendMessage())
           .catch();
       })
-      .catch(error => {
-        console.log("error " + error);
-      });
+        .catch(err => {
+          Logger.saveLogs(
+              this.props.plantyData.myCognitoUser.username,
+              err.toString(),
+              'removePlanter',
+          );
+          console.log(err)});
   }
 
   renderPlanters = planter => {
@@ -264,7 +264,6 @@ class UserPage extends React.Component {
           margin: 10,
           width: maxWidth,
           backgroundColor: "#e8f5e9"
-          // root: { color: "#a5d6a7" }
         }}
       >
         <CardActionArea
@@ -332,18 +331,10 @@ class UserPage extends React.Component {
     if (this.state.planters === []) {
       return <LinearProgress style={{ width: "100%" }} />;
     }
-    // if (!this.state.user) return <Redirect to="/login" />;
-
     if (this.state.toLogin === true) {
       return <Redirect to="/login" />;
     }
-    // if (this.state.toRegister === true) {
-    //   return <Redirect to="/register" />;
-    // }
-    // console.log(this.props.location);
-    // console.log(this.props.location.pathname.replace("/user/", ""));
     let username = this.state.customerUsername;
-    // console.log(this.state.planters);
     return (
       <div>
         <div
@@ -361,7 +352,6 @@ class UserPage extends React.Component {
                 onClick={() => {
                   if (!this.state.user) this.setState({ toLogin: true });
                 }}
-                // className={styles.menuButton}
                 style={{ marginRight: 10 }}
                 color="inherit"
                 aria-label="menu"
@@ -383,7 +373,6 @@ class UserPage extends React.Component {
               </IconButton>
               <Typography
                 variant="h6"
-                // className={styles.title}
                 style={{ flexGrow: 1 }}
               >
                 Plant'y
@@ -392,7 +381,6 @@ class UserPage extends React.Component {
                 <div>
                   <Typography
                     variant="h6"
-                    // className={styles.title}
                     style={{ flexGrow: 1 }}
                   >
                     Hello {this.state.user.username}
@@ -407,21 +395,10 @@ class UserPage extends React.Component {
                 <Link
                   color="inherit"
                   href="/dashboard"
-                  // to="/dashboard"
-                  // style={{ color: "#9e9e9e" }}
-                  // onClick={handleClick}
                 >
                   Dashboard
                 </Link>
-                {/*<Link*/}
-                {/*  color="inherit"*/}
-                {/*  href="/getting-started/installation/"*/}
-                {/*  // onClick={handleClick}*/}
-                {/*>*/}
-                {/*  User*/}
-                {/*</Link>*/}
                 <Typography color="textPrimary">
-                  {/*{username}*/}
                   {username === "Test" ? "Yukio" : username}
                 </Typography>
               </Breadcrumbs>
@@ -431,10 +408,6 @@ class UserPage extends React.Component {
                 </Typography>
               </Paper>
               <div>
-                {/*<h1>*/}
-                {/*  {username === "Test" ? "Yukio" : username}'s Planters*/}
-                {/*  /!*{username}'s Planters*!/*/}
-                {/*</h1>*/}
                 <div>
                   {this.state.planters.map(one => this.renderPlanters(one))}
                 </div>
@@ -459,11 +432,9 @@ class UserPage extends React.Component {
             bottomThreshold={20}
             normalStyles={{
               height: 20,
-              // backgroundColor: "#999999",
               padding: "10px"
             }}
             stickyStyles={{
-              // backgroundColor: "rgba(255,255,255,.8)",
               padding: "2rem"
             }}
           >

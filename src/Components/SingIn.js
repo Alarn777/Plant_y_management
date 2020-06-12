@@ -11,34 +11,24 @@ import { bindActionCreators } from "redux";
 import { addSocket, addUser, loadPlanters } from "../actions";
 import Button from "@material-ui/core/Button";
 import Amplify, { Auth } from "aws-amplify";
-// import awsconfig from "../aws-exports";
-import FormControl from "@material-ui/core/FormControl";
 import FormGroup from "@material-ui/core/FormGroup";
 import "../Styles/Signin.css";
-import TextField from "@material-ui/core/TextField";
 import AppBar from "@material-ui/core/AppBar";
-import { IconButton, Paper, Toolbar, Typography, Fab } from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
+import { IconButton, Toolbar, Typography } from "@material-ui/core";
 import StickyFooter from "react-sticky-footer";
-// import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import ArrowBackIosIcon from "@material-ui/icons/NavigateBefore";
 import { Redirect } from "react-router-dom";
 import Input from "@material-ui/core/Input";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import { Image, Visibility, VisibilityOff } from "@material-ui/icons";
+import { Visibility, VisibilityOff } from "@material-ui/icons";
 import InputLabel from "@material-ui/core/InputLabel";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { BrowserView, isMobile } from "react-device-detect";
+import { BrowserView } from "react-device-detect";
 import Link from "@material-ui/core/Link";
 import Alert from "@material-ui/lab/Alert";
-// import { instanceOf } from "prop-types";
-// import { withCookies, Cookies } from "react-cookie";
 const plantyColor = "#6f9e04";
 
 class SingIn extends React.Component {
-  // static propTypes = {
-  //   cookies: instanceOf(Cookies).isRequired
-  // };
 
   constructor(props) {
     super(props);
@@ -151,9 +141,6 @@ class SingIn extends React.Component {
   }
 
   sendNewPassword = () => {
-    // console.log(this.state.username);
-    // console.log(this.state.code);
-    //  console.log(this.state.newPasswordString);
 
     if (this.state.code === "" || this.state.newPasswordString === "") {
       this.setState({ error: true });
@@ -187,20 +174,6 @@ class SingIn extends React.Component {
       this.setState({ error: true, loading: false });
       return;
     }
-    // console.log("'Didint get it");
-
-    // Auth.forgotPasswordSubmit(
-    //   this.state.username,
-    //   this.state.code,
-    //   this.state.newPassword
-    // )
-    //   .then(data => {
-    //     console.log(data);
-    //     this.setState({ loading: false });
-    //     this.setState({ forgotPassword: false, newPassword: false });
-    //     // this.changeState('signIn');
-    //   })
-    //   .catch(err => this.error(err));
   };
 
   handleChange = name => event => {
@@ -308,17 +281,6 @@ class SingIn extends React.Component {
               capital letter and one digit
             </Alert>
             {this.renderError()}
-            {/*<p>New password must contain one capital letter and one number</p>*/}
-
-            {/*<Input*/}
-            {/*  error={this.state.error}*/}
-            {/*  style={{ marginTop: 10 }}*/}
-            {/*  // variant="outlined"*/}
-            {/*  id="standard-adornment-newPass"*/}
-            {/*  type={"password"}*/}
-            {/*  value={this.state.newPasswordString}*/}
-            {/*  onChange={this.handleChange("newPasswordString")}*/}
-            {/*/>*/}
           </FormGroup>
           <FormGroup style={{ margin: 10 }}>
             <Button
@@ -326,7 +288,6 @@ class SingIn extends React.Component {
                 marginTop: 20,
                 width: "100%"
               }}
-              // disabled={!this.validateForm()}
               variant="contained"
               color="primary"
               onClick={() => {
@@ -342,7 +303,6 @@ class SingIn extends React.Component {
                   style={{ root: { flex: 1 } }}
                 />
               )}
-              {/*Login*/}
             </Button>
           </FormGroup>
         </form>
@@ -404,7 +364,6 @@ class SingIn extends React.Component {
                   style={{ root: { flex: 1 } }}
                 />
               )}
-              {/*Login*/}
             </Button>
           </FormGroup>
         </form>
@@ -500,7 +459,6 @@ class SingIn extends React.Component {
                   style={{ root: { flex: 1 } }}
                 />
               )}
-              {/*Login*/}
             </Button>
           </FormGroup>
         </form>
@@ -545,101 +503,7 @@ class SingIn extends React.Component {
             </Typography>
             <div className="Login">
               {this.renderNeededForm()}
-
-              {/*<form onSubmit={this.handleSubmit}>*/}
-              {/*  <FormGroup style={{ margin: 10 }}>*/}
-              {/*    <img*/}
-              {/*      style={{ width: 300, margin: "0 auto" }}*/}
-              {/*      src={require("../Images/logo.png")}*/}
-              {/*      alt="logo"*/}
-              {/*    />*/}
-              {/*    <InputLabel*/}
-              {/*      error={this.state.error}*/}
-              {/*      style={{ marginTop: 10 }}*/}
-              {/*      htmlFor="outlined-adornment-username"*/}
-              {/*    >*/}
-              {/*      Username*/}
-              {/*    </InputLabel>*/}
-              {/*    <Input*/}
-              {/*      error={this.state.error}*/}
-              {/*      style={{ marginTop: 10 }}*/}
-              {/*      // variant="outlined"*/}
-              {/*      id="standard-adornment-username"*/}
-              {/*      type={"text"}*/}
-              {/*      value={this.state.username}*/}
-              {/*      onChange={this.handleChange("username")}*/}
-              {/*    />*/}
-              {/*  </FormGroup>*/}
-              {/*  <FormGroup style={{ margin: 10 }}>*/}
-              {/*    <InputLabel*/}
-              {/*      error={this.state.error}*/}
-              {/*      style={{ marginTop: 10 }}*/}
-              {/*      htmlFor="outlined-adornment-password"*/}
-              {/*    >*/}
-              {/*      Password*/}
-              {/*    </InputLabel>*/}
-              {/*    <Input*/}
-              {/*      error={this.state.error}*/}
-              {/*      style={{ marginTop: 10 }}*/}
-              {/*      variant="outlined"*/}
-              {/*      id="standard-adornment-password"*/}
-              {/*      type={this.state.showPassword ? "text" : "password"}*/}
-              {/*      value={this.state.password}*/}
-              {/*      onChange={this.handleChange("password")}*/}
-              {/*      endAdornment={*/}
-              {/*        <InputAdornment position="end">*/}
-              {/*          <IconButton*/}
-              {/*            aria-label="toggle password visibility"*/}
-              {/*            onClick={this.handleClickShowPassword}*/}
-              {/*          >*/}
-              {/*            {this.state.showPassword ? (*/}
-              {/*              <Visibility />*/}
-              {/*            ) : (*/}
-              {/*              <VisibilityOff />*/}
-              {/*            )}*/}
-              {/*          </IconButton>*/}
-              {/*        </InputAdornment>*/}
-              {/*      }*/}
-              {/*    />*/}
-              {/*    <Link*/}
-              {/*      style={{ marginTop: 5, fontSize: 15, alignSelf: "start" }}*/}
-              {/*      href="#"*/}
-              {/*      component={"button"}*/}
-              {/*      onClick={() => {*/}
-              {/*        // console.log("aaaa");*/}
-              {/*        this.setState({ forgotPassword: true });*/}
-              {/*      }}*/}
-              {/*    >*/}
-              {/*      Forgot password*/}
-              {/*    </Link>*/}
-              {/*    <Button*/}
-              {/*      style={{*/}
-              {/*        marginTop: 20*/}
-              {/*      }}*/}
-              {/*      disabled={!this.validateForm()}*/}
-              {/*      variant="contained"*/}
-              {/*      color="primary"*/}
-              {/*      onClick={() => {*/}
-              {/*        this.setState({ loading: true });*/}
-              {/*        this.SignIn()*/}
-              {/*          .then()*/}
-              {/*          .catch();*/}
-              {/*      }}*/}
-              {/*    >*/}
-              {/*      {!this.state.loading ? (*/}
-              {/*        <p>Login</p>*/}
-              {/*      ) : (*/}
-              {/*        <CircularProgress*/}
-              {/*          color="secondary"*/}
-              {/*          style={{ root: { flex: 1 } }}*/}
-              {/*        />*/}
-              {/*      )}*/}
-              {/*      /!*Login*!/*/}
-              {/*    </Button>*/}
-              {/*  </FormGroup>*/}
-              {/*</form>*/}
             </div>
-            {/*</Paper>*/}
           </div>
           <BrowserView>
             <img

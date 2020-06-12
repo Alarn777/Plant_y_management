@@ -10,7 +10,7 @@ import "../Styles/Signin.css";
 import { Paper, Toolbar, Typography, Button } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
 import Avatar from "@material-ui/core/Avatar";
-import { BrowserView, isMobile } from "react-device-detect";
+import { BrowserView } from "react-device-detect";
 import FormGroup from "@material-ui/core/FormGroup";
 
 const plantyColor = "#6f9e04";
@@ -49,7 +49,6 @@ class IndexPage extends React.Component {
   }
 
   render() {
-    // console.log(process.env.REACT_APP_CONFIG_AWS);
 
     if (this.state.toLogin === true) {
       return <Redirect to="/login" />;
@@ -80,27 +79,8 @@ class IndexPage extends React.Component {
                 }}
                 src={require("../Images/logo.png")}
               />
-              {/*<IconButton*/}
-              {/*  edge="start"*/}
-              {/*  // className={styles.menuButton}*/}
-              {/*  style={{ marginRight: 10 }}*/}
-              {/*  color="inherit"*/}
-              {/*  aria-label="menu"*/}
-              {/*>*/}
-              {/*  <Avatar*/}
-              {/*    variant="square"*/}
-              {/*    alt="Remy Sharp"*/}
-              {/*    style={{*/}
-              {/*      backgroundColor: "white",*/}
-              {/*      borderRadius: 5,*/}
-              {/*      marginRight: 10*/}
-              {/*    }}*/}
-              {/*    src={require("../Images/logo.png")}*/}
-              {/*  />*/}
-              {/*</IconButton>*/}
               <Typography
                 variant="h6"
-                // className={styles.title}
                 style={{ flexGrow: 1 }}
               >
                 Plant'y
@@ -152,9 +132,6 @@ class IndexPage extends React.Component {
                   alt="logo"
                 />
               </FormGroup>
-              {/*<p style={{ color: plantyColor, fontSize: 20 }}>*/}
-              {/*  Grow your plants with us*/}
-              {/*</p>*/}
             </form>
           </div>
         </div>

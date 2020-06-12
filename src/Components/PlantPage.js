@@ -1,42 +1,23 @@
 import React from "react";
 import StickyFooter from "react-sticky-footer";
-import ReactDOM from "react-dom";
 
 //redux
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { addSocket, addUser, loadPlanters } from "../actions";
-// import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
-// import Toolbar from "@material-ui/core/Toolbar";
-// import Typography from "@material-ui/core/Typography";
-import { withStyles } from "@material-ui/styles";
-//import Consts from "../ENV_VARS";
-// import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import {
-  Card,
-  Paper,
   Toolbar,
   Typography,
-  Button,
   IconButton
 } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
-import Amplify, { Auth } from "aws-amplify";
-//import awsconfig from "../aws-exports";
-//import { instanceOf } from "prop-types";
-//import { Cookies } from "react-cookie";
+import { Auth } from "aws-amplify";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import { Visibility, VisibilityOff } from "@material-ui/icons";
-import axios from "axios";
 import { BrowserView } from "react-device-detect";
 
 class PlantPage extends React.Component {
-  // static propTypes = {
-  //   cookies: instanceOf(Cookies).isRequired
-  // };
 
   constructor(props) {
     super(props);
@@ -49,7 +30,6 @@ class PlantPage extends React.Component {
       user: null,
       systemUsers: []
     };
-    // Amplify.configure(awsconfig);
   }
 
   updateDimensions = () => {
@@ -77,7 +57,9 @@ class PlantPage extends React.Component {
         this.loadAllData();
       })
       // .then(data => console.log(data))
-      .catch(err => console.log(err));
+      .catch(err => {
+
+        console.log(err)});
 
     window.addEventListener("resize", this.updateDimensions);
   }
@@ -88,26 +70,9 @@ class PlantPage extends React.Component {
 
   async loadAllData() {
     let USER_TOKEN = "";
-    // console.log(this.state.user);
     USER_TOKEN = this.state.user.signInUserSession.idToken.jwtToken;
     this.state.USER_TOKEN = USER_TOKEN;
 
-    // const AuthStr = "Bearer ".concat(this.state.USER_TOKEN);
-    // await axios
-    //   .post(
-    //     Consts.apigatewayRoute + "/getAllUsers",
-    //     {},
-    //     {
-    //       headers: { Authorization: AuthStr }
-    //     }
-    //   )
-    //   .then(response => {
-    //     // console.log(response.data);
-    //     this.dealWithUserData(response.data);
-    //   })
-    //   .catch(error => {
-    //     console.log("error " + error);
-    //   });
   }
 
   dealWithUserData(sentData) {
@@ -123,15 +88,9 @@ class PlantPage extends React.Component {
   }
 
   render() {
-    // console.log(this.state);
-    // if (!this.state.user) return <Redirect to="/login" />;
-
     if (this.state.toLogin === true) {
       return <Redirect to="/login" />;
     }
-    // if (this.state.toRegister === true) {
-    //   return <Redirect to="/register" />;
-    // }
     return (
       <div>
         <div

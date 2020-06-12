@@ -46,9 +46,7 @@ ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        {/*<CookiesProvider>*/}
         <App />
-        {/*</CookiesProvider>*/}
       </ThemeProvider>
     </Provider>
   </React.StrictMode>,

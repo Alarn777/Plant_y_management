@@ -16,17 +16,16 @@ import "../Styles/Signin.css";
 import AppBar from "@material-ui/core/AppBar";
 import { IconButton, Paper, Toolbar, Typography, Fab } from "@material-ui/core";
 import StickyFooter from "react-sticky-footer";
-// import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 
 import ArrowBackIosIcon from "@material-ui/icons/NavigateBefore";
 
 import { Redirect } from "react-router-dom";
 import Input from "@material-ui/core/Input";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import { Image, Visibility, VisibilityOff } from "@material-ui/icons";
+import {  Visibility, VisibilityOff } from "@material-ui/icons";
 import InputLabel from "@material-ui/core/InputLabel";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { BrowserView, isMobile } from "react-device-detect";
+import { BrowserView } from "react-device-detect";
 import Alert from "@material-ui/lab/Alert";
 
 const plantyColor = "#6f9e04";
@@ -99,6 +98,7 @@ class SingUp extends React.Component {
       })
       .catch(err => {
         console.log(err);
+
         this.setState({ error: true });
       });
 
@@ -186,7 +186,6 @@ class SingUp extends React.Component {
             <Typography style={{ padding: 10 }} variant="h3" component="h3">
               User registered successfully
             </Typography>
-            {/*</Paper>*/}
           </div>
           <BrowserView>
             <img
@@ -251,7 +250,6 @@ class SingUp extends React.Component {
                 </Typography>
               </Toolbar>
             </AppBar>
-            {/*<Paper style={{ margin: 10 }}>*/}
             <Typography style={{ padding: 10 }} variant="h3" component="h3">
               Register
             </Typography>
@@ -265,18 +263,6 @@ class SingUp extends React.Component {
                         src={require("../Images/logo.png")}
                         alt="logo"
                       />
-                      {/*<p*/}
-                      {/*  style={{*/}
-                      {/*    marginTop: 10,*/}
-                      {/*    borderColor: errorColor,*/}
-                      {/*    borderWidth: 1,*/}
-                      {/*    borderRadius: 3,*/}
-                      {/*    padding: 10,*/}
-                      {/*    color: errorColor*/}
-                      {/*  }}*/}
-                      {/*>*/}
-                      {/*  Please contact system administrator to register*/}
-                      {/*</p>*/}
                       <Alert
                         style={{
                           marginTop: 10

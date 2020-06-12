@@ -6,7 +6,6 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { addSocket, addUser, loadPlanters } from "../actions";
 import AppBar from "@material-ui/core/AppBar";
-import MenuIcon from "@material-ui/icons/Menu";
 import {
   Card,
   CardActionArea,
@@ -15,17 +14,15 @@ import {
   Toolbar,
   Typography,
   Button,
-  IconButton
 } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
 import Amplify, { Auth, Storage } from "aws-amplify";
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import axios from "axios";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Link from "@material-ui/core/Link";
 import Avatar from "@material-ui/core/Avatar";
-import { BrowserView, isBrowser, isMobile } from "react-device-detect";
+import { BrowserView, isMobile } from "react-device-detect";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
@@ -40,6 +37,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import WS from "../websocket";
 import Paper from "@material-ui/core/Paper";
+import {Logger} from "../Logger";
 
 const plantyColor = "#6f9e04";
 const errorColor = "#ee3e34";
@@ -107,7 +105,13 @@ class Dashboard extends React.Component {
           .then()
           .catch();
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        Logger.saveLogs(
+            this.props.plantyData.myCognitoUser.username,
+            err.toString(),
+            'didmount - Dashboard',
+        );
+        console.log(err)});
 
     window.addEventListener("resize", this.updateDimensions);
   }
@@ -135,9 +139,13 @@ class Dashboard extends React.Component {
         // console.log(response);
         this.dealWithUserData(response.data);
       })
-      .catch(error => {
-        console.log("error " + error);
-      });
+        .catch(err => {
+          Logger.saveLogs(
+              this.props.plantyData.myCognitoUser.username,
+              err.toString(),
+              'loadAllData',
+          );
+          console.log(err)});
 
     await axios
       .post(
@@ -155,9 +163,13 @@ class Dashboard extends React.Component {
         });
         // this.dealWithUserData(response.data);
       })
-      .catch(error => {
-        console.log("error " + error);
-      });
+        .catch(err => {
+          Logger.saveLogs(
+              this.props.plantyData.myCognitoUser.username,
+              err.toString(),
+              'growthPlans - dashboard',
+          );
+          console.log(err)});
   }
 
   dealWithUserData(sentData) {
@@ -170,8 +182,6 @@ class Dashboard extends React.Component {
         Storage.get(userAvatarKey, {
           level: "public",
           type: "image/jpg"
-          // bucket: 'plant-pictures-planty',
-          // region: 'eu',
         })
           .then(data => {
             let newOne = {
@@ -179,10 +189,15 @@ class Dashboard extends React.Component {
               pic: data
             };
             users.push(newOne);
-            // console.log(data);
           })
           .then(() => this.setState({ systemUsers: users }))
-          .catch(error => console.log(error));
+            .catch(err => {
+              Logger.saveLogs(
+                  this.props.plantyData.myCognitoUser.username,
+                  err.toString(),
+                  'loadUserAvatars',
+              );
+              console.log(err)});
       }
     });
   }
@@ -195,8 +210,6 @@ class Dashboard extends React.Component {
           "/manageGrowthPlans",
         {
           action: "deleteGrowthPlan",
-          // growthPlanGroup: this.state.growthPlan.growthPlanGroup,
-          // phases: this.state.growthPlan.phases,
           UUID: this.state.growthPlan.UUID
         },
         {
@@ -216,8 +229,6 @@ class Dashboard extends React.Component {
   }
 
   async saveGrowthPlan() {
-    // console.log("saving plan");
-    // console.log(this.state.growthPlan);
 
     this.setState({ savingPlan: true, errorText: "" });
 
@@ -241,7 +252,6 @@ class Dashboard extends React.Component {
         )
         .then(response => {
           this.setState({ savingPlan: false });
-          // console.log("Saving plan", response);
           this.loadAllData()
             .then()
             .catch();
@@ -252,7 +262,6 @@ class Dashboard extends React.Component {
         });
     } else {
       //validations
-      // this.setState({ savingPlan: false });
       if (Object.keys(this.state.growthPlan).length === 0) {
         //if no growthPlan
         if (this.state.growthPlanName === "") {
@@ -296,14 +305,15 @@ class Dashboard extends React.Component {
         )
         .then(response => {
           this.setState({ savingPlan: false });
-          this.setState({
-            // growthPlans: response.data.Items,
-            // growthPlan: this.state.growthPlans[0]
-          });
-          // this.dealWithUserData(response.data);
         })
         .catch(error => {
           console.log("error " + error);
+            Logger.saveLogs(
+                this.props.plantyData.myCognitoUser.username,
+                error.toString(),
+                'manageGrowthPlans - dashboard',
+            );
+
           this.setState({ growthPlan: {}, savingPlan: false });
         });
     }
@@ -340,9 +350,6 @@ class Dashboard extends React.Component {
     } else {
       currentWeeks = this.state.growthPlan.phases;
     }
-
-    // let currentWeeks;
-    // console.log(currentWeeks);
 
     let newWeekNum = currentWeeks.length + 1;
     let fromDay = 0;
@@ -465,7 +472,6 @@ class Dashboard extends React.Component {
   };
 
   renderUsers = user => {
-    //
     let maxWidth = 150;
     if (isMobile) {
       maxWidth = this.state.width - 20;
@@ -495,7 +501,6 @@ class Dashboard extends React.Component {
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">
-              {/*{user.name}*/}
               {user.name === "Test" ? "Yukio" : user.name}
             </Typography>
             <Typography variant="body2" color="textSecondary" component="p">
@@ -574,8 +579,6 @@ class Dashboard extends React.Component {
         expanded={this.state.expanded === panel}
         onChange={this.handleChange(panel)}
         key={oneWeek.phaseName}
-        // style={styles.week}
-        // title={oneWeek.phaseName}
       >
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
@@ -614,8 +617,6 @@ class Dashboard extends React.Component {
                   style={{
                     width: "100%",
                     display: "inline-block",
-                    // borderRight: "1px solid black",
-                    // backgroundColor: "yellow",
                     margin: "5px"
                   }}
                 >
@@ -636,12 +637,8 @@ class Dashboard extends React.Component {
                         oneWeek.subPhases[0].temperature.min,
                         oneWeek.subPhases[0].temperature.max
                       ]}
-                      // onChange={this.handleSliderChange}
                       onChange={(event, newValue) => {
-                        // console.log(event);
-
                         oneWeek.subPhases[0].temperature.min = newValue[0];
-                        // this.forceUpdate();
                         oneWeek.subPhases[0].temperature.max = newValue[1];
                         this.forceUpdate();
                       }}
@@ -668,22 +665,11 @@ class Dashboard extends React.Component {
                     {isMobile ? "" : 0}
                     <Slider
                       style={{ width: "60%", marginLeft: 25, marginRight: 25 }}
-                      // value={[
-                      //   oneWeek.subPhases[0].uvIntensity.min,
-                      //   oneWeek.subPhases[0].uvIntensity.max
-                      // ]}
                       value={[
                         oneWeek.subPhases[0].uvIntensity.min
-                        // oneWeek.subPhases[0].uvIntensity.max
                       ]}
-                      // onChange={this.handleSliderChange}
                       onChange={(event, newValue) => {
-                        // console.log(event);
-                        // console.log(newValue);
-
                         oneWeek.subPhases[0].uvIntensity.min = newValue[0];
-                        // this.forceUpdate();
-                        // oneWeek.subPhases[0].uvIntensity.max = newValue[1];
                         this.forceUpdate();
                       }}
                       valueLabelDisplay="auto"
@@ -691,18 +677,14 @@ class Dashboard extends React.Component {
                       min={0}
                       max={400}
                       step={100}
-                      // getAriaValueText={this.valueTempText}
                     />
                     {isMobile ? "" : 400}
-                    {/*<p style={{ marginTop: 20 }}>35</p>*/}
                   </div>
                 </div>
                 <div
                   style={{
                     width: "100%",
                     display: "inline-block",
-                    // borderLeft: "1px solid black",
-                    // backgroundColor: "yellow",
                     padding: "5px"
                   }}
                 >
@@ -723,13 +705,9 @@ class Dashboard extends React.Component {
                         oneWeek.subPhases[0].soilHumidity.min * 100,
                         oneWeek.subPhases[0].soilHumidity.max * 100
                       ]}
-                      // onChange={this.handleSliderChange}
                       onChange={(event, newValue) => {
-                        // console.log(event);
-
                         oneWeek.subPhases[0].soilHumidity.min =
                           newValue[0] / 100;
-                        // this.forceUpdate();
                         oneWeek.subPhases[0].soilHumidity.max =
                           newValue[1] / 100;
                         this.forceUpdate();
@@ -741,7 +719,6 @@ class Dashboard extends React.Component {
                       getAriaValueText={this.valueHumidText}
                     />
                     {isMobile ? "" : 100}
-                    {/*<p style={{ marginTop: 20 }}>35</p>*/}
                   </div>
                 </div>
               </ExpansionPanelDetails>
@@ -770,8 +747,6 @@ class Dashboard extends React.Component {
                   style={{
                     width: "100%",
                     display: "inline-block",
-                    // borderRight: "1px solid black",
-                    // backgroundColor: "yellow",
                     margin: "5px"
                   }}
                 >
@@ -792,12 +767,8 @@ class Dashboard extends React.Component {
                         oneWeek.subPhases[1].temperature.min,
                         oneWeek.subPhases[1].temperature.max
                       ]}
-                      // onChange={this.handleSliderChange}
                       onChange={(event, newValue) => {
-                        // console.log(event);
-
                         oneWeek.subPhases[1].temperature.min = newValue[0];
-                        // this.forceUpdate();
                         oneWeek.subPhases[1].temperature.max = newValue[1];
                         this.forceUpdate();
                       }}
@@ -808,7 +779,6 @@ class Dashboard extends React.Component {
                       getAriaValueText={this.valueTempText}
                     />
                     {isMobile ? "" : 35}
-                    {/*<p style={{ marginTop: 20 }}>35</p>*/}
                   </div>
                 </div>
                 <div style={{ width: "100%" }}>
@@ -827,15 +797,9 @@ class Dashboard extends React.Component {
                       style={{ width: "60%", marginLeft: 25, marginRight: 25 }}
                       value={[
                         oneWeek.subPhases[1].uvIntensity.min
-                        // oneWeek.subPhases[1].uvIntensity.max
                       ]}
-                      // onChange={this.handleSliderChange}
                       onChange={(event, newValue) => {
-                        // console.log(event);
-
                         oneWeek.subPhases[1].uvIntensity.min = newValue[0];
-                        // this.forceUpdate();
-                        // oneWeek.subPhases[1].uvIntensity.max = newValue[1];
                         this.forceUpdate();
                       }}
                       valueLabelDisplay="auto"
@@ -843,18 +807,14 @@ class Dashboard extends React.Component {
                       min={0}
                       max={400}
                       step={100}
-                      // getAriaValueText={this.valueTempText}
                     />
                     {isMobile ? "" : 400}
-                    {/*<p style={{ marginTop: 20 }}>35</p>*/}
                   </div>
                 </div>
                 <div
                   style={{
                     width: "100%",
                     display: "inline-block",
-                    // borderLeft: "1px solid black",
-                    // backgroundColor: "yellow",
                     padding: "5px"
                   }}
                 >
@@ -875,13 +835,9 @@ class Dashboard extends React.Component {
                         oneWeek.subPhases[1].soilHumidity.min * 100,
                         oneWeek.subPhases[1].soilHumidity.max * 100
                       ]}
-                      // onChange={this.handleSliderChange}
                       onChange={(event, newValue) => {
-                        // console.log(event);
-
                         oneWeek.subPhases[1].soilHumidity.min =
                           newValue[0] / 100;
-                        // this.forceUpdate();
                         oneWeek.subPhases[1].soilHumidity.max =
                           newValue[1] / 100;
                         this.forceUpdate();
@@ -893,7 +849,6 @@ class Dashboard extends React.Component {
                       getAriaValueText={this.valueHumidText}
                     />
                     {isMobile ? "" : 100}
-                    {/*<p style={{ marginTop: 20 }}>35</p>*/}
                   </div>
                 </div>
               </ExpansionPanelDetails>
@@ -902,10 +857,6 @@ class Dashboard extends React.Component {
               style={{ width: "100%" }}
               expanded={this.state.innerExpanded === "evening"}
               onChange={this.handleInnerChange("evening")}
-
-              // key={oneWeek.name}
-              // style={styles.week}
-              // title={oneWeek.phaseName}
             >
               <ExpansionPanelSummary
                 expandIcon={<ExpandMoreIcon />}
@@ -925,8 +876,6 @@ class Dashboard extends React.Component {
                   style={{
                     width: "100%",
                     display: "inline-block",
-                    // borderRight: "1px solid black",
-                    // backgroundColor: "yellow",
                     margin: "5px"
                   }}
                 >
@@ -947,12 +896,8 @@ class Dashboard extends React.Component {
                         oneWeek.subPhases[2].temperature.min,
                         oneWeek.subPhases[2].temperature.max
                       ]}
-                      // onChange={this.handleSliderChange}
                       onChange={(event, newValue) => {
-                        // console.log(event);
-
                         oneWeek.subPhases[2].temperature.min = newValue[0];
-                        // this.forceUpdate();
                         oneWeek.subPhases[2].temperature.max = newValue[1];
                         this.forceUpdate();
                       }}
@@ -963,7 +908,6 @@ class Dashboard extends React.Component {
                       getAriaValueText={this.valueTempText}
                     />
                     {isMobile ? "" : 35}
-                    {/*<p style={{ marginTop: 20 }}>35</p>*/}
                   </div>
                 </div>
                 <div style={{ width: "100%" }}>
@@ -982,15 +926,9 @@ class Dashboard extends React.Component {
                       style={{ width: "60%", marginLeft: 25, marginRight: 25 }}
                       value={[
                         oneWeek.subPhases[2].uvIntensity.min
-                        // oneWeek.subPhases[2].uvIntensity.max
                       ]}
-                      // onChange={this.handleSliderChange}
                       onChange={(event, newValue) => {
-                        // console.log(event);
-
                         oneWeek.subPhases[2].uvIntensity.min = newValue[0];
-                        // this.forceUpdate();
-                        // oneWeek.subPhases[2].uvIntensity.max = newValue[1];
                         this.forceUpdate();
                       }}
                       valueLabelDisplay="auto"
@@ -998,18 +936,14 @@ class Dashboard extends React.Component {
                       min={0}
                       max={400}
                       step={100}
-                      // getAriaValueText={this.valueTempText}
                     />
                     {isMobile ? "" : 400}
-                    {/*<p style={{ marginTop: 20 }}>35</p>*/}
                   </div>
                 </div>
                 <div
                   style={{
                     width: "100%",
                     display: "inline-block",
-                    // borderLeft: "1px solid black",
-                    // backgroundColor: "yellow",
                     padding: "5px"
                   }}
                 >
@@ -1030,13 +964,10 @@ class Dashboard extends React.Component {
                         oneWeek.subPhases[2].soilHumidity.min * 100,
                         oneWeek.subPhases[2].soilHumidity.max * 100
                       ]}
-                      // onChange={this.handleSliderChange}
                       onChange={(event, newValue) => {
-                        // console.log(event);
 
                         oneWeek.subPhases[2].soilHumidity.min =
                           newValue[0] / 100;
-                        // this.forceUpdate();
                         oneWeek.subPhases[2].soilHumidity.max =
                           newValue[1] / 100;
                         this.forceUpdate();
@@ -1048,7 +979,6 @@ class Dashboard extends React.Component {
                       getAriaValueText={this.valueHumidText}
                     />
                     {isMobile ? "" : 100}
-                    {/*<p style={{ marginTop: 20 }}>35</p>*/}
                   </div>
                 </div>
               </ExpansionPanelDetails>
@@ -1076,8 +1006,6 @@ class Dashboard extends React.Component {
                   style={{
                     width: "100%",
                     display: "inline-block",
-                    // borderRight: "1px solid black",
-                    // backgroundColor: "yellow",
                     margin: "5px"
                   }}
                 >
@@ -1098,12 +1026,8 @@ class Dashboard extends React.Component {
                         oneWeek.subPhases[3].temperature.min,
                         oneWeek.subPhases[3].temperature.max
                       ]}
-                      // onChange={this.handleSliderChange}
                       onChange={(event, newValue) => {
-                        // console.log(event);
-
                         oneWeek.subPhases[3].temperature.min = newValue[0];
-                        // this.forceUpdate();
                         oneWeek.subPhases[3].temperature.max = newValue[1];
                         this.forceUpdate();
                       }}
@@ -1114,7 +1038,6 @@ class Dashboard extends React.Component {
                       getAriaValueText={this.valueTempText}
                     />
                     {isMobile ? "" : 35}
-                    {/*<p style={{ marginTop: 20 }}>35</p>*/}
                   </div>
                 </div>
                 <div style={{ width: "100%" }}>
@@ -1133,15 +1056,9 @@ class Dashboard extends React.Component {
                       style={{ width: "60%", marginLeft: 25, marginRight: 25 }}
                       value={[
                         oneWeek.subPhases[3].uvIntensity.min
-                        // oneWeek.subPhases[3].uvIntensity.max
                       ]}
-                      // onChange={this.handleSliderChange}
                       onChange={(event, newValue) => {
-                        // console.log(event);
-
                         oneWeek.subPhases[3].uvIntensity.min = newValue[0];
-                        // this.forceUpdate();
-                        // oneWeek.subPhases[3].uvIntensity.max = newValue[1];
                         this.forceUpdate();
                       }}
                       valueLabelDisplay="auto"
@@ -1149,18 +1066,14 @@ class Dashboard extends React.Component {
                       min={0}
                       max={400}
                       step={100}
-                      // getAriaValueText={this.valueTempText}
                     />
                     {isMobile ? "" : 400}
-                    {/*<p style={{ marginTop: 20 }}>35</p>*/}
                   </div>
                 </div>
                 <div
                   style={{
                     width: "100%",
                     display: "inline-block",
-                    // borderLeft: "1px solid black",
-                    // backgroundColor: "yellow",
                     padding: "5px"
                   }}
                 >
@@ -1181,13 +1094,10 @@ class Dashboard extends React.Component {
                         oneWeek.subPhases[3].soilHumidity.min * 100,
                         oneWeek.subPhases[3].soilHumidity.max * 100
                       ]}
-                      // onChange={this.handleSliderChange}
                       onChange={(event, newValue) => {
-                        // console.log(event);
 
                         oneWeek.subPhases[3].soilHumidity.min =
                           newValue[0] / 100;
-                        // this.forceUpdate();
                         oneWeek.subPhases[3].soilHumidity.max =
                           newValue[1] / 100;
                         this.forceUpdate();
@@ -1199,7 +1109,6 @@ class Dashboard extends React.Component {
                       getAriaValueText={this.valueHumidText}
                     />
                     {isMobile ? "" : 100}
-                    {/*<p style={{ marginTop: 20 }}>35</p>*/}
                   </div>
                 </div>
               </ExpansionPanelDetails>
@@ -1210,7 +1119,6 @@ class Dashboard extends React.Component {
     );
   }
   render() {
-    // return <div />;
     if (this.state.selectedUser !== "none") {
       return <Redirect to={`/users/${this.state.selectedUser}`} />;
     }
@@ -1223,7 +1131,6 @@ class Dashboard extends React.Component {
       return <LinearProgress style={{ width: "100%" }} />;
     }
 
-    let growthPlanName = "";
     let maxWidth = 300;
     if (isMobile) {
       maxWidth = "95%";
@@ -1241,18 +1148,7 @@ class Dashboard extends React.Component {
         >
           <AppBar position="static">
             <Toolbar>
-              {/*<IconButton*/}
-              {/*  onClick={() => {*/}
-              {/*    if (!this.state.user) this.setState({ toLogin: true });*/}
-              {/*  }}*/}
-              {/*  edge="start"*/}
-              {/*  // className={styles.menuButton}*/}
-              {/*  style={{ marginRight: 10 }}*/}
-              {/*  color="inherit"*/}
-              {/*  aria-label="menu"*/}
-              {/*>*/}
-              {/*  {this.state.user ? <MenuIcon /> : <ArrowBackIosIcon />}*/}
-              {/*</IconButton>*/}
+
               <Avatar
                 variant="square"
                 alt="Remy Sharp"
@@ -1266,7 +1162,6 @@ class Dashboard extends React.Component {
 
               <Typography
                 variant="h6"
-                // className={styles.title}
                 style={{ flexGrow: 1 }}
               >
                 Plant'y
@@ -1279,7 +1174,13 @@ class Dashboard extends React.Component {
                       onClick={() => {
                         Auth.signOut()
                           .then(data => console.log(data))
-                          .catch(err => console.log(err));
+                            .catch(err => {
+                              Logger.saveLogs(
+                                  this.props.plantyData.myCognitoUser.username,
+                                  err.toString(),
+                                  'signout - dashboard',
+                              );
+                              console.log(err)});
 
                         this.setState({ user: null, toLogin: true });
                       }}
@@ -1287,7 +1188,6 @@ class Dashboard extends React.Component {
                   ) : (
                     <Typography
                       variant="h6"
-                      // className={styles.title}
                       style={{ flexGrow: 1 }}
                     >
                       Hello {this.state.user.username}
@@ -1298,7 +1198,13 @@ class Dashboard extends React.Component {
                         onClick={() => {
                           Auth.signOut()
                             .then(data => console.log(data))
-                            .catch(err => console.log(err));
+                              .catch(err => {
+                                Logger.saveLogs(
+                                    this.props.plantyData.myCognitoUser.username,
+                                    err.toString(),
+                                    'signout - dashboard',
+                                );
+                                console.log(err)});
 
                           this.setState({ user: null, toLogin: true });
                         }}
@@ -1317,18 +1223,9 @@ class Dashboard extends React.Component {
                 <Link
                   color="inherit"
                   href="/dashboard"
-                  // onClick={handleClick}
                 >
                   Dashboard
                 </Link>
-                {/*<Link*/}
-                {/*  color="inherit"*/}
-                {/*  href="/getting-started/installation/"*/}
-                {/*  // onClick={handleClick}*/}
-                {/*>*/}
-                {/*  Core*/}
-                {/*</Link>*/}
-                {/*<Typography color="textPrimary">Breadcrumb</Typography>*/}
               </Breadcrumbs>
               {!this.state.growthPlanActive ? (
                 <div>
@@ -1341,7 +1238,6 @@ class Dashboard extends React.Component {
                       All Users
                     </Typography>
                   </Paper>
-                  {/*<h1 style={{ margin: 10 }}>All Users</h1>*/}
                   <div>
                     {this.state.systemUsers.map(one => this.renderUsers(one))}
                   </div>
@@ -1355,7 +1251,7 @@ class Dashboard extends React.Component {
                       All growth plans
                     </Typography>
                   </Paper>
-                  {/*<h1 style={{ margin: 10 }}>All growth plans</h1>*/}
+
                   <Button
                     variant="outlined"
                     style={{ color: plantyColor, margin: 10, width: maxWidth }}
@@ -1363,7 +1259,6 @@ class Dashboard extends React.Component {
                       this.setState({ dialogOpen: true });
 
                       this.newGrowthPlan();
-                      // this.setState({ growthPlanActive: true });  onClose={() => this.setState({dialogOpen:false})}
                     }}
                   >
                     Create new growth plan
@@ -1377,9 +1272,6 @@ class Dashboard extends React.Component {
                       New growth plan
                     </DialogTitle>
                     <DialogContent>
-                      {/*<DialogContentText>*/}
-                      {/*  Please enter a name for your growth plan*/}
-                      {/*</DialogContentText>*/}
                       <TextField
                         autoFocus
                         margin="dense"
@@ -1387,9 +1279,7 @@ class Dashboard extends React.Component {
                         label="Growth Plan Name"
                         type="text"
                         fullWidth
-                        // value={"asdasd"}
                         value={this.state.growthPlanName}
-                        // onChange={event => console.log(event.target.value)}
                         onChange={event => {
                           this.setState({
                             growthPlanName: event.target.value
@@ -1407,7 +1297,6 @@ class Dashboard extends React.Component {
                         fullWidth
                         // value={"asdasd"}
                         value={this.state.growthPlanDescription}
-                        // onChange={event => console.log(event.target.value)}
                         onChange={event => {
                           this.setState({
                             growthPlanDescription: event.target.value
@@ -1426,12 +1315,8 @@ class Dashboard extends React.Component {
                       <Button
                         onClick={() => {
                           this.setState({ dialogOpen: false });
-                          // console.log(this.state.growthPlanName);
-                          // console.log(this.state.growthPlan);
                           this.state.growthPlan.growthPlanGroup = this.state.growthPlanName;
                           this.state.growthPlan.growthPlanDescription = this.state.growthPlanDescription;
-                          // console.log(this.state.growthPlan);
-
                           this.saveGrowthPlan()
                             .then()
                             .catch();
@@ -1499,7 +1384,6 @@ class Dashboard extends React.Component {
                         width: 180,
                         padding: -10
                       }}
-                      // disabled={!this.validateForm()}
                       variant="contained"
                       color="primary"
                       onClick={() => {
@@ -1548,7 +1432,6 @@ class Dashboard extends React.Component {
                       }}
                     />
                     <TextField
-                      // error={this.state.errorInName}
                       style={{
                         marginLeftW: 5,
                         marginTop: 20,
@@ -1565,7 +1448,6 @@ class Dashboard extends React.Component {
                           ? this.state.growthPlanDescription
                           : this.state.growthPlan.growthPlanDescription
                       }
-                      // onChange={event => console.log(event.target.value)}
                       onChange={event => {
                         Object.keys(this.state.growthPlan).length === 0 &&
                         this.state.growthPlan.constructor === Object
@@ -1620,11 +1502,9 @@ class Dashboard extends React.Component {
             bottomThreshold={20}
             normalStyles={{
               height: 20,
-              // backgroundColor: "#999999",
               padding: "10px"
             }}
             stickyStyles={{
-              // backgroundColor: "rgba(255,255,255,.8)",
               padding: "2rem"
             }}
           >
