@@ -43,7 +43,7 @@ import Link from "@material-ui/core/Link";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import CardActions from "@material-ui/core/CardActions";
-import {  isMobile } from "react-device-detect";
+import { isMobile } from "react-device-detect";
 import WS from "../websocket";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Fab from "@material-ui/core/Fab";
@@ -56,8 +56,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import Slider from "@material-ui/core/Slider";
 import TextField from "@material-ui/core/TextField";
-import {Logger} from '../Logger'
-
+import { Logger } from "../Logger";
 
 const plantyColor = "#6f9e04";
 const errorColor = "#ee3e34";
@@ -157,7 +156,7 @@ class PlanterPage extends React.Component {
           instructions: "",
           name: "",
           phoneNumber: "",
-          username: "",
+          username: ""
         }
       },
       waterAdded: false,
@@ -304,6 +303,13 @@ class PlanterPage extends React.Component {
       );
   };
 
+  getMeasurments = () => {
+    if (WS.ws)
+      WS.sendMessage(
+        "FROM_WEB;" + this.state.planterUUID + ";GET_MEASUREMENTS"
+      );
+  };
+
   updateDimensions = () => {
     let w = window,
       d = document,
@@ -342,13 +348,14 @@ class PlanterPage extends React.Component {
           .catch();
       })
       // .then(data => console.log(data))
-        .catch(err => {
-          Logger.saveLogs(
-              this.props.plantyData.myCognitoUser.username,
-              err.toString(),
-              'didmount - planterPage',
-          );
-          console.log(err)});
+      .catch(err => {
+        Logger.saveLogs(
+          this.props.plantyData.myCognitoUser.username,
+          err.toString(),
+          "didmount - planterPage"
+        );
+        console.log(err);
+      });
 
     window.addEventListener("resize", this.updateDimensions);
   }
@@ -476,7 +483,7 @@ class PlanterPage extends React.Component {
   }
 
   async loadPlants() {
-    let USER_TOKEN = this.state.user.signInUserSession.idToken.jwtToken ;
+    let USER_TOKEN = this.state.user.signInUserSession.idToken.jwtToken;
     const AuthStr = "Bearer ".concat(USER_TOKEN);
     await axios
       .post(
@@ -493,18 +500,20 @@ class PlanterPage extends React.Component {
       .then(response => {
         this.dealWithPlantsData(response.data);
       })
-        .catch(err => {
-          Logger.saveLogs(
-              this.props.plantyData.myCognitoUser.username,
-              err.toString(),
-              'loadPlants',
-          );
-          console.log(err)});
+      .catch(err => {
+        Logger.saveLogs(
+          this.props.plantyData.myCognitoUser.username,
+          err.toString(),
+          "loadPlants"
+        );
+        console.log(err);
+      });
 
     this.checkLight();
     this.checkStream();
     this.checkFan();
     this.checkHeater();
+    this.getMeasurments();
   }
 
   async loadPlanter() {
@@ -537,13 +546,14 @@ class PlanterPage extends React.Component {
         this.parceData(response.data.plots);
         // this.dealWithPlantsData(response.data);
       })
-        .catch(err => {
-          Logger.saveLogs(
-              this.props.plantyData.myCognitoUser.username,
-              err.toString(),
-              'loadPlanter',
-          );
-          console.log(err)});
+      .catch(err => {
+        Logger.saveLogs(
+          this.props.plantyData.myCognitoUser.username,
+          err.toString(),
+          "loadPlanter"
+        );
+        console.log(err);
+      });
   }
 
   dealWithPlantsData = plants => {
@@ -565,13 +575,14 @@ class PlanterPage extends React.Component {
           newPlants.push(newOne);
         })
         .then(() => this.setState({ plants: newPlants }))
-          .catch(err => {
-            Logger.saveLogs(
-                this.props.plantyData.myCognitoUser.username,
-                err.toString(),
-                'loadPlantsImg',
-            );
-            console.log(err)});
+        .catch(err => {
+          Logger.saveLogs(
+            this.props.plantyData.myCognitoUser.username,
+            err.toString(),
+            "loadPlantsImg"
+          );
+          console.log(err);
+        });
     });
   };
 
@@ -598,13 +609,14 @@ class PlanterPage extends React.Component {
           .then()
           .catch();
       })
-        .catch(err => {
-          Logger.saveLogs(
-              this.props.plantyData.myCognitoUser.username,
-              err.toString(),
-              'sendAction',
-          );
-          console.log(err)});
+      .catch(err => {
+        Logger.saveLogs(
+          this.props.plantyData.myCognitoUser.username,
+          err.toString(),
+          "sendAction"
+        );
+        console.log(err);
+      });
   }
 
   async deletePlant(plantUUID) {
@@ -629,13 +641,14 @@ class PlanterPage extends React.Component {
           .then()
           .catch();
       })
-        .catch(err => {
-          Logger.saveLogs(
-              this.props.plantyData.myCognitoUser.username,
-              err.toString(),
-              'deletePlant',
-          );
-          console.log(err)});
+      .catch(err => {
+        Logger.saveLogs(
+          this.props.plantyData.myCognitoUser.username,
+          err.toString(),
+          "deletePlant"
+        );
+        console.log(err);
+      });
   }
 
   async loadStreamUrl() {
@@ -674,13 +687,14 @@ class PlanterPage extends React.Component {
         } else {
         }
       })
-        .catch(err => {
-          Logger.saveLogs(
-              this.props.plantyData.myCognitoUser.username,
-              err.toString(),
-              'loadStreamUrl',
-          );
-          console.log(err)});
+      .catch(err => {
+        Logger.saveLogs(
+          this.props.plantyData.myCognitoUser.username,
+          err.toString(),
+          "loadStreamUrl"
+        );
+        console.log(err);
+      });
   }
 
   renderPlants = plant => {
@@ -1757,11 +1771,11 @@ class PlanterPage extends React.Component {
         this.setState({ growthPlan: { phases: [] } });
         console.log("error " + error);
 
-          Logger.saveLogs(
-              this.props.plantyData.myCognitoUser.username,
-              error.toString(),
-              'loadGrowthPlan',
-          );
+        Logger.saveLogs(
+          this.props.plantyData.myCognitoUser.username,
+          error.toString(),
+          "loadGrowthPlan"
+        );
       });
   }
 
@@ -1821,11 +1835,11 @@ class PlanterPage extends React.Component {
         );
       })
       .catch(error => {
-          Logger.saveLogs(
-              this.props.plantyData.myCognitoUser.username,
-              error.toString(),
-              'saveGrowthPlan'
-          )
+        Logger.saveLogs(
+          this.props.plantyData.myCognitoUser.username,
+          error.toString(),
+          "saveGrowthPlan"
+        );
         this.setState({ growthPlan: { phases: [] }, savingPlan: false });
       });
   }
@@ -2711,16 +2725,16 @@ class PlanterPage extends React.Component {
       .then(response => {
         this.setState({ loadingSendingPlanter: false });
         this.loadPlanter()
-            .then()
-            .catch();
+          .then()
+          .catch();
       })
       .catch(error => {
         console.log("error " + error);
         this.setState({ loadingSendingPlanter: false });
         Logger.saveLogs(
-            this.props.plantyData.myCognitoUser.username,
-            error.toString(),
-            'loadPlanter',
+          this.props.plantyData.myCognitoUser.username,
+          error.toString(),
+          "loadPlanter"
         );
       });
   }
@@ -2742,7 +2756,8 @@ class PlanterPage extends React.Component {
               Address: {<b>{this.state.planter.sendDetails.address}</b>}
             </p>
             <p style={{ marginTop: 10 }}>
-              Instructions: {<b>{this.state.planter.sendDetails.instructions}</b>}
+              Instructions:{" "}
+              {<b>{this.state.planter.sendDetails.instructions}</b>}
             </p>
             <Button
               style={{
