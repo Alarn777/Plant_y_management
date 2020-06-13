@@ -13,7 +13,7 @@ import {
   CardMedia,
   Toolbar,
   Typography,
-  Button,
+  Button
 } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
 import Amplify, { Auth, Storage } from "aws-amplify";
@@ -37,7 +37,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import WS from "../websocket";
 import Paper from "@material-ui/core/Paper";
-import {Logger} from "../Logger";
+import { Logger } from "../Logger";
 
 const plantyColor = "#6f9e04";
 const errorColor = "#ee3e34";
@@ -107,11 +107,12 @@ class Dashboard extends React.Component {
       })
       .catch(err => {
         Logger.saveLogs(
-            this.props.plantyData.myCognitoUser.username,
-            err.toString(),
-            'didmount - Dashboard',
+          this.props.plantyData.myCognitoUser.username,
+          err.toString(),
+          "didmount - Dashboard"
         );
-        console.log(err)});
+        console.log(err);
+      });
 
     window.addEventListener("resize", this.updateDimensions);
   }
@@ -139,13 +140,14 @@ class Dashboard extends React.Component {
         // console.log(response);
         this.dealWithUserData(response.data);
       })
-        .catch(err => {
-          Logger.saveLogs(
-              this.props.plantyData.myCognitoUser.username,
-              err.toString(),
-              'loadAllData',
-          );
-          console.log(err)});
+      .catch(err => {
+        Logger.saveLogs(
+          this.props.plantyData.myCognitoUser.username,
+          err.toString(),
+          "loadAllData"
+        );
+        console.log(err);
+      });
 
     await axios
       .post(
@@ -163,13 +165,14 @@ class Dashboard extends React.Component {
         });
         // this.dealWithUserData(response.data);
       })
-        .catch(err => {
-          Logger.saveLogs(
-              this.props.plantyData.myCognitoUser.username,
-              err.toString(),
-              'growthPlans - dashboard',
-          );
-          console.log(err)});
+      .catch(err => {
+        Logger.saveLogs(
+          this.props.plantyData.myCognitoUser.username,
+          err.toString(),
+          "growthPlans - dashboard"
+        );
+        console.log(err);
+      });
   }
 
   dealWithUserData(sentData) {
@@ -191,13 +194,14 @@ class Dashboard extends React.Component {
             users.push(newOne);
           })
           .then(() => this.setState({ systemUsers: users }))
-            .catch(err => {
-              Logger.saveLogs(
-                  this.props.plantyData.myCognitoUser.username,
-                  err.toString(),
-                  'loadUserAvatars',
-              );
-              console.log(err)});
+          .catch(err => {
+            Logger.saveLogs(
+              this.props.plantyData.myCognitoUser.username,
+              err.toString(),
+              "loadUserAvatars"
+            );
+            console.log(err);
+          });
       }
     });
   }
@@ -229,7 +233,6 @@ class Dashboard extends React.Component {
   }
 
   async saveGrowthPlan() {
-
     this.setState({ savingPlan: true, errorText: "" });
 
     const AuthStr = "Bearer ".concat(this.state.USER_TOKEN);
@@ -308,11 +311,11 @@ class Dashboard extends React.Component {
         })
         .catch(error => {
           console.log("error " + error);
-            Logger.saveLogs(
-                this.props.plantyData.myCognitoUser.username,
-                error.toString(),
-                'manageGrowthPlans - dashboard',
-            );
+          Logger.saveLogs(
+            this.props.plantyData.myCognitoUser.username,
+            error.toString(),
+            "manageGrowthPlans - dashboard"
+          );
 
           this.setState({ growthPlan: {}, savingPlan: false });
         });
@@ -665,9 +668,7 @@ class Dashboard extends React.Component {
                     {isMobile ? "" : 0}
                     <Slider
                       style={{ width: "60%", marginLeft: 25, marginRight: 25 }}
-                      value={[
-                        oneWeek.subPhases[0].uvIntensity.min
-                      ]}
+                      value={[oneWeek.subPhases[0].uvIntensity.min]}
                       onChange={(event, newValue) => {
                         oneWeek.subPhases[0].uvIntensity.min = newValue[0];
                         this.forceUpdate();
@@ -795,9 +796,7 @@ class Dashboard extends React.Component {
                     {isMobile ? "" : 0}
                     <Slider
                       style={{ width: "60%", marginLeft: 25, marginRight: 25 }}
-                      value={[
-                        oneWeek.subPhases[1].uvIntensity.min
-                      ]}
+                      value={[oneWeek.subPhases[1].uvIntensity.min]}
                       onChange={(event, newValue) => {
                         oneWeek.subPhases[1].uvIntensity.min = newValue[0];
                         this.forceUpdate();
@@ -924,9 +923,7 @@ class Dashboard extends React.Component {
                     {isMobile ? "" : 0}
                     <Slider
                       style={{ width: "60%", marginLeft: 25, marginRight: 25 }}
-                      value={[
-                        oneWeek.subPhases[2].uvIntensity.min
-                      ]}
+                      value={[oneWeek.subPhases[2].uvIntensity.min]}
                       onChange={(event, newValue) => {
                         oneWeek.subPhases[2].uvIntensity.min = newValue[0];
                         this.forceUpdate();
@@ -965,7 +962,6 @@ class Dashboard extends React.Component {
                         oneWeek.subPhases[2].soilHumidity.max * 100
                       ]}
                       onChange={(event, newValue) => {
-
                         oneWeek.subPhases[2].soilHumidity.min =
                           newValue[0] / 100;
                         oneWeek.subPhases[2].soilHumidity.max =
@@ -1054,9 +1050,7 @@ class Dashboard extends React.Component {
                     {isMobile ? "" : 0}
                     <Slider
                       style={{ width: "60%", marginLeft: 25, marginRight: 25 }}
-                      value={[
-                        oneWeek.subPhases[3].uvIntensity.min
-                      ]}
+                      value={[oneWeek.subPhases[3].uvIntensity.min]}
                       onChange={(event, newValue) => {
                         oneWeek.subPhases[3].uvIntensity.min = newValue[0];
                         this.forceUpdate();
@@ -1095,7 +1089,6 @@ class Dashboard extends React.Component {
                         oneWeek.subPhases[3].soilHumidity.max * 100
                       ]}
                       onChange={(event, newValue) => {
-
                         oneWeek.subPhases[3].soilHumidity.min =
                           newValue[0] / 100;
                         oneWeek.subPhases[3].soilHumidity.max =
@@ -1148,7 +1141,6 @@ class Dashboard extends React.Component {
         >
           <AppBar position="static">
             <Toolbar>
-
               <Avatar
                 variant="square"
                 alt="Remy Sharp"
@@ -1160,10 +1152,7 @@ class Dashboard extends React.Component {
                 src={require("../Images/logo.png")}
               />
 
-              <Typography
-                variant="h6"
-                style={{ flexGrow: 1 }}
-              >
+              <Typography variant="h6" style={{ flexGrow: 1 }}>
                 Plant'y
               </Typography>
               {this.state.user && (
@@ -1173,23 +1162,21 @@ class Dashboard extends React.Component {
                       style={{ marginLeft: 5 }}
                       onClick={() => {
                         Auth.signOut()
-                          .then(data => console.log(data))
-                            .catch(err => {
-                              Logger.saveLogs(
-                                  this.props.plantyData.myCognitoUser.username,
-                                  err.toString(),
-                                  'signout - dashboard',
-                              );
-                              console.log(err)});
+                          .then(data => console.log())
+                          .catch(err => {
+                            Logger.saveLogs(
+                              this.props.plantyData.myCognitoUser.username,
+                              err.toString(),
+                              "signout - dashboard"
+                            );
+                            console.log(err);
+                          });
 
                         this.setState({ user: null, toLogin: true });
                       }}
                     />
                   ) : (
-                    <Typography
-                      variant="h6"
-                      style={{ flexGrow: 1 }}
-                    >
+                    <Typography variant="h6" style={{ flexGrow: 1 }}>
                       Hello {this.state.user.username}
                       <Button
                         variant="outlined"
@@ -1197,14 +1184,15 @@ class Dashboard extends React.Component {
                         color="inherit"
                         onClick={() => {
                           Auth.signOut()
-                            .then(data => console.log(data))
-                              .catch(err => {
-                                Logger.saveLogs(
-                                    this.props.plantyData.myCognitoUser.username,
-                                    err.toString(),
-                                    'signout - dashboard',
-                                );
-                                console.log(err)});
+                            .then(data => console.log())
+                            .catch(err => {
+                              Logger.saveLogs(
+                                this.props.plantyData.myCognitoUser.username,
+                                err.toString(),
+                                "signout - dashboard"
+                              );
+                              console.log(err);
+                            });
 
                           this.setState({ user: null, toLogin: true });
                         }}
@@ -1220,10 +1208,7 @@ class Dashboard extends React.Component {
           {this.state.user ? (
             <div>
               <Breadcrumbs style={{ margin: 10 }} aria-label="breadcrumb">
-                <Link
-                  color="inherit"
-                  href="/dashboard"
-                >
+                <Link color="inherit" href="/dashboard">
                   Dashboard
                 </Link>
               </Breadcrumbs>
@@ -1239,7 +1224,19 @@ class Dashboard extends React.Component {
                     </Typography>
                   </Paper>
                   <div>
-                    {this.state.systemUsers.map(one => this.renderUsers(one))}
+                    {this.state.systemUsers.length === 0 ? (
+                      <CircularProgress
+                        color="primary"
+                        style={{
+                          marginLeft: "47%",
+                          root: { flex: 1 },
+                          textAlign: "center"
+                        }}
+                      />
+                    ) : (
+                      this.state.systemUsers.map(one => this.renderUsers(one))
+                    )}
+                    {/*{this.state.systemUsers.map(one => this.renderUsers(one))}*/}
                   </div>
                   <div style={{ clear: "both" }} />
                   <Paper style={{ margin: 10 }}>
@@ -1328,8 +1325,19 @@ class Dashboard extends React.Component {
                     </DialogActions>
                   </Dialog>
                   <div>
-                    {this.state.growthPlans.map(one =>
-                      this.renderGrowthPlan(one)
+                    {this.state.growthPlans.length === 0 ? (
+                      <CircularProgress
+                        color="primary"
+                        style={{
+                          marginLeft: "47%",
+                          root: { flex: 1 },
+                          textAlign: "center"
+                        }}
+                      />
+                    ) : (
+                      this.state.growthPlans.map(one =>
+                        this.renderGrowthPlan(one)
+                      )
                     )}
                   </div>
                 </div>

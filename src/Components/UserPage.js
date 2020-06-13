@@ -28,10 +28,10 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import { BrowserView, isMobile } from "react-device-detect";
 import CardActions from "@material-ui/core/CardActions";
 import Avatar from "@material-ui/core/Avatar";
-import {Logger} from "../Logger";
+import { Logger } from "../Logger";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 class UserPage extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -68,21 +68,20 @@ class UserPage extends React.Component {
   componentDidMount() {
     Auth.currentAuthenticatedUser()
       .then(user => {
-
-
         this.setState({ user: user });
         this.props.addUser(user);
         this.loadPlanters()
           .then()
           .catch();
       })
-        .catch(err => {
-          Logger.saveLogs(
-              this.props.plantyData.myCognitoUser.username,
-              err.toString(),
-              'didmount - userpage',
-          );
-          console.log(err)});
+      .catch(err => {
+        Logger.saveLogs(
+          this.props.plantyData.myCognitoUser.username,
+          err.toString(),
+          "didmount - userpage"
+        );
+        console.log(err);
+      });
 
     this.connect();
 
@@ -151,8 +150,6 @@ class UserPage extends React.Component {
   };
 
   async loadPlanters() {
-
-
     let USER_TOKEN = "";
 
     USER_TOKEN = this.state.user.signInUserSession.idToken.jwtToken;
@@ -171,16 +168,16 @@ class UserPage extends React.Component {
         }
       )
       .then(response => {
-
         this.dealWithPlantsData(response.data);
       })
-        .catch(err => {
-          Logger.saveLogs(
-              this.props.plantyData.myCognitoUser.username,
-              err.toString(),
-              'loadPlanters',
-          );
-          console.log(err)});
+      .catch(err => {
+        Logger.saveLogs(
+          this.props.plantyData.myCognitoUser.username,
+          err.toString(),
+          "loadPlanters"
+        );
+        console.log(err);
+      });
   }
 
   dealWithPlantsData = plants => {
@@ -211,13 +208,14 @@ class UserPage extends React.Component {
           .then(() => this.sendMessage())
           .catch();
       })
-        .catch(err => {
-          Logger.saveLogs(
-              this.props.plantyData.myCognitoUser.username,
-              err.toString(),
-              'sendAction',
-          );
-          console.log(err)});
+      .catch(err => {
+        Logger.saveLogs(
+          this.props.plantyData.myCognitoUser.username,
+          err.toString(),
+          "sendAction"
+        );
+        console.log(err);
+      });
   }
 
   async removePlanter(planterName) {
@@ -241,13 +239,14 @@ class UserPage extends React.Component {
           .then(() => this.sendMessage())
           .catch();
       })
-        .catch(err => {
-          Logger.saveLogs(
-              this.props.plantyData.myCognitoUser.username,
-              err.toString(),
-              'removePlanter',
-          );
-          console.log(err)});
+      .catch(err => {
+        Logger.saveLogs(
+          this.props.plantyData.myCognitoUser.username,
+          err.toString(),
+          "removePlanter"
+        );
+        console.log(err);
+      });
   }
 
   renderPlanters = planter => {
@@ -371,18 +370,12 @@ class UserPage extends React.Component {
                   <ArrowBackIosIcon />
                 )}
               </IconButton>
-              <Typography
-                variant="h6"
-                style={{ flexGrow: 1 }}
-              >
+              <Typography variant="h6" style={{ flexGrow: 1 }}>
                 Plant'y
               </Typography>
               {this.state.user && (
                 <div>
-                  <Typography
-                    variant="h6"
-                    style={{ flexGrow: 1 }}
-                  >
+                  <Typography variant="h6" style={{ flexGrow: 1 }}>
                     Hello {this.state.user.username}
                   </Typography>
                 </div>
@@ -392,10 +385,7 @@ class UserPage extends React.Component {
           {this.state.user ? (
             <div style={{ margin: 10 }}>
               <Breadcrumbs aria-label="breadcrumb">
-                <Link
-                  color="inherit"
-                  href="/dashboard"
-                >
+                <Link color="inherit" href="/dashboard">
                   Dashboard
                 </Link>
                 <Typography color="textPrimary">
@@ -409,7 +399,18 @@ class UserPage extends React.Component {
               </Paper>
               <div>
                 <div>
-                  {this.state.planters.map(one => this.renderPlanters(one))}
+                  {this.state.planters.length === 0 ? (
+                    <CircularProgress
+                      color="primary"
+                      style={{
+                        marginLeft: "47%",
+                        root: { flex: 1 },
+                        textAlign: "center"
+                      }}
+                    />
+                  ) : (
+                    this.state.planters.map(one => this.renderPlanters(one))
+                  )}
                 </div>
               </div>
             </div>

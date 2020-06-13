@@ -1293,8 +1293,20 @@ class PlanterPage extends React.Component {
                 <Typography style={{ padding: 10 }} variant="h5" component="h3">
                   Plants in {this.state.planterName}
                 </Typography>
-                {this.state.plants.map(one => this.renderPlants(one))}
+                {/*{this.state.plants.map(one => this.renderPlants(one))}*/}
               </Paper>
+              {this.state.plants.length === 0 ? (
+                <CircularProgress
+                  color="primary"
+                  style={{
+                    marginLeft: "47%",
+                    root: { flex: 1 },
+                    textAlign: "center"
+                  }}
+                />
+              ) : (
+                this.state.plants.map(one => this.renderPlants(one))
+              )}
               <div style={{ clear: "both" }} />
               <Paper style={{ margin: 10 }}>
                 <Typography style={{ padding: 10 }} variant="h5" component="h3">
@@ -1487,7 +1499,6 @@ class PlanterPage extends React.Component {
                       width: 180,
                       padding: -10
                     }}
-                    // disabled={!this.validateForm()}
                     variant="contained"
                     color="primary"
                     onClick={() => {
@@ -1537,7 +1548,6 @@ class PlanterPage extends React.Component {
                     }}
                   />
                   <TextField
-                    // error={this.state.errorInName}
                     style={{
                       marginLeft: 5,
                       marginTop: 20,
@@ -1555,7 +1565,6 @@ class PlanterPage extends React.Component {
                         ? this.state.growthPlanDescription
                         : this.state.growthPlan.growthPlanDescription
                     }
-                    // onChange={event => console.log(event.target.value)}
                     onChange={event => {
                       Object.keys(this.state.growthPlan).length === 0 &&
                       this.state.growthPlan.constructor === Object
@@ -1573,8 +1582,19 @@ class PlanterPage extends React.Component {
                   </p>
                   <br />
                   <div style={{ marginRight: 5 }}>
-                    {this.state.growthPlan.phases.map(one =>
-                      this.renderWeeks(one)
+                    {this.state.growthPlan.phases.length === 0 ? (
+                      <CircularProgress
+                        color="primary"
+                        style={{
+                          marginLeft: "0%",
+                          root: { flex: 1 },
+                          textAlign: "center"
+                        }}
+                      />
+                    ) : (
+                      this.state.growthPlan.phases.map(one =>
+                        this.renderWeeks(one)
+                      )
                     )}
                   </div>
                 </div>
@@ -1974,14 +1994,8 @@ class PlanterPage extends React.Component {
                         oneWeek.subPhases[0].uvIntensity.min
                         // oneWeek.subPhases[0].uvIntensity.max
                       ]}
-                      // onChange={this.handleSliderChange}
                       onChange={(event, newValue) => {
-                        // console.log(event);
-                        // console.log(newValue);
-
                         oneWeek.subPhases[0].uvIntensity.min = newValue[0];
-                        // this.forceUpdate();
-                        // oneWeek.subPhases[0].uvIntensity.max = newValue[1];
                         this.forceUpdate();
                       }}
                       valueLabelDisplay="auto"

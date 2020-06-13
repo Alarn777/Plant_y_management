@@ -29,7 +29,6 @@ import Alert from "@material-ui/lab/Alert";
 const plantyColor = "#6f9e04";
 
 class SingIn extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -112,14 +111,9 @@ class SingIn extends React.Component {
       }
     }
   }
-
-  // error(error) {}
-
   sendForgotPassword() {
     const username = this.state.username;
-    // console.log(username);
     if (!username) {
-      // this.error("Username cannot be empty");
       return;
     }
     this.setState({ loading: false, forgotPassword: false, newPassword: true });
@@ -141,7 +135,6 @@ class SingIn extends React.Component {
   }
 
   sendNewPassword = () => {
-
     if (this.state.code === "" || this.state.newPasswordString === "") {
       this.setState({ error: true });
       return;
@@ -160,13 +153,10 @@ class SingIn extends React.Component {
         this.state.newPasswordString
       )
         .then(data => {
-          // console.log(data);
           this.setState({ loading: false });
           this.setState({ forgotPassword: false, newPassword: false });
-          // this.changeState('signIn');
         })
         .catch(err => {
-          // this.error(err)
           console.log(err);
           this.setState({ error: true });
         });
@@ -430,7 +420,6 @@ class SingIn extends React.Component {
               href="#"
               component={"button"}
               onClick={() => {
-                // console.log("aaaa");
                 this.setState({ forgotPassword: true });
               }}
             >
@@ -501,9 +490,7 @@ class SingIn extends React.Component {
             <Typography style={{ padding: 10 }} variant="h3" component="h3">
               Login
             </Typography>
-            <div className="Login">
-              {this.renderNeededForm()}
-            </div>
+            <div className="Login">{this.renderNeededForm()}</div>
           </div>
           <BrowserView>
             <img
