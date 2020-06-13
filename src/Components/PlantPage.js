@@ -7,18 +7,13 @@ import { bindActionCreators } from "redux";
 import { addSocket, addUser, loadPlanters } from "../actions";
 import AppBar from "@material-ui/core/AppBar";
 import MenuIcon from "@material-ui/icons/Menu";
-import {
-  Toolbar,
-  Typography,
-  IconButton
-} from "@material-ui/core";
+import { Toolbar, Typography, IconButton } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
 import { Auth } from "aws-amplify";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { BrowserView } from "react-device-detect";
 
 class PlantPage extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -58,8 +53,8 @@ class PlantPage extends React.Component {
       })
       // .then(data => console.log(data))
       .catch(err => {
-
-        console.log(err)});
+        console.log(err);
+      });
 
     window.addEventListener("resize", this.updateDimensions);
   }
@@ -72,7 +67,6 @@ class PlantPage extends React.Component {
     let USER_TOKEN = "";
     USER_TOKEN = this.state.user.signInUserSession.idToken.jwtToken;
     this.state.USER_TOKEN = USER_TOKEN;
-
   }
 
   dealWithUserData(sentData) {
