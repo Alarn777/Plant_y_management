@@ -1,10 +1,4 @@
 import React from "react";
-
-import ReactDOM from "react-dom";
-// import { Provider } from 'react-redux';
-// import { store } from './reducer';
-// import { Container } from './container';
-
 //redux
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -14,7 +8,7 @@ import Amplify, { Auth } from "aws-amplify";
 import FormGroup from "@material-ui/core/FormGroup";
 import "../Styles/Signin.css";
 import AppBar from "@material-ui/core/AppBar";
-import { IconButton, Paper, Toolbar, Typography, Fab } from "@material-ui/core";
+import { IconButton, Toolbar, Typography } from "@material-ui/core";
 import StickyFooter from "react-sticky-footer";
 
 import ArrowBackIosIcon from "@material-ui/icons/NavigateBefore";
@@ -22,7 +16,7 @@ import ArrowBackIosIcon from "@material-ui/icons/NavigateBefore";
 import { Redirect } from "react-router-dom";
 import Input from "@material-ui/core/Input";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import {  Visibility, VisibilityOff } from "@material-ui/icons";
+import { Visibility, VisibilityOff } from "@material-ui/icons";
 import InputLabel from "@material-ui/core/InputLabel";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { BrowserView } from "react-device-detect";
@@ -202,11 +196,9 @@ class SingUp extends React.Component {
               bottomThreshold={20}
               normalStyles={{
                 height: 20,
-                // backgroundColor: "#999999",
                 padding: "10px"
               }}
               stickyStyles={{
-                // backgroundColor: "rgba(255,255,255,.8)",
                 padding: "2rem"
               }}
             >

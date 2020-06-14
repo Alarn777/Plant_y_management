@@ -65,7 +65,8 @@ class Dashboard extends React.Component {
       growthPlanName: "",
       savingPlan: false,
       errorText: "",
-      growthPlanDescription: ""
+      growthPlanDescription: "",
+      growthPlanNameError: false
     };
     Amplify.configure(JSON.parse(process.env.REACT_APP_CONFIG_AWS));
 
@@ -98,7 +99,6 @@ class Dashboard extends React.Component {
   componentDidMount() {
     Auth.currentAuthenticatedUser()
       .then(user => {
-        // return Auth.changePassword(user, "oldPassword", "newPassword");
         this.setState({ user: user });
         this.props.addUser(user);
         this.loadAllData()
@@ -137,7 +137,6 @@ class Dashboard extends React.Component {
         }
       )
       .then(response => {
-        // console.log(response);
         this.dealWithUserData(response.data);
       })
       .catch(err => {
@@ -163,7 +162,6 @@ class Dashboard extends React.Component {
           growthPlans: response.data.Items,
           growthPlan: this.state.growthPlans[0]
         });
-        // this.dealWithUserData(response.data);
       })
       .catch(err => {
         Logger.saveLogs(
@@ -505,9 +503,6 @@ class Dashboard extends React.Component {
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">
               {user.name === "Test" ? "Yukio" : user.name}
-            </Typography>
-            <Typography variant="body2" color="textSecondary" component="p">
-              One cool user
             </Typography>
           </CardContent>
         </CardActionArea>
@@ -1151,7 +1146,6 @@ class Dashboard extends React.Component {
                 }}
                 src={require("../Images/logo.png")}
               />
-
               <Typography variant="h6" style={{ flexGrow: 1 }}>
                 Plant'y
               </Typography>
@@ -1276,6 +1270,7 @@ class Dashboard extends React.Component {
                         label="Growth Plan Name"
                         type="text"
                         fullWidth
+                        error={this.state.growthPlanNameError}
                         value={this.state.growthPlanName}
                         onChange={event => {
                           this.setState({
@@ -1292,7 +1287,6 @@ class Dashboard extends React.Component {
                         label="Growth Plan Description"
                         type="text"
                         fullWidth
-                        // value={"asdasd"}
                         value={this.state.growthPlanDescription}
                         onChange={event => {
                           this.setState({
@@ -1311,9 +1305,16 @@ class Dashboard extends React.Component {
                       </Button>
                       <Button
                         onClick={() => {
+                          this.setState({ growthPlanNameError: false });
+                          if (this.state.growthPlanName === "") {
+                            this.setState({ growthPlanNameError: true });
+                            return;
+                          }
+
                           this.setState({ dialogOpen: false });
                           this.state.growthPlan.growthPlanGroup = this.state.growthPlanName;
                           this.state.growthPlan.growthPlanDescription = this.state.growthPlanDescription;
+
                           this.saveGrowthPlan()
                             .then()
                             .catch();

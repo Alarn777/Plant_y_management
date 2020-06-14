@@ -226,7 +226,6 @@ class PlanterPage extends React.Component {
             break;
 
           case "STREAM_ON":
-            // this.loadStreamUrl();
             this.setState({
               streamTurnedOn: true
             });
@@ -347,7 +346,6 @@ class PlanterPage extends React.Component {
           .then()
           .catch();
       })
-      // .then(data => console.log(data))
       .catch(err => {
         Logger.saveLogs(
           this.props.plantyData.myCognitoUser.username,
@@ -544,7 +542,6 @@ class PlanterPage extends React.Component {
         this.setState({ growthPlan: response.data.activeGrowthPlan });
 
         this.parceData(response.data.plots);
-        // this.dealWithPlantsData(response.data);
       })
       .catch(err => {
         Logger.saveLogs(
@@ -680,7 +677,6 @@ class PlanterPage extends React.Component {
               console.log("error: ", response.data.errorMessage);
               return;
             }
-            // console.log(response.data.HLSStreamingSessionURL);
             this.setState({ streamUrl: response.data.HLSStreamingSessionURL });
           } else {
           }
@@ -772,7 +768,6 @@ class PlanterPage extends React.Component {
     if (isMacintosh()) {
       maxWidth = this.state.width / 3 - 50;
     } else {
-      //console.log("windows");
       maxWidth = this.state.width / 3 - 50;
     }
 

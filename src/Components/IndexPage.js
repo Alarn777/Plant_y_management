@@ -49,7 +49,6 @@ class IndexPage extends React.Component {
   }
 
   render() {
-
     if (this.state.toLogin === true) {
       return <Redirect to="/login" />;
     }
@@ -79,10 +78,7 @@ class IndexPage extends React.Component {
                 }}
                 src={require("../Images/logo.png")}
               />
-              <Typography
-                variant="h6"
-                style={{ flexGrow: 1 }}
-              >
+              <Typography variant="h6" style={{ flexGrow: 1 }}>
                 Plant'y
               </Typography>
             </Toolbar>
@@ -150,11 +146,9 @@ class IndexPage extends React.Component {
             bottomThreshold={20}
             normalStyles={{
               height: 20,
-              // backgroundColor: "#999999",
               padding: "10px"
             }}
             stickyStyles={{
-              // backgroundColor: "rgba(255,255,255,.8)",
               padding: "2rem"
             }}
           >
@@ -166,9 +160,6 @@ class IndexPage extends React.Component {
         </BrowserView>
       </div>
     );
-    // <Provider store={store}>
-    //   <Container />
-    // </Provider>)
   }
 }
 

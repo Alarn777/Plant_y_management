@@ -45,13 +45,10 @@ class PlantPage extends React.Component {
   componentDidMount() {
     Auth.currentAuthenticatedUser()
       .then(user => {
-        // return Auth.changePassword(user, "oldPassword", "newPassword");
-        // console.log(user);
         this.setState({ user: user });
         this.props.addUser(user);
         this.loadAllData();
       })
-      // .then(data => console.log(data))
       .catch(err => {
         console.log(err);
       });
@@ -99,27 +96,18 @@ class PlantPage extends React.Component {
             <Toolbar>
               <IconButton
                 edge="start"
-                // className={styles.menuButton}
                 style={{ marginRight: 10 }}
                 color="inherit"
                 aria-label="menu"
               >
                 {this.state.user ? <MenuIcon /> : <ArrowBackIosIcon />}
               </IconButton>
-              <Typography
-                variant="h6"
-                // className={styles.title}
-                style={{ flexGrow: 1 }}
-              >
+              <Typography variant="h6" style={{ flexGrow: 1 }}>
                 Plant'y
               </Typography>
               {this.state.user && (
                 <div>
-                  <Typography
-                    variant="h6"
-                    // className={styles.title}
-                    style={{ flexGrow: 1 }}
-                  >
+                  <Typography variant="h6" style={{ flexGrow: 1 }}>
                     Hello {this.state.user.username}
                   </Typography>
                 </div>
