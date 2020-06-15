@@ -720,7 +720,7 @@ class PlanterPage extends React.Component {
               margin: "0 auto"
             }}
             image={plant.pic}
-            title="Contemplative Reptile"
+            title={plant.name}
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">

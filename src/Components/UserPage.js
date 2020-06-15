@@ -280,7 +280,7 @@ class UserPage extends React.Component {
               margin: "0 auto"
             }}
             image={require("../Images/greenhouse.png")}
-            title="Contemplative Reptile"
+            title={planter.name}
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">

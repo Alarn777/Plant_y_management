@@ -498,7 +498,7 @@ class Dashboard extends React.Component {
               width: maxWidth - 10
             }}
             image={user.pic}
-            title="Contemplative Reptile"
+            title={user.name === "Test" ? "Yukio" : user.name}
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">
