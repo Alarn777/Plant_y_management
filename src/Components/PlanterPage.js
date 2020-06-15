@@ -1519,7 +1519,7 @@ class PlanterPage extends React.Component {
                       // marginLeft: 5,
                       marginTop: 20,
                       marginBottom: 20,
-                      width: "97%"
+                      width: "95%"
                     }}
                     required
                     defaultValue=" "
@@ -1547,7 +1547,7 @@ class PlanterPage extends React.Component {
                       marginLeft: 5,
                       marginTop: 20,
                       marginBottom: 20,
-                      width: "97%"
+                      width: "95%"
                     }}
                     multiline={true}
                     required
@@ -1576,7 +1576,7 @@ class PlanterPage extends React.Component {
                     {this.state.errorText}
                   </p>
                   <br />
-                  <div style={{ marginRight: 5 }}>
+                  <div style={{ marginRight: 5, textAlign: "center" }}>
                     {this.state.growthPlan.phases.length === 0 ? (
                       <CircularProgress
                         color="primary"
@@ -1872,7 +1872,7 @@ class PlanterPage extends React.Component {
     }
     return (
       <ExpansionPanel
-        style={{ width: "97%", backgroundColor: weekColor }}
+        style={{ width: "99%", backgroundColor: weekColor }}
         expanded={this.state.expanded === panel}
         onChange={this.handleChange(panel)}
         key={oneWeek.phaseName}
