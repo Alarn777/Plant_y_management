@@ -2732,6 +2732,12 @@ class PlanterPage extends React.Component {
         }
       )
       .then(response => {
+        try {
+          WS.sendMessage("FROM_WEB;none;UPDATE_STATE");
+        } catch (error) {
+          console.log(error); // catch error
+        }
+
         this.setState({ loadingSendingPlanter: false });
         this.loadPlanter()
           .then()

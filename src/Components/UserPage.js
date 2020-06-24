@@ -143,7 +143,6 @@ class UserPage extends React.Component {
           action: "message"
         })
       ); //send data to the server
-      // console.log("sent message");
     } catch (error) {
       console.log(error); // catch error
     }
