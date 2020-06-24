@@ -1497,16 +1497,20 @@ class Dashboard extends React.Component {
           )}
         </div>
         <BrowserView>
-          <img
-            style={{
-              zIndex: -100,
-              width: "100%",
-              position: "absolute",
-              bottom: -1
-            }}
-            src={require("../Images/grass.png")}
-            alt="footer"
-          />
+          {this.state.growthPlanActive ? (
+            <div />
+          ) : (
+            <img
+              style={{
+                zIndex: -100,
+                width: "100%",
+                position: "absolute",
+                bottom: -1
+              }}
+              src={require("../Images/grass.png")}
+              alt="footer"
+            />
+          )}
           <StickyFooter
             bottomThreshold={20}
             normalStyles={{
