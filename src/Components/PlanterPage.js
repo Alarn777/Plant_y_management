@@ -215,7 +215,10 @@ class PlanterPage extends React.Component {
             });
             break;
           case "HEATER_IS_OFF":
-            this.setState({ heaterTurnedOn: false });
+            this.setState({
+              heaterTurnedOn: false,
+              loadingHeaterTurnedOff: false
+            });
             break;
 
           case "FAN_IS_ON":
@@ -1193,7 +1196,7 @@ class PlanterPage extends React.Component {
                       );
                     }}
                   >
-                    {!this.state.loadingHeaterTurnedOff ? (
+                    {!this.state.loadingFanTurnedOff ? (
                       "Turn fan off"
                     ) : (
                       <CircularProgress
