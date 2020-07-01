@@ -2760,7 +2760,7 @@ class PlanterPage extends React.Component {
   renderSendPlanter() {
     if (this.state.planter.askedToSend === "requested") {
       return (
-        <Paper style={{ margin: 10 }}>
+        <Paper style={{ margin: 10, backgroundColor: "#fff4e5" }}>
           <Alert severity="warning">User requested to ship this planter</Alert>
           <div style={{ margin: 10 }}>
             <h5>Shipment Details:</h5>
