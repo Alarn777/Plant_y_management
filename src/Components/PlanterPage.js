@@ -178,7 +178,7 @@ class PlanterPage extends React.Component {
     if (!WS.ws) WS.init();
     Amplify.configure(JSON.parse(process.env.REACT_APP_CONFIG_AWS));
     WS.onMessage(data => {
-      // console.log("GOT in planter screen", data.data);
+      console.log("GOT in planter screen", data.data);
 
       let instructions = data.data.split(";");
       if (instructions.length > 2)
@@ -202,10 +202,16 @@ class PlanterPage extends React.Component {
             });
             break;
           case "UV_LAMP_IS_ON":
-            this.setState({ lightTurnedOn: true, loadingLightTurnedOn: false });
+            this.setState({
+              lightTurnedOn: true,
+              loadingLightTurnedOn: false
+            });
             break;
           case "LAMP_IS_OFF":
-            this.setState({ lightTurnedOn: false });
+            this.setState({
+              lightTurnedOn: false,
+              loadingLightTurnedOff: false
+            });
             break;
 
           case "HEATER_IS_ON":
@@ -225,7 +231,7 @@ class PlanterPage extends React.Component {
             this.setState({ fanTurnedOn: true, loadingFanTurnedOn: false });
             break;
           case "FAN_IS_OFF":
-            this.setState({ fanTurnedOn: false });
+            this.setState({ fanTurnedOn: false, loadingFanTurnedOff: false });
             break;
 
           case "STREAM_ON":
